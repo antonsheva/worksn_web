@@ -1,0 +1,205 @@
+body{
+    display: block;
+    height: 98%;
+    width: 96%;
+    background: #e1fffd;
+    font-family: Arial;
+    position: relative;
+    overflow: auto;
+
+}
+.body{
+    background-color: azure;
+    width: 100%;
+    height: 99%;
+    max-width: 600px;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+
+
+    /*border: 1px solid gray;*/
+    /*border-radius: 10px;*/
+}
+.mainScreen{
+    position: relative;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: azure;
+}
+#balloonDiscusCard{
+    display: block;
+    height: 55%;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #e2faf5;
+    overflow: hidden;
+    padding-bottom: 5%;
+}
+.activFrmContent{
+    display: block;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: azure;
+    overflow: auto;
+}
+.chsBtn{
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    background: rgb(76, 169, 84);
+    box-shadow: 0 -3px rgb(50, 154, 100) inset;
+    width: 50%;
+    height: 50px;
+    text-align: center;
+}
+.stlBtSmall{
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    background: rgb(138, 172, 199);
+    box-shadow: 0 -3px rgb(119, 136, 167) inset;
+    text-align: center;
+    margin: 3px;
+    padding: 3%;
+}
+.tmp{
+    background-color: #a3cffa;
+}
+
+
+.fullSpace{
+    width: 100%;
+    height: 100%;
+}
+.ymaps-2-1-78-b-cluster-tabs__menu-item-text{
+    font-size: x-large;
+}
+.tmpImgBox{
+    display: none;
+    position: absolute;
+    top: 15%;
+    z-index: 5;
+    padding: 5px;
+    border: 2px solid #9d9f9d;
+    background-color: #ebfffc;
+    border-radius: 10px;
+    width: 100%;
+}
+.imgGrp{
+    display: none;
+    position: absolute;
+    z-index: 4;
+    width: 98%;
+    height: 60%;
+    min-height: 600px;
+    top: 5%;
+}
+.closeImgGroup{
+    position: absolute;
+    height: 70px;
+    width: 70px;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+    /*margin-left: 60%;*/
+    mix-blend-mode:color-dodge;
+}
+.tmpImgGroup{
+    position: absolute;
+    background-color: #c4d7e9;
+    border-radius: 10px;
+    left: 1px;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #9d9f9d;
+    padding: 2px;
+    overflow: auto;
+}
+.adsImg{
+    border-radius: 5px;
+    margin: 3px;
+}
+.mainBackground{
+    background-color: #d2faf7;
+}
+.testEdit{
+    position: absolute;
+    top: 200px;
+    left:20px;
+    background-color: #a3cffa;
+    z-index: 3;
+}
+.padd_5{
+    padding-bottom: 5px;
+}
+
+#popup_msg{
+    z-index: 4;
+}
+
+.padd_5 input{
+    text-align: center;
+    font-size: xx-large;
+}
+.underLine{
+    width: 70%;
+    height: 2px;
+    background-color: #9d9f9d;
+    margin-right: 14%;
+    margin-left: 14%;
+    margin-top: 4px;
+}
+.activeLabel{
+    font-size: large;
+    position: relative;
+    margin-top: 4%;
+    display: block;
+    width: 99%;
+    margin-left: 1%;
+    background-color: azure;
+    font-weight: 600;
+}
+
+.homeSign{
+    position: absolute;
+    right : 5%;
+    top : 2%;
+    height:4%;
+    z-index: 3;
+    min-height: 40px;
+}
+.homeSign img{
+    height: 100%;
+    width: auto;
+}
+.linkGooglePlay{
+    position: absolute;
+    left : 1%;
+    top : 2%;
+    height:3%;
+    z-index: 3;
+    min-height: 25px;
+}
+.linkGooglePlay img{
+    height: 100%;
+    width: auto;
+}
+
+
+
+.notePage{
+    position:relative;
+    padding: 5%;
+    padding-top: 10%;
+}
+
+#frmSearch .content{
+    background: azure;
+    outline: none;
+    border: none;
+}
+
+
+

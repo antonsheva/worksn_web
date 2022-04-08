@@ -1,0 +1,10 @@
+.frmRatingStars{
+    position: absolute;
+    width: 100%;
+    height: auto;
+}
+.frmRatingStars img{
+    width: 100%;
+    height: 15px;
+    position: absolute;
+}

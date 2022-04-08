@@ -1,0 +1,133 @@
+#userMenu{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+#userMenu .q1 img{/*#userMenu > div img*/
+    position: relative;
+    height: auto;
+    width: 80%;
+    border-radius: 15%;
+    display: block;
+    float: right;
+}
+
+#userMenu .q2 img{/*#userMenu > div img*/
+    position: relative;
+    height: auto;
+    width: 60%;
+    border-radius: 5%;
+    display: block;
+    float: right;
+    margin-top: 10%;
+    margin-right: 15%;
+}
+
+
+#userMenu tr{
+    height: 100%;
+    width: 100%;
+    display: table;
+}
+#userMenu td{
+    height: 100%;
+    width: 12.6%;
+    /*display: inline-block;*/
+    /*padding-bottom: 15px;*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.href_user {
+    display: inline-block;
+    position: relative;
+    font-size: small;
+}
+.href_user .avatarImg{
+    border-radius: 10%;
+    height: 100%;
+    width: auto;
+}
+.menu_login{
+    width: 100%;
+    max-width: 100px;
+    overflow: hidden;
+}
+.menu{
+    cursor: pointer;
+    display: inline-block;
+    font-family: Arial;
+    font-size: small;
+    text-align: center;
+    padding: 5%;
+}
+.menu img{
+    height: 60px;
+
+}
+ 
+.adsParam{
+    position: relative;
+    background-color: antiquewhite;
+    border-radius: 5px;
+    width: 20%;
+    text-align: center;
+}
+
+#frmSearch{
+    position: relative;
+    width: 93%;
+    height: 100%;
+    vertical-align: middle;
+    background-color: azure;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+
+.roundSendForm{
+    padding: 2%;
+    width: 100%;
+}
+.roundSendForm input{
+    font-size: larger;
+    width: 100%;
+    border: none;
+    background-color: azure;
+    padding-bottom: 5px;
+}
+.roundSendForm textarea{
+    font-size: x-large;
+    width: 100%;
+    height: 100px;
+    resize:none;
+    background-color: azure;
+ }

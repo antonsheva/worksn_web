@@ -1,0 +1,34 @@
+#loginForm{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+#loginForm td{
+    position: relative;
+    left: 3%;
+}
+#loginForm .txt input{
+    background: azure;
+    outline: none;
+    border: none;
+}
+#loginForm img{/*#userMenu > div img*/
+    position: relative;
+    height: auto;
+    width: 50%;
+    border-radius: 5%;
+    display: block;
+    margin-top: -10%;
+    left: 22%;
+}
+
+#loginForm .tblRegForm a{
+    width: 100%;
+    text-align: center;
+    color: #8b8d8b;
+
+    text-decoration: none;
+
+    font-weight: 700;
+}

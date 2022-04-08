@@ -1,0 +1,39 @@
+
+.breakWord{
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    hyphens: auto;
+}
+
+.rmvMsg{
+    position: relative;
+    vertical-align: top;
+    horiz-align: left;
+    padding-left: 5px;
+
+}
+.rmvMsg img{
+    height: 20px;
+    width: 20px;
+}
+ 
+.centerDiscusFrame{
+    width: 73%;
+    height: 100%;
+    display: inline-block;
+    padding-top: 3%;
+    overflow: auto;
+}
+ 
+
+
+.msgImg img{
+    border-radius: 5%;
+    width: 150px;
+    height: auto;
+}
+
+
+
+

@@ -1,0 +1,43 @@
+.myButton{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    padding-right: 2%;
+    padding-left: 2%;
+}
+
+
+.myButton td{
+    height: 95%;
+    text-align: center;
+    position: relative;
+    padding-right: 1.5%;
+    padding-left: 1.5%;
+}
+.bt1{
+    position: relative;
+    height: 95%;
+    width: 100%;
+
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    border-radius: 20px;
+    background-color: rgb(76, 169, 84);
+    box-shadow: 0 -3px rgb(50, 154, 100) inset;
+
+}
+
+
+/*.myButton a{*/
+    /*padding-left: 1.5%;*/
+    /*padding-right: 1.5%;*/
+/*}*/
+
+
+

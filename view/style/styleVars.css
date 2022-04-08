@@ -1,0 +1,24 @@
+.uProfile_msg{
+    display: inline-block;
+    position: relative;
+    font-size: small;
+}
+
+.uProfile_msg .login{
+    width: 100%;
+    overflow: hidden;
+}
+
+
+
+.uProfile_balloon {
+     display: inline-block;
+     position: relative;
+     font-size: small;
+
+ }
+
+.uProfile_balloon .login{
+    width: 100%;
+    overflow: hidden;
+}

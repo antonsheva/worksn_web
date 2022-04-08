@@ -1,0 +1,38 @@
+#adsType{
+    width: 100%;
+    height: 95%;
+    position: relative;
+}
+
+#adsType td{
+    height: 95%;
+    text-align: center;
+    position: relative;
+}
+
+.bt{
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    background-color: rgb(76, 169, 84);
+    box-shadow: 0 -3px rgb(50, 134, 100) inset;
+}
+
+.activeColor{
+    background-color: #60d689;
+}
+
+#adsType .myLocation{
+    position: relative;
+    width: 10%;
+    height: 100%;
+    text-align: center;
+
+}
+#adsType .myLocation img{
+    position: absolute;
+    height: 100%;
+    width: 90%;
+    left: 5%;
+}
+

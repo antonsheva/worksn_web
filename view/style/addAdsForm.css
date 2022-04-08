@@ -1,0 +1,66 @@
+#addAdsForm{
+    margin-top: 1%;
+    position: relative;
+    height: 98%;
+}
+#addAdsForm .str1{
+    position: relative;
+    width: 100%;
+    height: 50px;
+}
+#addAdsForm .str2{
+    position: relative;
+    width: 100%;
+    height: 75%;
+}
+#addAdsForm .str2 select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    display: inline-block;
+    border: none;
+    background-color: azure;
+    font-size: larger;
+}
+#addAdsForm .str2 input{
+    font-size: larger;
+    background-color: azure;
+    padding-bottom: 5px;
+}
+#addAdsForm .str2 textarea{
+    font-size: x-large;
+    width: 100%;
+    height: 100px;
+    resize:none;
+    background-color: azure;
+}
+
+#addAdsForm .gallerySign{
+     position: absolute;
+     height: 110%;
+     top: -5%;
+     left: 10%;
+ }
+#addAdsForm .lifetime{
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    background: rgb(138, 172, 199);
+    box-shadow: 0 -3px rgb(119, 136, 167) inset;
+    text-align: center;
+    margin: 3px;
+}
+.sendingImgs{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.sendingImgs img{
+    position: absolute;
+    height: 100%;
+    border-radius: 5%;
+    border: 1px  solid  slategray;
+
+}

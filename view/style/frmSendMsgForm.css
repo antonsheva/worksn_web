@@ -1,0 +1,45 @@
+#frmSendMsgForm{
+    display: block;
+    position: absolute;
+    bottom: 30px;
+    width: 93%;
+    height: 5%;
+
+    margin-left: 3%;
+    margin-right: 3%;
+}
+#frmSendMsgForm .printMsgProcessFrame{
+    visibility: hidden;
+    margin-left: 20px;
+    margin-top: -10px;
+    position: relative;
+    font-size: larger;
+}
+#frmSendMsgForm .gallerySign{
+    display: inline-block;
+    position: absolute;
+    height: 99%;
+    left: 10px;
+}
+#frmSendMsgForm .content{
+    display: inline-block;
+    position: absolute;
+    width: 70%;
+    left: 16%;
+    top: 8px;
+    font-size: larger;
+    border: none;
+    outline: none;
+    background: azure;
+}
+#frmSendMsgForm .btSend{
+    display: inline-block;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    right: 10px;
+}
+
+
+
+

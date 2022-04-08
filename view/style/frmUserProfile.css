@@ -1,0 +1,16 @@
+.frmUserProfile{
+    display: block;
+    position: relative;
+    font-size: small;
+    width: 55px;
+}
+.frmUserProfile .avatar{
+    height: auto;
+    width: 100%;
+    border-radius: 5%;
+
+}
+
+.userAvatar{
+    padding: 10px;
+}

@@ -1,0 +1,10 @@
+.layoutRegistration{
+    position: absolute;
+    border: 1px solid gray;
+    border-radius: 10px;
+    width: 100%;
+    height: 99%;
+    overflow: auto;
+    overflow-x: hidden;
+
+}

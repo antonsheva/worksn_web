@@ -1,0 +1,4 @@
+var envVars = {
+    catList      : [],
+    lifetimeList : []
+};

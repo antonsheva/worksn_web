@@ -1,0 +1,99 @@
+#userProfile{
+    height: 99%;
+    width: 100%;
+    position: relative;
+
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+
+#userProfile .txt_review{
+    background-color: azure;
+}
+#userProfile .vt{
+    width: 80px; top: 35px; position:relative;  text-align: center; display: block;
+}
+#userProfile textarea{
+    width: 100%;
+    height: 100px;
+    resize:none;
+    font-size: larger;
+}
+#userProfile .name_sname{
+    font-weight: 600;
+}
+#userProfile .about_user{
+    max-height: 300px;
+    overflow: auto;
+}
+#userReviewsField{
+    height: 42%;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow-scrolling: auto;
+}
+.frm_user_review{
+    background-color: #cce1ee;
+    max-height: 200px;
+    overflow: auto;
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 5px;
+    width: auto;
+}
+.frm_user_review .tm{
+    font-size: 12px;
+}
+.big_avatar img{
+    height: 80px;
+}
+.rm_avatar_img{
+    position: relative;
+    left:60px;
+    top: -80px;
+    visibility: hidden;
+}
+.rm_avatar_img img{
+    height: 15px;
+    width: 15px;
+}
+.star{
+
+    cursor: pointer;
+}
+.star img{
+    height: 60px;
+    width: 60px;
+}
+.reset_vote{
+    display: inline-block;
+    left: 10px;
+    cursor: pointer;
+    position: relative;
+}
+.ratingStars{
+    position: relative;
+    width: 100%;
+    height: 20px;
+}
+.ratingStars img{
+    position: absolute;
+    width: 100%;
+}
+.online{
+    position: absolute;
+    right: 1px;
+    height: 15px;
+    width: 15px;
+    display: none;
+}
+
+#userProfile .q1 img{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 30px;
+}

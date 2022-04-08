@@ -1,0 +1,14 @@
+.kant_msg{
+    border-radius: 15px 15px;
+    padding: 20px;
+    text-decoration: none;
+    font-size: x-large;
+    border-left: none;
+    box-shadow: inset 0 0 5px 5px chartreuse;
+    height: auto;
+    width: auto;
+    max-width: 400px;
+    position: absolute;
+    left: 25%;
+    top: 30%;
+}

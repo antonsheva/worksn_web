@@ -1,0 +1,69 @@
+.settingBody{
+    position: absolute;
+    border: 1px solid gray;
+    border-radius: 10px;
+    width: 100%;
+    height: 99%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#layoutSetting{
+    position: relative;
+    top: 70px;
+    left: 2%;
+    width: 90%;
+}
+#layoutSetting .description{
+    display: none;
+    margin-left: 5%;
+}
+input[type=checkbox]{
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(2); /* IE */
+    -moz-transform: scale(2); /* FF */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    -o-transform: scale(2); /* Opera */
+    transform: scale(2);
+    padding: 10px;
+}
+#layoutSetting .underline{
+    width: 90%;
+    height: 1px;
+    background-color: #9d9f9d;
+    margin-left: 25px;
+}
+#layoutSetting .systemNotify{
+    position: relative;
+    width: 100%;
+    display: none;
+}
+#layoutSetting b{
+    position: relative;
+    font-size: 16pt;
+    font-weight: 600;
+    color: grey;
+    display: block;
+}
+#layoutSetting .systemNotify .notify{
+    position:relative;
+    color: grey;
+    display: block;
+    left: 5%;
+    width: 90%;
+}
+#layoutSetting #settingPageContent{
+    position: relative;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+.msgToAdminForm .content{
+    height: 150px;
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: azure;
+    font-size: larger;
+    resize: none;
+}
+
+
