@@ -15,7 +15,6 @@ new \classesPhp\ClassChpu();
 $M = new \classesPhp\ClassMsg();
 $A = new \classesPhp\ClassAds();
 $U  = new \classesPhp\ClassUser();
-//$AU = new \classesPhp\ClassAndroidUser();
 $O = new \classesPhp\ClassOwner();
 $U_review = new \classesPhp\ClassUserReview();
 $AC_img = new \classesPhp\ClassImg();
@@ -28,5 +27,3 @@ new \classesPhp\ClassController();
 
 $G->act = 'full_page';
 $A_context->APrintContext();
-
-//register_shutdown_function('shutdownFunc');

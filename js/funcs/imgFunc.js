@@ -1,14 +1,14 @@
 function removeImg(img){
     var data = {};
     data.act = 'rm_tmp_file';
-    data.file_name = img;
+    data.filename = img;
     APost(data, cbRemoveImg);
 }
 function changeImg(e){
     if(G_tmp_img){
         var data = {};
         data.act = 'rm_tmp_file';
-        data.file_name = G_tmp_img;
+        data.filename = G_tmp_img;
         APost(data, cbChangeImg);
     }else sendFile();
 
@@ -128,7 +128,7 @@ function CheckImgFile(file){
     lt_fl_name = AConvertCyrillicToLatin(fl_name);
 
     fl_name = lt_fl_name.replace('c:\\fakepath\\','');
-    $('[name=latin_file_name]').val(fl_name);
+    $('[name=latin_filename]').val(fl_name);
     return false;
 }
 function AShowNewImg(img){

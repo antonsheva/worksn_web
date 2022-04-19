@@ -47,11 +47,7 @@ function initHomePage() {
     switch( parseInt(localStorage.getItem('mode'))){
         case MODE_MAIN :
             renderScreenAdsList();
-
             mapVars.noBoundsChange = false;
-            // setTimeout(function () {
-            //     checkFirsEntry();
-            // }, 2000);
             break;
         case MODE_DISCUS_WITH_USER :
             renderScreenMsgGroupList();

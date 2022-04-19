@@ -43,7 +43,7 @@ class ClassContext
             case  ACT_UPDATE_USER_DATA          : $this->addPack_UpdtUserData();       break;
             case  ACT_UPDATE_AUTO_AUTH_DATA     : $this->addPack_UpdtAutoAuthData();   break;
             case 'reg_new_user'                 : $this->addPack_RegNewUser();         break;
-            case 'user_review'                  : $this->addPack_UserReview();         break;
+            case 'add_user_review'              : $this->addPack_UserReview();         break;
             case 'get_user_reviews'             : $this->addPack_GetUserReviews();     break;
 
             case 'get_ads_collection'           : $this->addPack_GetAdsCollection();   break;
@@ -60,8 +60,8 @@ class ClassContext
             case 'get_all_msg'                  : $this->addPack_GetAllMsg();          break;
             case 'get_chain_msg'                : $this->addPack_GetChainMsg();        break;
             case 'get_discus_for_ads'           : $this->addPack_GetDiscusForAds();    break;
-            case 'rmvMsg'                       : $this->addPack_RmvMsg();             break;
-            case 'rmvDiscus'                    : $this->addPack_RmvDiscus();          break;
+            case 'rmv_msg'                      : $this->addPack_RmvMsg();             break;
+            case 'rmv_discus'                   : $this->addPack_RmvDiscus();          break;
             case ACT_CHECK_NEW_NOTIFY           : $this->addPack_CheckNewNotify();     break;
             case ACT_GET_NEW_NOTIFY             : $this->addPack_GetNewNotify();       break;
             case ACT_GET_ALL_NOTIFY             : $this->addPack_GetNewNotify();       break;

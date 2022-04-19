@@ -124,7 +124,7 @@ var CNTXT_ = {
     messages           : null,
     date               : null,
     lifetime           : null,
-    s_token            : null,
+    ws_token            : null,
     session            : null,
     float_data         : null,
     integer_data       : null,

@@ -67,9 +67,22 @@ class ClassUser
             mRESP_WTF();
         }
     }
+    function checkBanedLogin($login){
+        $error = false;
+        $login = strtolower($login);
+
+        if(strpos($login, 'admin') !== false)$error =  true;
+        if(strpos($login, 'админ') !== false)$error =  true;
+        if(strpos($login, 'логин') !== false)$error =  true;
+        if(strpos($login, 'login') !== false)$error =  true;
+        return $error;
+    }
     function ACheckUserLoginExist(){
         global $A_db;
         $login = $this->user->login;
+
+        if ($this->checkBanedLogin($login))mRESP_DATA('Логин занят', 0,1);
+
         $query = "SELECT id FROM users WHERE login='$login'";
         $result = $A_db->AGetSingleStringFromDb($query);
         if($result)mRESP_DATA('Логин занят', 0,0);
@@ -237,7 +250,7 @@ class ClassUser
 
         $old_img      = $this->user->img;
         $old_img_icon = $this->user->img_icon;
-        $s_token = $this->user->ws_token;
+        $ws_token = $this->user->ws_token;
         $auto_auth = $this->user->auto_auth;
 
 
@@ -247,7 +260,7 @@ class ClassUser
         $S->ASet('old_img', $old_img);
         $S->ASet('old_img_icon', $old_img_icon);
         $S->ASet('user_data', json_encode($this->user));
-        $S->ASet('ws_token', $s_token);
+        $S->ASet('ws_token', $ws_token);
 
 
         return LOGIN_OK;
@@ -519,9 +532,9 @@ class ClassUser
 //------------------ EXIT ------------------------------------------------
     function AExit(){
         global $S, $G;
-//        $s_token = $S->AGet('s_token');
+//        $ws_token = $S->AGet('ws_token');
         $S->clear();
-//        $S->ASet('s_token', $s_token);
+//        $S->ASet('ws_token', $ws_token);
         $G->user = new StructUser();
         $G->user_id = null;
         $this->cookie->ASet('auto_login', 0);

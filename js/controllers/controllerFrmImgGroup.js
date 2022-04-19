@@ -40,7 +40,7 @@ function tmFrmImgGroupSubMenu(obj, e) {
     frmImgGroup_tm  = setTimeout(showSubMenu, 500)
     G_tmp_obj.type        = 'imgGroup';
 
-    G_tmp_obj.file_name   = $(obj).children('[name=imgName]').data('name');
+    G_tmp_obj.filename   = $(obj).children('[name=imgName]').data('name');
     G_tmp_obj.target_id   = $(obj).attr('id');
     G_tmp_obj.confirm_msg = null;
 }

@@ -1,5 +1,5 @@
 function sendUserReviewTxt(data) {
-    data.act         = 'user_review';
+    data.act         = 'add_user_review';
     data.sender_id   = CNTXT_.user.id;
     data.owner_id = CNTXT_.owner.id;
     if(!data.sender_id){APopUpMessage('Войдите или зарегистрируйтесь',1);return;}
@@ -12,7 +12,7 @@ function ACbUserReview(data){
 }
 function userVote(star_qt) {
     data = {};
-    data.act = 'user_review';
+    data.act = 'add_user_review';
     data.star_qt = star_qt;
     data.sender_id   = CNTXT_.user.id;
     data.owner_id = CNTXT_.owner.id;

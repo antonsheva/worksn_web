@@ -127,7 +127,9 @@ function cbGetDiscus(data){
 }
 function cbSendMsg(data) {
     data = CNTXT_.target_msg;
-    discusVars.messages.push(data);
+    if(discusVars.messages)
+        discusVars.messages.push(data);
+
     clearTmpMsg();
     hideReplyToMsgForm();
     data.view = 0;
@@ -143,7 +145,7 @@ function cbSendMsg(data) {
     d.ads_id        = data.ads_id;
     d.sender_id     = data.sender_id;
     d.sender_login  = CNTXT_.user.login;
-    d.sender_avatar = CNTXT_.user.img_icon;
+    d.sender_img    = CNTXT_.user.img_icon;
     d.consumer_id   = data.consumer_id;
     d.content       = data.content;
     d.img           = data.img;
@@ -171,14 +173,14 @@ function cbRmvMsg(data) {
 function rmvMsg(id) {
     subMenuHidden();
     data = {};
-    data.act = 'rmvMsg';
+    data.act = 'rmv_msg';
     data.id = id;
     APost(data, cbRmvMsg);
 }
 function rmvDiscus(id){
     if(confirm('Удалить диалог?')) {
         data = {};
-        data.act = 'rmvDiscus';
+        data.act = 'rmv_discus';
         data.id = id;
         APost(data, cbRmvMsg);
     }

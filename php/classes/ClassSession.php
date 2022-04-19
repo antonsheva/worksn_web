@@ -32,9 +32,9 @@ class ClassSession{
     }
     function createNewSessionToken()
     {
-        if($this->AGet('s_token'))return;
+        if($this->AGet('ws_token'))return;
         $time = hrtime(true);
         $token = password_hash($time . 'dsafvgds', PASSWORD_DEFAULT);
-        $this->ASet('s_token', $token);
+        $this->ASet('ws_token', $token);
     }
 }

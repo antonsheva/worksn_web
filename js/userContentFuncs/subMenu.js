@@ -7,11 +7,11 @@ function subMenuRemove() {
           
             break;
         case 'msgChain' :
-            G_tmp_obj.act = 'rmvMsg';
+            G_tmp_obj.act         = 'rmv_msg';
             G_tmp_obj.cbFunc      = cbRmvMsg;
             break;
         case 'msgGroup' :
-            G_tmp_obj.act         = 'rmvDiscus';
+            G_tmp_obj.act         = 'rmv_discus';
             G_tmp_obj.cbFunc      = cbRmvMsg;
             G_tmp_obj.confirm_msg = 'Удалить диалог?'
             break;
@@ -23,7 +23,7 @@ function subMenuRemove() {
     data = {};
     data.act =   G_tmp_obj.act;
     data.id  =  G_tmp_obj.id
-    data.file_name = G_tmp_obj.file_name;
+    data.filename = G_tmp_obj.filename;
     if(G_tmp_obj.confirm_msg){
         G_tmp_obj.confirm_msg = null;
         if(confirm( G_tmp_obj.confirm_msg )) {

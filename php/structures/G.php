@@ -22,7 +22,7 @@ class G{
     var $tmp_img = null;
     var $tmp_img_icon = null;
     var $img_list = null;
-    var $img_file_name = null;
+    var $img_filename = null;
     var $msg_create_id = null;
     var $ads_type = null;
     var $ads_category = null;

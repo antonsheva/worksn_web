@@ -34,7 +34,7 @@ class ClassPost
     }
     function checkSessionToken(){
         global $S;
-        if($S->AGet('s_token')!= $this->AGet('s_token')){
+        if($S->AGet('ws_token')!= $this->AGet('ws_token')){
             mRESP_WTF('WTF_tk');
         }
     }

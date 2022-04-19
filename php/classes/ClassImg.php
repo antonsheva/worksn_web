@@ -269,8 +269,8 @@ class ClassImg{
         global $S, $P, $DIR, $G;
 
         if(is_null($fileName)){
-            if($P->AGet('file_name')){
-                $fileName = $this->getFileNameFromPath($P->AGet('file_name'));
+            if($P->AGet('filename')){
+                $fileName = $this->getFileNameFromPath($P->AGet('filename'));
             }else{
                 $fileName = $this->getFileNameFromPath($S->AGet('tmp_file'));
             }
@@ -298,7 +298,7 @@ class ClassImg{
         }catch (\Exception $e){
             global $LOG;
             $LOG->write(__FILE__.'func - '.__FUNCTION__.'line - '.__LINE__.'; ');
-            $LOG->write('ERROR_GET_FILE_NAME, getFileNameFromPath; ');
+            $LOG->write('ERROR_GET_FILENAME, getFileNameFromPath; ');
             mRESP_WTF( 'func - '.__FUNCTION__.'line - '.__LINE__.'; ');
         }
         return $fileName;

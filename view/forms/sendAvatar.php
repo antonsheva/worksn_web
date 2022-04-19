@@ -5,6 +5,6 @@ global $S;
     <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
     <input class="chs_file" name="userfile" type="file" onchange="CheckImgFile(this)" value=""/><br>
     <input type="hidden" name="act" value="add_img">
-    <input type="hidden" name="s_token" value="<?echo $S->AGet('s_token')?>">
-    <input type="hidden" name="latin_file_name" value="">
+    <input type="hidden" name="ws_token" value="<?echo $S->AGet('ws_token')?>">
+    <input type="hidden" name="latin_filename" value="">
 </form>

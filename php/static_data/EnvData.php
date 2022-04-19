@@ -58,40 +58,40 @@ class EnvData{
 
 
 
-        $data = new SettingPageContent() ;
-        $data->name               = 'Общие принципы';
-        $data->description        = 'https://worksn.ru/concept';
-        $this->settingPageData[0] = $data;
-
+//        $data = new SettingPageContent() ;
+//        $data->name               = 'Общие принципы';
+//        $data->description        = 'https://worksn.ru/concept';
+//        $this->settingPageData[0] = $data;
+//
         $data = new SettingPageContent() ;
         $data->name               = 'ЧАВО';
         $data->description        = 'https://worksn.ru/faq';
-        $this->settingPageData[1] = $data;
+        $this->settingPageData[0] = $data;
 
         $data = new SettingPageContent() ;
         $data->name               = 'Рекомендации по приложению';
         $data->description        = 'https://worksn.ru/recommendations';
-        $this->settingPageData[2] = $data;
+        $this->settingPageData[1] = $data;
 
         $data = new SettingPageContent() ;
         $data->name               = 'Безопасность';
         $data->description        = 'https://worksn.ru/security';
-        $this->settingPageData[3] = $data;
+        $this->settingPageData[2] = $data;
 
         $data = new SettingPageContent() ;
         $data->name               = 'Политика конфиденциальности';
         $data->description        = 'https://worksn.ru/privacy';
-        $this->settingPageData[4] = $data;
+        $this->settingPageData[3] = $data;
 
         $data = new SettingPageContent() ;
         $data->name               = 'Apk-файл для android (zip)';
         $data->description        = 'https://worksn.ru/apk/worksn.zip';
-        $this->settingPageData[5] = $data;
+        $this->settingPageData[4] = $data;
 
         $data = new SettingPageContent() ;
         $data->name               = 'О проекте';
         $data->description        = 'https://worksn.ru/about';
-        $this->settingPageData[6] = $data;
+        $this->settingPageData[5] = $data;
 
     }
 

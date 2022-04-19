@@ -9,10 +9,7 @@ class ClassController{
         $act = $P->AGet('act');
         if($act){
             $G->act = $act;
-//            if($act != 'get_token')$P->checkSessionToken();
-
             if ($G->user_id)$U->checkSessionToken($G->act);
-
             switch($act){
 
 //-------------------   Crash application -------------------------------------------------
@@ -43,7 +40,7 @@ class ClassController{
 
 //-------------------   OWNER    ----------------------------------------------------------
                 case 'set_bw_status'      :$U_review->setBwStatus();     break;
-                case 'user_review'        :$U_review->addUserReview(); break;
+                case 'add_user_review'    :$U_review->addUserReview(); break;
                 case 'get_user_reviews'   :$U_review->getUserData();     break;
 
 
@@ -77,8 +74,8 @@ class ClassController{
                 case 'get_chain_msg'       :$M->getMsgChain();     break;
                 case 'check_new_msg'       :$M->checkNewMsg();     break;
                 case 'get_discus_for_ads'  :$M->getDiscusForAds(); break;
-                case 'rmvMsg'              :$M->rmvMsg();          break;
-                case 'rmvDiscus'           :$M->rmvDiscus();       break;
+                case 'rmv_msg'             :$M->rmvMsg();          break;
+                case 'rmv_discus'           :$M->rmvDiscus();       break;
                 case 'get_user_msg'        :$M->getUserMsg();      break;
 
 //-----------------------------------------------------------------------------------------

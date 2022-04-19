@@ -145,16 +145,7 @@ function wsSendData(data){
     }catch (e){
     }
 }
-function wsSendEnableShowStatus() {
-    data = {};
-    data.act = ACT_ENABLE_SHOW_STATUS;
-    wsSendData(data);
-}
-function wsSendDisableShowStatus() {
-    data = {};
-    data.act = ACT_DISABLE_SHOW_STATUS;
-    wsSendData(data);
-}
+
 function wsSendMsgStatus(sender_id, discus_id, status_msg) {
     data = {};
     data.act         = ACT_CONFIRM_DELIVER_MSG;
