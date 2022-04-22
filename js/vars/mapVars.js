@@ -6,3 +6,9 @@ var mapVars = {
     coords   : [],
     targetCoords : null
 };
+var MIN_MAX_CRD_ = {
+    min_x : null,
+    max_x : null,
+    min_y : null,
+    max_y : null
+};

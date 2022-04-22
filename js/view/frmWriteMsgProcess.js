@@ -1,13 +1,13 @@
-tmOut = null;
 function frmWriteMsgProcess() {
-    cnt = 0;
-    $('#frmSendMsgForm .printMsgProcessFrame').css('visibility', 'visible');
+    var tmOut = null;
+    var cnt = 0;
+    $('.printMsgProcessFrame').css('visibility', 'visible');
     intrvl = setInterval(function () {
         switch (cnt & 3){
-            case 0 : $('#frmSendMsgForm .printMsgProcessFrame').text('Печатает');    break;
-            case 1 : $('#frmSendMsgForm .printMsgProcessFrame').text('Печатает.');    break;
-            case 2 : $('#frmSendMsgForm .printMsgProcessFrame').text('Печатает..');    break;
-            case 3 : $('#frmSendMsgForm .printMsgProcessFrame').text('Печатает...');    break;
+            case 0 : {$('.printMsgProcessFrame').text(STRING_PRINTS_1);    break;}
+            case 1 : {$('.printMsgProcessFrame').text(STRING_PRINTS_2);    break;}
+            case 2 : {$('.printMsgProcessFrame').text(STRING_PRINTS_3);    break;}
+            case 3 : {$('.printMsgProcessFrame').text(STRING_PRINTS_4);    break;}
         }
         cnt++;
     }, 300);
@@ -16,8 +16,7 @@ function frmWriteMsgProcess() {
         tmOut = null;
     }
     tmOut = setTimeout(function () {
-        $('#frmSendMsgForm .printMsgProcessFrame').css('visibility', 'hidden');
+        $('.printMsgProcessFrame').css('visibility', 'hidden');
         clearInterval(intrvl);
     }, 5000)
-
 }

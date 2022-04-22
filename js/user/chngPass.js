@@ -4,16 +4,16 @@ function AShowNewPass() {
 }
 function chngPass(data) {
     if(!data.password || !data.new_pass || !data.rpt_pass){
-        APopUpMessage('Введите необходимые данные', 1);
+        APopUpMessage(STRING_NEED_FIELDS, 1);
         return;
     }
 
     if(data.new_pass !== data.rpt_pass){
-        APopUpMessage('Пароли не совпадают', 1);
+        APopUpMessage(STRING_PASS_NOT_EQUAL, 1);
         return;
     }
 
-    data.act   = 'chng_password';
+    data.act   = ACT_CHNG_PASSWORD;
     data.login = G_cntxt.user.login;
 
     APost(data,ACbChngPassword)

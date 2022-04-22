@@ -15,19 +15,20 @@ function renderTmpImgBox(show){
 function renderImgMsgForm(show) {
     if(show){
         content = $('#frmSendMsgForm .content').val();
-        $('#sendImgMsg').css('display', 'block');
-        $('#sendImgMsg .content').val(content);
-        $('#sendImgMsg .content').focus();
-        $('#frmSendMsgForm .content').prop('disabled', true)
-        $('#frmSendMsgForm .bt').prop('disabled', true)
-        $('#frmSendMsgForm .gallerySign').prop('disabled', true)
+
+        $('#sendImgMsg')                 .css('display', 'block');
+        $('#sendImgMsg .content')        .val(content);
+        $('#sendImgMsg .content')        .focus();
+        $('#frmSendMsgForm .content')    .prop('disabled', true);
+        $('#frmSendMsgForm .bt')         .prop('disabled', true);
+        $('#frmSendMsgForm .gallerySign').prop('disabled', true);
     }else {
         content = $('#sendImgMsg .content').val();
-        $('#frmSendMsgForm .content').val(content);
-        $('#sendImgMsg').css('display', 'none');
 
-        $('#frmSendMsgForm .content').prop('disabled', false)
-        $('#frmSendMsgForm .bt').prop('disabled', false)
+        $('#sendImgMsg')                 .css('display', 'none');
+        $('#frmSendMsgForm .content')    .val(content);
+        $('#frmSendMsgForm .content')    .prop('disabled', false)
+        $('#frmSendMsgForm .bt')         .prop('disabled', false)
         $('#frmSendMsgForm .gallerySign').prop('disabled', false)
     }
 }

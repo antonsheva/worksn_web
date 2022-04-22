@@ -3,4 +3,4 @@ var layoutSetting = {
     expFqAddAds     : false,
     expFqRemoveAds  : false,
     expAboutProject : false
-}
+};

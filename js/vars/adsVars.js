@@ -22,5 +22,12 @@ var adsVars = {
     editFlag   : false,
     oldImgs    : null,
     oldImgsIcon: null
-}
+};
+var CLLCT_ = {
+    ads_type  : null,
+    category  : null,
+    user_id   : null,
+    remove    : 0,
+    active    : 1
+};
 

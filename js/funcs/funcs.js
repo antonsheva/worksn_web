@@ -13,16 +13,7 @@ function AConvertCyrillicToLatin(str){
     }
     return new_str_latin;
 }
-function AGetContext(data) {
-    try{
-        for(key in data){
-            CNTXT_[key] = data[key];
-        }
-    }catch (e){
 
-    }
-
-}
 function initG(){
     G_.user.id = CNTXT_.user.id;
     G_.user.login =  CNTXT_.user.login;
@@ -60,7 +51,7 @@ function urlExists(url){
     var http = new XMLHttpRequest();
     http.open('HEAD', url, false);
     http.send();
-    return http.status!=404;
+    return parseInt(http.status) !== 404;
 }
 
 

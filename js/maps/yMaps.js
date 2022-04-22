@@ -1,7 +1,5 @@
 function MapInit () {
-    // var descript, cat;
     var myPlacemark;
-
     myMap = new ymaps.Map("map", {
         center: [mapVars.center_x, mapVars.center_y], // Углич
         zoom: mapVars.zoom
@@ -102,14 +100,10 @@ function MapInit () {
         wsSendGetOnlineStatus(id);
         AClrPlasemarks(C_VIOLET);
     });
-
-
-
-
     myMap.events.add('click', function (e) {
         clearTmpPoints();
         mapVars.targetCoords = null;
-        if(G_globalMode === C_MODE_ADD_ADS){
+        if(G_globalMode === MODE_ADD_ADS){
             mapVars.targetCoords = e.get('coords');
             myPlacemark = new ymaps.Placemark(mapVars.targetCoords);
             AClrPlasemarks(C_RED);
@@ -128,8 +122,6 @@ function MapInit () {
 /////////////////////////////////////////////////////////////////////////////////////////////
     AGetMapArea();
     AGetAdsCollection();
-
-
 }
 
 function AGetMapArea() {
@@ -204,9 +196,7 @@ function AClrPlasemarks(type) {
 }
 function setCenterToMyLocation(setPoint) {
     navigator.geolocation.getCurrentPosition(function (position) {
-
         clearTmpPoints();
-
         coords = position.coords;
         mapVars.center_x = coords.latitude;
         mapVars.center_y = coords.longitude;

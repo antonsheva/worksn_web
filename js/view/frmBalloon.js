@@ -1,6 +1,6 @@
 function frmBalloon(d) {
     var rmvBt = (d.user.id===CNTXT_.user.id) ? '<div class="balloonRmvAds">Удалить</div>' : '';
-    cost =  (d.cost !== null) ? d.cost+"p." : '';
+    var cost =  (d.cost !== null) ? d.cost+"p." : '';
     var body =
         rmvBt +
         '<div id="balloonDiscusCard">'+
@@ -29,7 +29,6 @@ function frmBalloon(d) {
         '</div>';
     var content = {
         balloonContentHeader: 'cat - 1',
-        // balloonContentHeader: G_catList[d.category],
         balloonContent: body}
     return content;
 }

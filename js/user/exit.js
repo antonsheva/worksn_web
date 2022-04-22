@@ -1,7 +1,7 @@
 function AExit(exit){
-    G_globalMode = C_MODE_MAIN;
+    G_globalMode = MODE_MAIN;
     highlightTab(null);
-    var date = {act:'exit'};
+    var date = {act:ACT_EXIT};
     G_.user = null;
     APost(date,ACbExit);
     if(exit){

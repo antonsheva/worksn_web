@@ -14,7 +14,6 @@ function AScript_home() {
     if(CNTXT_.user.id){
         checkNewMsg();
     }
-
 }
 
 function AScript_my_profile() {
@@ -37,47 +36,44 @@ function scriptSetting() {
     getNewNotifies();
 }
 
-
-
-//--------------------------------------------
-
+/////////////////////////////////////////////////////
 
 function initHomePage() {
     initBwList(G_cntxt.user);
-    switch( parseInt(localStorage.getItem('mode'))){
+    switch( parseInt(localStorage.getItem(STR_MODE))){
         case MODE_MAIN :
             renderScreenAdsList();
             mapVars.noBoundsChange = false;
             break;
         case MODE_DISCUS_WITH_USER :
             renderScreenMsgGroupList();
-            getDiscusWithUser(localStorage.getItem('user_id'));
-            render.noChangeScreen = true;
+            getDiscusWithUser(localStorage.getItem(STR_USER_ID));
+            renderVars.noChangeScreen = true;
             break;
     }
 }
 function initWsMonitor() {
-    if(G_.user.id != null){
+    if(G_.user.id){
         initSocket();
     }
     setInterval(wsCheckSocketConnection, 3000);
 }
 function initCheckBoxes() {
-    if (!localStorage.getItem(SHOW_STATUS))
-        localStorage.setItem(SHOW_STATUS, 'true');
-    if (!localStorage.getItem(DELIVER_MSG))
-        localStorage.setItem(DELIVER_MSG, 'true');
-    if (!localStorage.getItem(VIEW_MSG))
-        localStorage.setItem(VIEW_MSG, 'true');
-    if (!localStorage.getItem(PRINT_TEXT))
-        localStorage.setItem(PRINT_TEXT, 'true');
+    if (!localStorage.getItem(STR_SHOW_STATUS))
+        localStorage.setItem(STR_SHOW_STATUS, 'true');
+    if (!localStorage.getItem(STR_DELIVER_MSG))
+        localStorage.setItem(STR_DELIVER_MSG, 'true');
+    if (!localStorage.getItem(STR_VIEW_MSG))
+        localStorage.setItem(STR_VIEW_MSG, 'true');
+    if (!localStorage.getItem(STR_PRINT_TEXT))
+        localStorage.setItem(STR_PRINT_TEXT, 'true');
 
 
-    if (localStorage.getItem(VIEW_MSG) === 'true')
+    if (localStorage.getItem(STR_VIEW_MSG) === 'true')
         $('.checkViewMsg').prop('checked', true);
     else  $('.checkViewMsg').prop('checked', false);
 
-    if (localStorage.getItem(PRINT_TEXT) === 'true')
+    if (localStorage.getItem(STR_PRINT_TEXT) === 'true')
         $('.checkPrintText').prop('checked', true);
     else  $('.checkPrintText').prop('checked', false);
 
@@ -86,12 +82,12 @@ function initCheckBoxes() {
 
     }
 
-    if (localStorage.getItem(DELIVER_MSG) === 'true')
+    if (localStorage.getItem(STR_DELIVER_MSG) === 'true')
         $('.checkDeliverMsg').prop('checked', true);
     else
         $('.checkDeliverMsg').prop('checked', false);
 
-    if (localStorage.getItem(SHOW_STATUS) === 'true'){
+    if (localStorage.getItem(STR_SHOW_STATUS) === 'true'){
         $('.checkShowStatus').prop('checked', true);
     }else  {
         $('.checkShowStatus').prop('checked', false);
@@ -100,51 +96,51 @@ function initCheckBoxes() {
 
 function clickCheckShowStatus() {
     if ($('.checkShowStatus').is(':checked')){
-        localStorage.setItem(SHOW_STATUS, 'true');
+        localStorage.setItem(STR_SHOW_STATUS, 'true');
 
     }else{
-        localStorage.setItem(SHOW_STATUS, 'false');
-        localStorage.setItem(DELIVER_MSG, 'false');
+        localStorage.setItem(STR_SHOW_STATUS, 'false');
+        localStorage.setItem(STR_DELIVER_MSG, 'false');
         $('.checkDeliverMsg').prop('checked', false);
-        localStorage.setItem(VIEW_MSG, 'false');
+        localStorage.setItem(STR_VIEW_MSG, 'false');
         $('.checkViewMsg').prop('checked', false);
-        localStorage.setItem(PRINT_TEXT, 'false');
+        localStorage.setItem(STR_PRINT_TEXT, 'false');
         $('.checkPrintText').prop('checked', false);
     }
 }
 function clickCheckDeliverMsg() {
     if ($('.checkDeliverMsg').is(':checked'))
-        localStorage.setItem(DELIVER_MSG, 'true');
+        localStorage.setItem(STR_DELIVER_MSG, 'true');
     else
-        localStorage.setItem(DELIVER_MSG, 'false');
+        localStorage.setItem(STR_DELIVER_MSG, 'false');
 }
 function clickCheckViewMsg() {
     if ($('.checkViewMsg').is(':checked'))
-        localStorage.setItem(VIEW_MSG, 'true');
+        localStorage.setItem(STR_VIEW_MSG, 'true');
     else
-        localStorage.setItem(VIEW_MSG, 'false');
+        localStorage.setItem(STR_VIEW_MSG, 'false');
 }
 function clickCheckPrintText() {
     if ($('.checkPrintText').is(':checked'))
-        localStorage.setItem(PRINT_TEXT, 'true');
+        localStorage.setItem(STR_PRINT_TEXT, 'true');
     else
-        localStorage.setItem(PRINT_TEXT, 'false');
+        localStorage.setItem(STR_PRINT_TEXT, 'false');
 }
 function getEnvironmentData() {
     data = {};
-    data.act = 'get_env_data';
+    data.act = ACT_GET_ENVIRONMENT_DATA;
     APost(data, cbGetEnvData);
 }
 function getSettingPageData() {
     data = {};
-    data.act = 'get_setting_data';
+    data.act = ACT_GET_SETTING_DATA;
     APost(data, cbGetSettingPageData);
 }
 function cbGetEnvData(data) {
     var d = data.context;
     $.each(d.categories, function (index, item) {
         envVars.catList[item.pos] = item.name;
-    })
+    });
     $.each(d.lifetime, function (index, item) {
         var data = {};
         data.pos  =  item.pos;
@@ -152,9 +148,9 @@ function cbGetEnvData(data) {
         data.val  =  item.val;
         envVars.lifetimeList[item.pos] = data;
 
-    })
-    envVars.catList[100] = 'Переписка с администратором';
-    envVars.catList[101] = 'Переписка с пользователем';
+    });
+    envVars.catList[100] = STRING_DISCUS_WITH_ADMIN;
+    envVars.catList[101] = STRING_DISCUS_WITH_USER;
     renderEnvironmentData(data.context);
 }
 function cbGetSettingPageData(data) {

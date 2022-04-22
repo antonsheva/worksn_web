@@ -2,14 +2,13 @@ function sendMsg(data) {
     if((!data.content)&&(!G_tmp_img))return;
     if(!data.content)data.content = ' ';
     G_.msg.content = data.content;
-
-
     delete data.bt;
-    data.act = 'add_msg';
+
+    data.act = ACT_ADD_MSG;
     data.sender_id   = G_.user.id;
     data.consumer_id = discusVars.speaker.id;
     data.ads_id      = discusVars.ads.id ;
-    if(data.ads_id == null)data.ads_id = 1;
+    if(data.ads_id === null)data.ads_id = 1;
     renderTmpImgBox(null);
 
     if(G_tmp_msg.reply_msg_id){
@@ -19,8 +18,8 @@ function sendMsg(data) {
         data.reply_sender_login = G_tmp_msg.reply_sender_login ;
         if(G_tmp_msg.reply_img)
             data.reply_img = G_tmp_msg.reply_img;
-    }
 
+    }
     APost(data, cbSendMsg);
     data = null;
 }
@@ -32,30 +31,26 @@ function chooseImg(id) {
     G_tmpImgState = C_IMG_MSG;
 }
 function getDiscusWithUser(id) {
-    data = {};
-    data.act = 'get_user_msg';
+    var data = {act:ACT_GET_USER_MSG};
     data.speaker_id = id;
     APost(data, cbGetMsgGroup);
 }
 function getMsgGroup(act) {
-    render.noChangeScreen = true;
-    G_globalMode = C_MODE_MAIN;
-    highlightTabAdsParam(null)
-    if(!CNTXT_.user.id){APopUpMessage('Войдите в учетную запись', 1);return;}
-    data = {};
-    data.act = act;
+    var data = {act: act};
+    renderVars.noChangeScreen = true;
+    G_globalMode = MODE_MAIN;
+    highlightTabAdsParam(null);
+    if(!CNTXT_.user.id){APopUpMessage(STRING_SIGN_IN_OR_UP, 1);return;}
     APost(data, cbGetMsgGroup);
 }
 function getMsgChain(discus_id) {
-    if(!CNTXT_.user.id){APopUpMessage('Войдите в учетную запись', 1);return;}
-    data = {};
-    data.act = 'get_chain_msg';
+    var data = {act: ACT_GET_CHAIN_MSG};
+    if(!CNTXT_.user.id){APopUpMessage(STRING_SIGN_IN_OR_UP, 1);return;}
     data.discus_id = discus_id;
     APost(data, cbGetDiscus);
 }
 function getDiscusForAds(ads_id, consumer_id) {
-    data = {};
-    data.act = 'get_discus_for_ads';
+    var data = {act: ACT_GET_DISCUS_FOR_ADS};
     data.ads_id = ads_id;
     data.consumer_id = consumer_id;
     data.sender_id = CNTXT_.user.id;
@@ -63,9 +58,8 @@ function getDiscusForAds(ads_id, consumer_id) {
     APost(data, cbGetDiscus);
 }
 function checkNewMsg() {
-    data = {};
-    if(!CNTXT_.user.id){APopUpMessage('Войдите в учетную запись', 1);return;}
-    data.act = 'check_new_msg';
+    var data = {act: ACT_CHECK_NEW_MSG};
+    if(!CNTXT_.user.id){APopUpMessage(STRING_SIGN_IN_OR_UP, 1);return;}
     APost(data, cbCheckNewMsg)
 }
 
@@ -73,14 +67,13 @@ function cbCheckNewMsg(data){
     enableBell(data.result)
 }
 function cbGetMsgGroup(data) {
-
     var error  = Number.parseInt(data.error);
     var result = Number.parseInt(data.result);
     var msg = data.response;
     if(data.act === ACT_GET_NEW_MSG)enableBell(result)
     if(error === 0){
         if(result === 0){
-            if(localStorage.getItem('mode') == MODE_DISCUS_WITH_USER){
+            if(parseInt(localStorage.getItem(STR_MODE)) === MODE_DISCUS_WITH_USER){
                 createDiscusWithUser();
             }else {
                 msg = data.data;
@@ -94,20 +87,18 @@ function cbGetMsgGroup(data) {
                 $.each(CNTXT_.messages, function (index, item) {
                     if (userVars.targetUsers.indexOf(item.speaker_id) === -1)
                         userVars.targetUsers.push(item.speaker_id)
-                })
+                });
                 wsCheckUsersGroupStatus();
             }
-            localStorage.setItem('mode', MODE_MAIN);
+            localStorage.setItem(STR_MODE, MODE_MAIN);
         }
     }else{
-        msg = data.data;
-        printSysMsg(msg);
+        APopUpMessage(msg,1);
     }
 }
 
 function cbGetDiscus(data){
     var error  = Number.parseInt(data.error);
-    var result = Number.parseInt(data.result);
     var msg = data.response;
     if(error === 0) {
         saveDiscusData();
@@ -115,14 +106,14 @@ function cbGetDiscus(data){
             initDiscusCard(discusVars.speaker);
             renderScreenMsgChainList();
             checkNewMsg();
-            $('#frmSendMsgForm .content').focus();
+            $('#frmSendMsgForm').find('.content').focus();
         }else {
             initDiscusCard(discusVars.owner);
             renderScreenMsgChainList();
             renderMessagesScreen(0);
         }
     }else{
-        msg = data.data;
+        APopUpMessage(msg,1);
     }
 }
 function cbSendMsg(data) {
@@ -136,7 +127,7 @@ function cbSendMsg(data) {
     try {
         addMsgToMsgFrame(data, true);
     }catch (e){}
-    $('#frmSendMsgForm .content').val('');
+    $('#frmSendMsgForm').find('.content').val('');
     $('.content').val('');
     d = {};
     d.act           = ACT_NEW_MSG;
@@ -171,16 +162,14 @@ function cbRmvMsg(data) {
 }
 
 function rmvMsg(id) {
+    var data = {act: ACT_REMOVE_MSG};
     subMenuHidden();
-    data = {};
-    data.act = 'rmv_msg';
     data.id = id;
     APost(data, cbRmvMsg);
 }
 function rmvDiscus(id){
-    if(confirm('Удалить диалог?')) {
-        data = {};
-        data.act = 'rmv_discus';
+    var data = {act: ACT_REMOVE_DISCUS};
+    if(confirm(STRING_Q_REMOVE_DISCUS)) {
         data.id = id;
         APost(data, cbRmvMsg);
     }
@@ -194,39 +183,31 @@ function wsRcvNewMsg(data){
 
     sender_id = data.sender_id;
     discus_id = data.discus_id;
-    if(data.discus_id == discusVars.discus.id){
+    if(parseInt(data.discus_id) === parseInt(discusVars.discus.id)){
         discusVars.messages.push(data);
         $('.messagesFrame').scrollTop(0);
         addMsgToMsgFrame(data, false);
-
-        if (localStorage.getItem(VIEW_MSG) === 'true')
+        if (localStorage.getItem(STR_VIEW_MSG) === 'true')
             wsSendMsgStatus(sender_id, discus_id, 2);
 
-    }
-    else {
-        if (localStorage.getItem(DELIVER_MSG) === 'true')
+    }else {
+        if (localStorage.getItem(STR_DELIVER_MSG) === 'true')
             wsSendMsgStatus(sender_id, discus_id, 1);
 
         enableBell(1);
     }
 }
-function wsRcvWriteMsgProcess() {
-    if (data.discus_id == discusVars.discus.id)
+function wsRcvWriteMsgProcess(data) {
+    if (parseInt(data.discus_id) === parseInt(discusVars.discus.id))
         frmWriteMsgProcess();
+
 }
 function wsRcvConfirmViewedMsg(data) {
-    if(!discusVars.discus){
-        return;
-    }
-    if(data.discus_id == discusVars.discus.id){
+    if(!discusVars.discus)return;
+
+    if(parseInt(data.discus_id) === parseInt(discusVars.discus.id))
         renderMsgStatus(data.status_msg);
-    }
-}
-function wsRcvConfirmDeliverMsg(data) {
-    if(data.discus_id == G_.msg.discus_id){
-        $('.messagesFrame [data-status='+0+']').attr('src','/service_img/design/birdie_1.bmp');
-        $('.messagesFrame [data-status='+0+']').attr('data-status',1);
-    }
+
 }
 
 function startWriteProcessTimer() {
@@ -247,13 +228,11 @@ function saveDiscusData() {
 }
 
 function createDiscusWithUser() {
-    data = {};
-    data.act = 'get_discus_for_ads';
+    var data = {act: ACT_GET_DISCUS_FOR_ADS};
     data.ads_id = ADS_ID_FOR_DIRECT_DISCUS;
-    data.consumer_id = localStorage.getItem('user_id');
+    data.consumer_id = localStorage.getItem(STR_USER_ID);
     data.sender_id = CNTXT_.user.id;
-
     APost(data, cbGetDiscus);
-    localStorage.setItem('mode', MODE_MAIN);
+    localStorage.setItem(STR_MODE, MODE_MAIN);
 }
 

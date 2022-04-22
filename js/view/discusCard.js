@@ -1,26 +1,20 @@
-
 function initDiscusCard(owner) {
-    var time = (discusVars.ads.create_date != null) ?
-                discusVars.ads.create_date :
-                '--:--';
-    var description = (discusVars.ads.description != null) ?
-                       discusVars.ads.description :
-                       'Что-то очень полезное';
+    var time = (discusVars.ads.create_date) ?
+                discusVars.ads.create_date : '--:--';
 
-    var category = (discusVars.ads.category != null) ?
-                    envVars.catList[discusVars.ads.category] :
-                    'Полезная услуга';
+    var description = (discusVars.ads.description) ?
+                       discusVars.ads.description : STRING_SOME_USEFUL;
+
+    var category = (discusVars.ads.category) ?
+                    envVars.catList[discusVars.ads.category] : STRING_SERVICE;
 
     var rating = owner.rating/5+'%';
 
-    var href = '/../user_profile/'+owner.id;
-    var cost = ((discusVars.ads.cost != null)&&(discusVars.ads.cost > 0)) ?
+    var href = HREF_USER_PROFILE+owner.id;
+    var cost = ((discusVars.ads.cost)&&(discusVars.ads.cost > 0)) ?
                  discusVars.ads.cost+'p.' : '';
 
-
-
-    $('#frmDiscusCard .adsData .stars .slider').css('width', rating);
-
+    $('#frmDiscusCard .slider').css('width', rating);
     $('#frmDiscusCard .login').text(owner.login);
     $('#frmDiscusCard .href').attr('href', href);
     $('#frmDiscusCard .time').text(time);
@@ -31,20 +25,20 @@ function initDiscusCard(owner) {
     $('#frmDiscusCard .profile .online').addClass(owner.id);
 
 
-    if (urlExists('https://worksn.ru/'+owner.img_icon))
+    if (urlExists(URL_BASE+owner.img_icon))
         $('#frmDiscusCard .avatar').attr('src',  owner.img_icon);
     else
-        $('#frmDiscusCard .avatar').attr('src',  '/service_img/avatars/no-avatar.jpg');
+        $('#frmDiscusCard .avatar').attr('src', URL_IMG_NO_AVATAR);
     showAdsImgsIcon();
     printMessagesChain(discusVars.messages);
     wsSendGetOnlineStatus(owner.id);
     wsSendMsgStatus(owner.id, discusVars.discus.id, 2);
 }
 function showAdsImgsIcon(){
-    $('#frmDiscusCard .loadImgs').empty();
-
     var imgsIcon = discusVars.ads.img_icon;
     var imgs     = discusVars.ads.img;
+
+    $('#frmDiscusCard .loadImgs').empty();
 
     try{
         var tmpImgs     = imgs.split(',');
@@ -52,12 +46,12 @@ function showAdsImgsIcon(){
         imgs = [];
         imgsIcon = [];
         for (i=0; i<tmpImgs.length; i++){
-            if (urlExists('https://worksn.ru/'+tmpImgs[i])){
+            if (urlExists(URL_BASE+tmpImgs[i])){
                 imgs[i] = tmpImgs[i];
             }
         }
         for (i=0; i<tmpImgsIcon.length; i++){
-            if (urlExists('https://worksn.ru/'+tmpImgsIcon[i])){
+            if (urlExists(URL_BASE+tmpImgsIcon[i])){
                 imgsIcon[i] = tmpImgsIcon[i];
             }
         }
@@ -87,5 +81,5 @@ function showAdsImgsIcon(){
         }
         cnt++;
         if(cnt>3)return false;
-    })
+    });
 }

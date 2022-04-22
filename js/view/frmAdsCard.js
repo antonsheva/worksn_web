@@ -1,16 +1,16 @@
 function frmAdsCard(ads) {
     var err = false;
+    var user = {};
+    var description, hRef;
     if(!ads.user_id)err = true;
     if(!ads.user_login)err = true;
     if (err) return '';
 
-    user = {};
     user.id    = ads.user_id;
     user.login = ads.user_login;
-    user.rating =    (ads.user_rating != null)   ? ads.user_rating : 0;
-    user.img_icon =  (ads.user_img_icon != null) ? ads.user_img_icon : 'service_img/avatars/no-avatar.jpg'
-    hRef = 'href="/../user_profile/'+user_id+'"';
-    descr = ads.description ? ads.description.substr(0,400): " ";
+    user.rating =    (ads.user_rating)   ? ads.user_rating : 0;
+    user.img_icon =  (ads.user_img_icon) ? ads.user_img_icon : URL_IMG_NO_AVATAR;
+    description = ads.description ? ads.description.substr(0,400): " ";
     costStr = '';
     if(ads.cost !== null){
         cost = parseFloat(ads.cost);
@@ -29,29 +29,22 @@ function frmAdsCard(ads) {
     switch (ads.visible_mode){
         case ADS_VISIBLE_HIDDEN_MANUAL :
             frmAdsCardStyle = ' style="background-color : beige"';
-            descr = 'Сообщение скрыто';
+            description = STRING_MSG_HIDDEN;
             break;
         case ADS_VISIBLE_HIDDEN_REMOVE :
-            // return;
             frmAdsCardStyle = ' style="background-color : burlywood"';
-            descr = 'Сообщение удалено. Скоро Вы не сможете его восстановить';
+            description = STRING_MSG_WAS_REMOVE;
             break;
         case ADS_VISIBLE_HIDDEN_FOR_TIME :
             frmAdsCardStyle = ' style="background-color : antiquewhite"';
-            descr = 'Сообщение скрыто по времени';
+            description = STRING_MSG_HIDDEN_FOR_TIME;
             break;
-
-    }
-
-    if (ads.remove == 1){
-
-    }else if(ads.active != 1){
 
     }
     var imgFrm = getAdsCardImg(ads);
     var width = imgFrm ? ' style="width: 80%;" ' : '';
     adsVars.adsList[id] = ads;
-    frm =
+    var frm =
         '<div class="frmAdsCard" id="'+id+'"'+frmAdsCardStyle+'>' +
         '   <table>' +
         '       <tr >' +
@@ -65,7 +58,7 @@ function frmAdsCard(ads) {
         '               <div style="font-weight: 600; display: inline-block; color: #818381; margin-left: 5%">'+costStr+'</div>'+
         '               <div style="font-size: 12px; display: inline-block; float: right">'+createDate+'</div>' +
         '               <div style="vertical-align: top; display: block; position: relative; overflow: hidden">'+
-        '                   <div class="description" '+width+'>'+descr+'... &nbsp; </div>' +
+        '                   <div class="description" '+width+'>'+description+'... &nbsp; </div>' +
                             imgFrm+
         '               </div>' +
         '           </td>' +
@@ -73,7 +66,6 @@ function frmAdsCard(ads) {
         '       <tr><div style="width: 80%; height: 1px; background-color: #9d9f9d; margin-left: 10%"/></tr>' +
         '   </table>' +
         '</div>';
-
     return frm;
 }
 function getAdsCardImg(ads) {

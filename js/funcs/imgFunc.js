@@ -1,24 +1,22 @@
 function removeImg(img){
     var data = {};
-    data.act = 'rm_tmp_file';
+    data.act = ACT_REMOVE_TMP_FILE;
     data.filename = img;
     APost(data, cbRemoveImg);
 }
 function changeImg(e){
     if(G_tmp_img){
         var data = {};
-        data.act = 'rm_tmp_file';
+        data.act = ACT_REMOVE_TMP_FILE;
         data.filename = G_tmp_img;
         APost(data, cbChangeImg);
     }else sendFile();
-
 }
-
 function removeTmpImgs(){
     adsVars.oldImgs     = null;
     adsVars.oldImgsIcon = null;
     data = {};
-    data.act = 'rm_tmp_file_list';
+    data.act = ACT_REMOVE_TMP_FILE_LIST;
     data.img_list = imgVars.tmpImgList;
     APost(data, cbRemoveTmpImgList);
 }
@@ -29,9 +27,6 @@ function cbChangeImg(data) {
     sendFile();
 }
 function cbRemoveImg(data) {
-
-    var img     = data.context.tmp_img;
-    var imgIcon = data.context.tmp_img_icon;
     AShowNewImg(null);
 }
 function ACbRmvGroupImg(data) {
@@ -115,9 +110,9 @@ function CheckImgFile(file){
     if(maxsize > iSize)good_size = true;
     for(i in ext_arr)if('image/'+ext_arr[i] == $(file)[0].files[0].type)good_ext = true;
     var error = '';
-    if(!good_ext) error += "Неверное расширение файла. Используйте: .jpg, .jpeg, .png, .gif файлы. ";
+    if(!good_ext) error += STRING_BAD_FILE_EXTENT;
     if(error != '')error += "\r\n";
-    if(!good_size)error += "Размер файла не должен превышать 5М";
+    if(!good_size)error += STRING_BAD_FILE_SIZE;
     if(error != ''){
         $(file).val("");
         alert(error);
@@ -142,14 +137,12 @@ function AShowNewImg(img){
 }
 function clearTmpImgBox() {
     G_tmp_img = 0;
-    $('#imgBox>.img').attr('src','/service_img/avatars/no-avatar.jpg');
+    $('#imgBox > .img').attr('src',URL_IMG_NO_AVATAR);
     $('[name=userfile]').removeAttr('disabled');
-    $("#add_avatar input[type=file]").val('');
+    $("#add_avatar").find('input[type=file]').val('');
 }
 function zoomImg(img) {
-
     if(eventDisable())return;
-
     renderTmpImgBox(1);
     AShowNewImg(img);
     G_tmpImgState = C_IMG_ZOOM;

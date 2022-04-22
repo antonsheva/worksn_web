@@ -48,5 +48,13 @@ function checkFirsEntry() {
         }, 500);
     }
 }
+function AGetContext(data) {
+    try{
+        for(key in data){
+            CNTXT_[key] = data[key];
+        }
+    }catch (e){
 
+    }
+}
 

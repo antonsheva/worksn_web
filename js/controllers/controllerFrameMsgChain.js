@@ -1,24 +1,15 @@
-
-
 $(function () {
     var frmMsgChain_tm;
     $(".messagesFrame").on("contextmenu", false);
     $('.messagesFrame').on('touchstart mousedown','.frmMsgChain',function (e) {
-        // if(eventDisable())return;
-        // e.preventDefault();
         fixEventData(this, e, e.type)
         frmMsgChain_tm  = setTimeout(showSubMenu, 500);
-
         var msgId = $(this).data('msg_id');
-
         G_tmp_obj.type        = 'msgChain';
         G_tmp_obj.id          = msgId;
         G_tmp_obj.target_id   = $(this).parent().attr('id');
         G_tmp_obj.confirm_msg = null;
         G_tmp_obj.cbFunc      = cbRmvMsg;
-
-
-        // tmFrmMsgChainSubMenu(this, e);
     });
     $('.messagesFrame').on('click touchend','.msgImg',function (e) {
         e.preventDefault();
@@ -29,45 +20,23 @@ $(function () {
     $('.messagesFrame').on('click touchend','.reply',function (e) {
         e.preventDefault();
         var scrollId = $(this).attr('data-scroll_id');
-
         scrollToView(scrollId);
     })
 
 
     $('.messagesFrame').on('touchmove','.frmMsgChain',function (e) {
-        // e.preventDefault();
         clearTimeout(frmMsgChain_tm);
-        G_event.click = C_DESABLE;
+        G_event.click = C_DISABLE;
     });
     $('.messagesFrame').on('touchmove','.msgImg',function (e) {
-        // e.preventDefault();
         clearTimeout(frmMsgChain_tm);
-        G_event.click = C_DESABLE;
+        G_event.click = C_DISABLE;
     });
     $('.messagesFrame').on('touchend click',  '.frmMsgChain',function (e) {
         e.preventDefault();
         clearTimeout(frmMsgChain_tm);
     });
 });
-
-function tmFrmMsgChainSubMenu(obj, e) {
-    if(eventDisable())return;
-    e.preventDefault();
-    fixEventData(obj, e, e.type)
-    frmMsgChain_tm  = setTimeout(showSubMenu, 500);
-
-    var msgId = $(obj).data('msg_id');
-
-    G_tmp_obj.type        = 'msgChain';
-    G_tmp_obj.id          = msgId;
-    G_tmp_obj.target_id   = $(obj).attr('id');
-    G_tmp_obj.confirm_msg = null;
-    G_tmp_obj.cbFunc      = cbRmvMsg;
-
-
-
-}
-
 function rmvSgn(obj, e) {
     objType = $(obj).attr('class');
     if(eventDisable())return;

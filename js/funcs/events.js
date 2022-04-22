@@ -1,5 +1,5 @@
 function fixEventData(obj, e, type) {
-    G_event.timer = C_ENABLE;
+    G_event.timerState = C_ENABLE;
     G_event.click = C_ENABLE;
     if(type ==='touchstart'){
         var touch = e.originalEvent.touches[0];
@@ -13,7 +13,6 @@ function fixEventData(obj, e, type) {
         topShift = parseInt( $(obj).css('height'));
         G_mouseY = parseInt($(obj).offset().top);
     }
-
 }
 var pressButton_obj = null;
 var pressButton_color = null;

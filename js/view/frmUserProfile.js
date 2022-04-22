@@ -1,10 +1,9 @@
-
 function frmUserProfile(user, setHref) {
     user_id     = (user.id !== null) ? user.id : 0;
     user_login  = (user.login !== null) ? user.login : 'login';
     user_rating = (user.rating !== null) ? user.rating : 0;
-    user_img    = (user.img_icon !== null) ? user.img_icon : "service_img/avatars/no-avatar.jpg";
-    hRef = setHref ? 'href="/../user_profile/'+user_id+'"' : '';
+    user_img    = (user.img_icon !== null) ? user.img_icon : URL_IMG_NO_AVATAR;
+    hRef = setHref ? 'href="'+HREF_USER_PROFILE+user_id+'"' : '';
     G_objCounter++;
     var stars =   frmRatingStars(user_rating);
     return ' ' +
@@ -14,9 +13,9 @@ function frmUserProfile(user, setHref) {
         '     <div style="width: 100%; text-align: center;">' +
         '         <a '+hRef+' style="display: inherit">' +
         '             <div class="menu_login">'+user_login+'</div>' +
-        '             <img class="online '+user_id+'" src="/service_img/design/online.gif" style="display: none">' +
+        '             <img class="online '+user_id+'" src="'+URL_IMG_ONLINE+'" style="display: none">' +
         '             <object data="/'+user_img+'" class="avatar">' +
-        '               <img class="avatar" src="/service_img/avatars/no-avatar.jpg">' +
+        '               <img class="avatar" src="'+URL_IMG_NO_AVATAR+'">' +
         '             </object>' +
         '         </a>' +
         '     </div>'+
@@ -24,11 +23,10 @@ function frmUserProfile(user, setHref) {
         '</div>';
 
 }
-
 function frmRatingStars(rating) {
     return'        <div class="frmRatingStars">' +
-        '                   <img src="/service_img/design/stars_bad_bgrd.gif">' +
-        '                   <img src="/service_img/design/stars_ok_bgrd.gif" style="width: '+rating/5+'%">' +
-        '                   <img src="/service_img/design/stars.gif">' +
+        '                   <img src="'+URL_IMG_STARS_BAD+'">' +
+        '                   <img src="'+URL_IMG_STARS_OK+'" style="width: '+rating/5+'%">' +
+        '                   <img src="'+URL_IMG_STARS+'">' +
         '          </div>';
 }

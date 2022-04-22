@@ -2,11 +2,8 @@ function renderEnvironmentData(data) {
     createCatLists(data.categories);
     createLifetimesList(data.lifetime);
 }
-
-
 function createCatLists(d) {
     $('#frmCategory').empty();
-
     $.each(d, function (index, item) {
         data = frmCategoryName(item.val, item.name);
         $('#frmCategory').append(data);
@@ -15,7 +12,6 @@ function createCatLists(d) {
 function createLifetimesList(d) {
     $('#frmLifetime').empty();
     $.each(d, function (index, item) {
-
         data = frmLifetime(item.val, item.name);
         $('#frmLifetime').append(data);
     });

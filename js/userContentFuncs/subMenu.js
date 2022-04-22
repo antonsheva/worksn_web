@@ -3,53 +3,47 @@ function subMenuRemove() {
     switch (G_tmp_obj.type){
         case 'adsCard'  :
             G_tmp_obj.cbFunc      = cbRemoveAds;
-            G_tmp_obj.act         = 'rmv_ads';
-          
+            G_tmp_obj.act         = ACT_ADS_REMOVE;
             break;
         case 'msgChain' :
-            G_tmp_obj.act         = 'rmv_msg';
+            G_tmp_obj.act         = ACT_REMOVE_MSG;
             G_tmp_obj.cbFunc      = cbRmvMsg;
             break;
         case 'msgGroup' :
-            G_tmp_obj.act         = 'rmv_discus';
+            G_tmp_obj.act         = ACT_REMOVE_DISCUS;
             G_tmp_obj.cbFunc      = cbRmvMsg;
-            G_tmp_obj.confirm_msg = 'Удалить диалог?'
+            G_tmp_obj.confirm_msg = STRING_Q_REMOVE_DISCUS;
             break;
         case 'imgGroup' :
-            G_tmp_obj.act         = 'rm_tmp_file';
+            G_tmp_obj.act         = ACT_REMOVE_TMP_FILE;
             G_tmp_obj.cbFunc      = ACbRmvGroupImg;
             break;
     }
-    data = {};
-    data.act =   G_tmp_obj.act;
-    data.id  =  G_tmp_obj.id
+    var data = {act: G_tmp_obj.act};
+    data.id  =  G_tmp_obj.id;
     data.filename = G_tmp_obj.filename;
     if(G_tmp_obj.confirm_msg){
         G_tmp_obj.confirm_msg = null;
-        if(confirm( G_tmp_obj.confirm_msg )) {
-
+        if(confirm( G_tmp_obj.confirm_msg ))
             APost(data, G_tmp_obj.cbFunc);
-        }
+
     }else APost(data, G_tmp_obj.cbFunc);
 }
 function subMenuRecoveryAds() {
     subMenuHidden();
-    var data = {};
-    data.act = 'recovery_ads';
+    var data = {act: ACT_ADS_RECOVERY};
     data.id = G_tmp_obj.id;
     APost(data, cbRecoveryAds);
 }
 function subMenuHiddenAds() {
     subMenuHidden();
-    var data = {};
-    data.act = 'hidden_ads';
+    var data = {act: ACT_ADS_HIDDEN};
     data.id = G_tmp_obj.id;
     APost(data, cbHiddenAds);
 }
 function subMenuShowAds() {
     subMenuHidden();
-    var data = {};
-    data.act = 'show_ads';
+    var data = {act: ACT_ADS_SHOW};
     data.id = G_tmp_obj.id;
     APost(data, cbShowAds);
 }
@@ -59,14 +53,15 @@ function subMenuEditAds() {
 }
 
 function subMenuCopy() {
-    containerid = G_tmp_obj.target_id+'_copy';
+    var containerId = G_tmp_obj.target_id+'_copy';
+    var range;
     if (document.selection) { // IE
-        var range = document.body.createTextRange();
-        range.moveToElementText(document.getElementById(containerid));
+        range = document.body.createTextRange();
+        range.moveToElementText(document.getElementById(containerId));
         range.select();
     } else if (window.getSelection) {
-        var range = document.createRange();
-        range.selectNode(document.getElementById(containerid));
+        range = document.createRange();
+        range.selectNode(document.getElementById(containerId));
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(range);
     }
@@ -84,24 +79,25 @@ function subMenuReply() {
 }
 
 function subMenuHidden() {
-    if(render.subMenuVisible){
-        G_event.click = C_DESABLE;
-        render.subMenuVisible = false;
+    if(renderVars.subMenuVisible){
+        G_event.click = C_DISABLE;
+        renderVars.subMenuVisible = false;
     }
     $('.subMenu').css('display', 'none');
 }
+function clearSubMenu() {
+    $('.subMenu').find('.copy'    ).css('display', 'none');
+    $('.subMenu').find('.reply'   ).css('display', 'none');
+    $('.subMenu').find('.remove'  ).css('display', 'none');
+    $('.subMenu').find('.recovery').css('display', 'none');
+    $('.subMenu').find('.hidden'  ).css('display', 'none');
+    $('.subMenu').find('.show'    ).css('display', 'none');
+    $('.subMenu').find('.edit'    ).css('display', 'none');
+}
 function showSubMenu(){
-    $('.subMenu .copy').css('display', 'none');
-    $('.subMenu .reply').css('display', 'none');
-    $('.subMenu .remove').css('display', 'none');
-    $('.subMenu .recovery').css('display', 'none');
-    $('.subMenu .hidden').css('display', 'none');
-    $('.subMenu .show').css('display', 'none');
-    $('.subMenu .edit').css('display', 'none');
-
-
+    clearSubMenu();
     if(G_tmp_obj.type === 'imgGroup'){
-        $('.subMenu .remove').css('display', 'block');
+        $('.subMenu').find('.remove').css('display', 'block');
     }
     if(G_tmp_obj.type === 'msgChain'){
         $('.subMenu .copy').css('display', 'block');
@@ -114,9 +110,9 @@ function showSubMenu(){
     if(G_tmp_obj.type === 'adsCard') {
         $('.subMenu .edit').css('display', 'block');
         var ads = adsVars.adsList[G_tmp_obj.target_id];
-        if (ads.remove == 1){
+        if (parseInt(ads.remove) === 1){
             $('.subMenu .recovery').css('display', 'block');
-        }else if (ads.active != 1){
+        }else if (parseInt(ads.active) !== 1){
             $('.subMenu .remove').css('display', 'block');
             $('.subMenu .show').css('display', 'block');
         }else {
@@ -125,13 +121,16 @@ function showSubMenu(){
         }
     }
 
-    if(G_event.timer===C_DESABLE)return;
-    G_event.click = C_DESABLE;
-    render.subMenuVisible = true;
-    leftShit = parseInt($('.subMenu').css('width'));
+    if(G_event.timerState === C_DISABLE)return;
+
+    G_event.click         = C_DISABLE;
+    renderVars.subMenuVisible = true;
+    var leftShit = parseInt($('.subMenu').css('width'));
     if(G_mouseX > 250)G_mouseX = (G_mouseX-leftShit-30);
     else              G_mouseX += 30;
-    $('.subMenu').css('top', G_mouseY);
-    $('.subMenu').css('left', G_mouseX);
-    $('.subMenu').css('display', 'block');
+
+    $('.subMenu').css('top', G_mouseY)
+                 .css('left', G_mouseX)
+                 .css('display', 'block');
+
 }

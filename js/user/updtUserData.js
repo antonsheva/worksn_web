@@ -1,11 +1,11 @@
 function updtUserData(data) {
     if (data.email === G_cntxt.user.email)
        delete data.email;
+
     if (G_tmp_img)
         data.img   = G_tmp_img;
 
-
-    data.act   = 'updt_user_data';
+    data.act   = ACT_UPDATE_USER_DATA;
     data.login = G_cntxt.user.login;
     if (data.email)
         if(ACheckEmail(data.email))return;

@@ -3,15 +3,15 @@ $(function () {
         if(e.which ===13){
             ALogin(GP('loginForm'));
         }
-    })
-    $('#frmSendMsgForm .content').keydown(function (e) {
+    });
+    $('#frmSendMsgForm').find('.content').keydown(function (e) {
         if(e.which ===13){
             sendMsg(GP('frmSendMsgForm'))
         }else {
             startWriteProcessTimer();
         }
     })
-    $('#sendImgMsg .content').keydown(function (e) {
+    $('#sendImgMsg').find('.content').keydown(function (e) {
         if(e.which ===13){
             sendMsg(GP('sendImgMsg'))
         }else {

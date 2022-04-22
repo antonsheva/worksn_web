@@ -1,6 +1,6 @@
 function ASendRegForm(data) {
     data.img = G_tmp_img;
-    data.act = 'reg_new_user';
+    data.act = ACT_REG_NEW_USER;
     if(!data.name)data.name = data.login;
     if(ACheckDataFields(data, 1))return;
     APost(data, ACbSendRegForm);

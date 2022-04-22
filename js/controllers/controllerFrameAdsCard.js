@@ -5,11 +5,11 @@ $(function () {
         fixEventData(this,e, e.type);
         tm = setTimeout(function (args) {
 
-            if(G_.user.id ==  owner_id)showSubMenu();
+            if(parseInt(G_.user.id) ===  parseInt(owner_id))showSubMenu();
             else {
-                if(G_event.timer===C_DESABLE)return;
+                if(G_event.timerState===C_DISABLE)return;
             }
-            G_event.click = C_DESABLE;
+            G_event.click = C_DISABLE;
             myMapCollectionViolet.removeAll();
             mapVars.coords[0] =  G_tmp_obj.coord_x;
             mapVars.coords[1] =  G_tmp_obj.coord_y;
@@ -29,17 +29,16 @@ $(function () {
         G_tmp_obj.coord_x = adsVars.adsList[G_tmp_obj.target_id].coord_x;
         G_tmp_obj.coord_y = adsVars.adsList[G_tmp_obj.target_id].coord_y;
         owner_id          = adsVars.adsList[G_tmp_obj.target_id].user_id;
-    });
-
-    $('#frmVisibleAds').on('touchmove','.frmAdsCard',function (e) {
-        clearTimeout(tm);
-        G_event.click = C_DESABLE;
     })
-    $('#frmVisibleAds').on('click touchend', '.frmAdsCard .discusFrameBody', function (e) {
+    .on('touchmove','.frmAdsCard',function (e) {
+        clearTimeout(tm);
+        G_event.click = C_DISABLE;
+    })
+    .on('click touchend', '.frmAdsCard .discusFrameBody', function (e) {
         clearTimeout(tm);
         if(eventDisable())return;
         var ads_id      = adsVars.adsList[G_tmp_obj.target_id].id;
         var consumer_id = adsVars.adsList[G_tmp_obj.target_id].user_id;
         getDiscusForAds(ads_id, consumer_id);
     });
-})
+});

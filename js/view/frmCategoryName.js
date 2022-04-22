@@ -1,6 +1,5 @@
 function frmCategoryName(number, name) {
-
-    data = '' +
+    var data = '' +
         '<div class="val" style="margin-top: 10px" data-num="'+number+'" ' +
         '                                          data-name="'+name+'">' +
         '   <div style="width: 100%; text-align: center; font-size: xx-large">'+name+'</div>' +

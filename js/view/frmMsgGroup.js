@@ -1,52 +1,56 @@
 function frmMsgGroup(msg) {
     var err = false;
+    var user = {};
+    var description;
+    var strContent;
+    var costStr = '';
+    var frm;
+    var id;
+    var createDate;
+    var img;
     if (!msg.speaker_id    )err = true;
     if (!msg.speaker_login )err = true;
 
     if (err) return;
 
-    if (!msg.speaker_rating)err = true;
-    if (!msg.speaker_img   )err = true;
-
-
-    user = {};
     user.id        = msg.speaker_id;
     user.login     = msg.speaker_login;
     user.rating    = msg.speaker_rating ? msg.speaker_rating : 0;
-    user.img_icon  = msg.speaker_img ? msg.speaker_img : "/service_img/avatars/no-avatar.jpg";
-    descr = msg.ads_description;
+    user.img_icon  = msg.speaker_img ? msg.speaker_img : URL_IMG_NO_AVATAR;
+    description = msg.ads_description;
     strContent = msg.content;
-    costStr = '';
+
     if(user.login !== null)user.login = user.login.substr(0,15);
-    if((msg.cost != null)&&(msg.cost != 0)){
+    if((msg.cost)&&(parseInt(msg.cost !== 0))){
         cost = parseFloat(msg.cost);
         if(cost > 999999){
             cost = cost/1000000;
             cost = cost.toFixed(2);
-            costStr = cost+'млн.р.';
+            costStr = cost+STRING_MLN_R;
         }else {
             costStr = cost+'р.';
         }
     }
 
     if(strContent){
-        strContent = strContent.length < 40 ? strContent :
-            strContent.substr(0,37)+'...';
-    }else strContent = ' ';
-    if(descr){
-        descr = descr.length < 40 ? descr :
-            descr.substr(0,37)+'...';
-    }else descr = ' ';
-    descr += ' '+costStr;
-    var id = 'msg_'+G_.cnt++;
-    var createDate = msg.create_date;
-
-    var img = msg.img_icon ? msg.img_icon : "/service_img/design/empty_100_100.gif";
+        strContent = strContent.length < 40 ? strContent : strContent.substr(0,37)+'...';
+    }else {
+        strContent = ' ';
+    }
+    if(description){
+        description = description.length < 40 ? description : description.substr(0,37)+'...';
+    }else {
+        description = ' ';
+    }
+    description += ' '+costStr;
+    id = 'msg_'+G_.cnt++;
+    createDate = msg.create_date;
+    img = msg.img_icon ? msg.img_icon : URL_IMG_EMPTY;
     msgVars.messages[id] = msg;
     frm =
         '<div class="frmMsgGroup" id = "'+id+'">' +
         '   <div class="bcgrnd">' +
-        '       <img src="/service_img/design/msg_group_bckgrnd.png">' +
+        '       <img src="'+URL_IMG_MSG_BACKGROUND+'">' +
         '       <div class="category_login">' +
         '           <div class="category">'+envVars.catList[msg.ads_category]+'</div>' +
         '           <div class="login">'+user.login+'</div>' +
@@ -61,7 +65,7 @@ function frmMsgGroup(msg) {
         '              </object>' +
         '           </div>' +
         '           <a class="text">'+
-                        descr+
+                        description+
         '           </a>' +
         '       </div>' +
         '       <div class="time">' +
@@ -70,9 +74,9 @@ function frmMsgGroup(msg) {
         '   </div>' +
         '   <a href="user_profile/'+user.id+'">' +
         '       <div class="avatar" >' +
-        '           <img class="online '+user.id+'" src="/service_img/design/online.gif" style="display: none">' +
+        '           <img class="online '+user.id+'" src="'+URL_IMG_ONLINE+'" style="display: none">' +
         '           <object data="/'+user.img_icon+'" class="icon">' +
-        '               <img class="icon" src="/service_img/avatars/no-avatar.jpg">' +
+        '               <img class="icon" src="'+URL_IMG_NO_AVATAR+'">' +
         '           </object>' +
         '       </div>' +
         '   </a>'+

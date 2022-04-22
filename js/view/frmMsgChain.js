@@ -1,148 +1,102 @@
-var params = {
-    color      : null,
-    align      : null,
-    status     : null,
-    statusImg  : null,
-    content    : null,
-    description: null,
-    msgImg     : null,
-    msgImgIcon : null,
-    tm         : null,
-
-    replyMsgId       : null,
-    replyMsgImg      : null,
-    replyMsgContent  : null,
-    replySenderId    : null,
-    replySenderLogin : null,
-
-    msgImgDisplay   : 'none',
-    replyDisplay    : 'none',
-    replyImgDisplay : 'none'
-
-};
-function clearMsgParams() {
-        params.color      = null;
-        params.align      = null;
-        params.status     = null;
-        params.statusImg  = null;
-        params.content    = null;
-        params.description= null;
-        params.msgImg     = null;
-        params.msgImgIcon = null;
-        params.tm         = null;
-        params.replyMsgId       = null;
-        params.replyMsgImg      = null;
-        params.replyMsgContent  = null;
-        params.replySenderId    = null;
-        params.replySenderLogin = null;
-
-        params.msgImgDisplay   = 'none';
-        params.replyDisplay    = 'none';
-        params.replyImgDisplay = 'none';
-}
-
 function frmMsgChain(msg, status) {
     var id = 'msg_'+G_.cnt++;
+    var scrollId;
+    var replyImg;
+    var frm;
     getFrameParameters(msg);
-    var scrollId = 'scroll_'+msg.id;
-    var replyImg = !params.replyMsgImg ? '' : '' +
-        '<object data="'+params.replyMsgImg+'" style="display: '+params.replyImgDisplay+'">' +
+    scrollId = 'scroll_'+msg.id;
+    replyImg = !msgParams.replyMsgImg ? '' : '' +
+        '<object data="'+msgParams.replyMsgImg+'" style="display: '+msgParams.replyImgDisplay+'">' +
              ''+
         '</object>';
-    return '' +
-        '<div id="'+id+'" style="text-align: '+params.align+'">' +
-        '   <div class="frmMsgChain" style="background-color: '+params.color+'" data-msg_id="'+msg.id+'">' +
-        '       <div class="reply"  style="display: '+params.replyDisplay+'" data-scroll_id="scroll_'+params.replyMsgId+'">' +
-        '           <a class="login" >'+params.replySenderLogin+'</a>' +
+    frm =  '' +
+        '<div id="'+id+'" style="text-align: '+msgParams.align+'">' +
+        '   <div class="frmMsgChain" style="background-color: '+msgParams.color+'" data-msg_id="'+msg.id+'">' +
+        '       <div class="reply"  style="display: '+msgParams.replyDisplay+'" data-scroll_id="scroll_'+msgParams.replyMsgId+'">' +
+        '           <a class="login" >'+msgParams.replySenderLogin+'</a>' +
         '           <div>' +
                         replyImg+
-        '               <a class="content">'+params.replyMsgContent+'</a>' +
+        '               <a class="content">'+msgParams.replyMsgContent+'</a>' +
         '           </div>' +
         '       </div>' +
         '       <div id="'+scrollId+'" class="msgNew">' +
-        '           <div class="msgImg" data-img="'+params.msgImg+'" data-img_id="'+msg.id+'" style="display: '+params.msgImgDisplay+'">' +
+        '           <div class="msgImg" data-img="'+msgParams.msgImg+'" data-img_id="'+msg.id+'" style="display: '+msgParams.msgImgDisplay+'">' +
 
-        '               <object data="'+params.msgImgIcon+'" data-img_icon_id="'+msg.id+'">' +
+        '               <object data="'+msgParams.msgImgIcon+'" data-img_icon_id="'+msg.id+'">' +
         '               </object>' +
-
-        // '                <img src="'+params.msgImgIcon+'" data-img_icon_id="'+msg.id+'">' +
-
-
         '           </div>' +
-        '           <a id="'+id+'_copy" class="content" name="'+id+'">'+params.content+'</a>' +
+        '           <a id="'+id+'_copy" class="content" name="'+id+'">'+msgParams.content+'</a>' +
         '           <div style="padding-top: 5px; display: block; position: relative">' +
-        '                <a  class="time">'+params.tm+'</a>' +
-        '                <img class="confirmMsg" src="'+params.statusImg+'" data-status="'+params.status+'">'+
+        '                <a  class="time">'+msgParams.tm+'</a>' +
+        '                <img class="confirmMsg" src="'+msgParams.statusImg+'" data-status="'+msgParams.status+'">'+
         '           </div>' +
         '       </div>' +
         '   </div>' +
         '</div>';
+    return frm;
 }
-
-
-
 
 function getFrameParameters(msg) {
     clearMsgParams();
     var view = Number.parseInt(msg.view);
-    if(!view)params.status = 0;
-    if(msg.sender_id == CNTXT_.user.id){
-        params.color  = '#d6ebdf';
-        params.align  = 'right';
-        params.status = view;
+    if(!view)msgParams.status = MSG_STATUS_NOT_DELIVER;
+    if(parseInt(msg.sender_id) === parseInt(CNTXT_.user.id)){
+        msgParams.color  = '#d6ebdf';
+        msgParams.align  = 'right';
+        msgParams.status = view;
     }else {
-        params.color  = '#cce1ee';
-        params.align  = 'left';
-        params.status = 3;
+        msgParams.color  = '#cce1ee';
+        msgParams.align  = 'left';
+        msgParams.status = MSG_STATUS_UNDEFINED;
     }
-    switch (params.status){
-        case 0 : params.statusImg = '/service_img/design/birdie_1.bmp'     ; break;
-        case 1 : params.statusImg = '/service_img/design/birdie_2.bmp'     ; break;
-        case 2 : params.statusImg = '/service_img/design/birdie_3.bmp'     ; break;
-        default: params.statusImg = '/service_img/design/empty_100_100.gif';
+    switch (msgParams.status){
+        case MSG_STATUS_NOT_DELIVER : msgParams.statusImg = URL_IMG_BIRDIE_1     ; break;
+        case MSG_STATUS_DELIVER     : msgParams.statusImg = URL_IMG_BIRDIE_2     ; break;
+        case MSG_STATUS_READ        : msgParams.statusImg = URL_IMG_BIRDIE_3     ; break;
+        default                     : msgParams.statusImg = URL_IMG_EMPTY        ;
     }
     getMsgImage(msg);
     getContentData(msg);
 
-    if (params.replyMsgId)params.replyDisplay = 'block';
-    if (params.replyMsgImg)params.replyImgDisplay = 'block';
-    if (params.msgImg)params.msgImgDisplay = 'block';
+    if (msgParams.replyMsgId)msgParams.replyDisplay = 'block';
+    if (msgParams.replyMsgImg)msgParams.replyImgDisplay = 'block';
+    if (msgParams.msgImg)msgParams.msgImgDisplay = 'block';
 }
 
 function getContentData(msg) {
      
 
-    params.tm = msg.create_date ? msg.create_date : '--:--';
-    params.content = msg.content ? msg.content : ' ';
+    msgParams.tm = msg.create_date ? msg.create_date : '--:--';
+    msgParams.content = msg.content ? msg.content : ' ';
 
     if(!msg.reply_msg_id) return;
 
 
 
-    params.replyMsgId       = Number.parseInt(msg.reply_msg_id);
-    params.replyMsgContent  = msg.reply_content;
-    params.replyMsgImg      = msg.reply_img;
-    params.replySenderId    = Number.parseInt(msg.reply_sender_id);
-    params.replySenderLogin = msg.reply_sender_login;
+    msgParams.replyMsgId       = Number.parseInt(msg.reply_msg_id);
+    msgParams.replyMsgContent  = msg.reply_content;
+    msgParams.replyMsgImg      = msg.reply_img;
+    msgParams.replySenderId    = Number.parseInt(msg.reply_sender_id);
+    msgParams.replySenderLogin = msg.reply_sender_login;
 
-    if(params.replySenderLogin === CNTXT_.user.login)
-        params.replySenderLogin = 'Вы';
+    if(msgParams.replySenderLogin === CNTXT_.user.login)
+        msgParams.replySenderLogin = STRING_YOU;
 
 
 }
 
 function getMsgImage(msg) {
-    if(!msg.img)params.msgImg = '';
-    else if (msg.img == 'was_send_post_data')
-        params.msgImg  = '/service_img/design/gallery.gif';
+    if(!msg.img)msgParams.msgImg = '';
+    else if (msg.img === STR_WAS_SEND_POST_DATA)
+        msgParams.msgImg  = URL_IMG_GALLERY;
     else
-        params.msgImg  = msg.img;
+        msgParams.msgImg  = msg.img;
 
-    if(!msg.img_icon) params.msgImgIcon  = '';
-    else if (msg.img_icon == 'was_send_post_data')
-        params.msgImgIcon = '/service_img/design/gallery.gif';
+    if(!msg.img_icon) msgParams.msgImgIcon  = '';
+    else if (msg.img_icon === STR_WAS_SEND_POST_DATA)
+        msgParams.msgImgIcon = URL_IMG_GALLERY;
     else
-        params.msgImgIcon = msg.img_icon;
+        msgParams.msgImgIcon = msg.img_icon;
 
 }
 

@@ -1,6 +1,5 @@
 function frmLifetime(val, name) {
-
-    data = '' +
+    var data = '' +
         '<div class="val" style="margin-top: 10px" data-val="'+val+'" ' +
         '                                          data-name="'+name+'">' +
         '   <div style="width: 100%; text-align: center; font-size: xx-large">'+name+'</div>' +

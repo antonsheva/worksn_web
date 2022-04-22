@@ -1,28 +1,27 @@
 function frmUserReview(data) {
-    img_tag = '';
-    remove_previous_comment = '';
+    var imgTag = '';
+    var rmvPrevComment = '';
+    var frm;
     if(data.sender_id){
-        img_tag = '<img src="/'+CNTXT_.user.img+'" style="height: 30px; width: 30px; border-radius: 5px;">';
-        remove_previous_comment = 'removePreviousComment';
+        imgTag = '<img src="/'+CNTXT_.user.img+'" style="height: 30px; width: 30px; border-radius: 5px;">';
+        rmvPrevComment = 'removePreviousComment';
     }
-    rt ='<div class="frm_user_review '+remove_previous_comment+' ">' +
+    frm ='<div class="frm_user_review '+rmvPrevComment+' ">' +
         '<div>' +
-        img_tag+
+            imgTag+
         '</div>' +
         '<table>' +
         '   <tr>' +
         '       <td class="tm">' +
-        data.create_date+
+                    data.create_date+
         '       </td>' +
         '   </tr>' +
         '   <tr>' +
         '       <td>' +
-        data.comment+
+                    data.comment+
         '       </td>' +
         '   </tr>' +
         '</table>' +
         '</div>';
-    return rt;
+    return frm;
 }
-
-

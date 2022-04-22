@@ -1,16 +1,12 @@
-//   ------   ON_CLICK FUNCS    ------------------------------------------------
+//   ------     ------------------------------------------------
 function imgBox_cls(id)             {removeImg(G_tmp_img)}
-// function imgBox_img(id)             {sendFile()}
 function regForm_bt(id)             {ASendRegForm(GP(id))}
-
 function loginForm_anonym(id, obj)  {AAnonymLogin(obj)}
-
 function chngPass_bt_visible()      {AShowNewPass()}
 function chngPass_bt_send(id)       {chngPass(GP(id))}
 function updtUserData_bt(id)        {updtUserData(GP(id))}
 function updtAutoAuthData_bt(id)    {updtAutoAuthData(GP(id))}
 function recoveryPass_bt(id)        {recoveryPass(GP(id))}
-
 function adsParameterReset_bt(id)   {adsParameterReset()}
 
 
@@ -34,8 +30,6 @@ function userProfile_avatarImg(id)  {showBigAvatar()}
 
 function userProfile_messages()     {showDiscusesWithUser()}
 
-
-
 //--------- SUB MENU ------------------------------------------------------------
 function subMenu_remove(id)         {subMenuRemove()}
 function subMenu_recovery(id)       {subMenuRecoveryAds()}
@@ -58,7 +52,7 @@ function userMenu_setting(id)       {}
 //--------- ADS PARAMETER -------------------------------------------------------
 function myButton_adsParamCategory(id, obj){choiceAdsCategory();}
 function myButton_adsParamUser(id, obj)    {choiceAdsUser();}
-function myButton_adsParamAddAds(id, obj)  {choiceEditAdsAdd(id, obj);}
+function myButton_adsParamAddAds(id, obj)  {choiceEditAdsAdd();}
 
 //--------- ADS TYPE ------------------------------------------------------------
 function adsType_btWorker()   {selAdsType(C_TYPE_WORKER, true)}
@@ -70,20 +64,18 @@ function addAdsForm_lifetime(id, obj)    {renderScreenSelectLifetime()}
 function addAdsForm_sendAds(id, obj)     {addAds(GP(id))}
 function addAdsForm_sendingImgs()        {renderTmpImgGroup(1)}
 function addAdsForm_cancel()             {cancelAddAdsMode()}
-function addAdsForm_gallerySign(id)        {chooseImg(id)}
+function addAdsForm_gallerySign(id)      {chooseImg(id)}
 
 
 
 //--------- SEARCH  -------------------------------------------------------------
 function frmSearch_bt(id, obj) {searchAds(GP(id))}
 
-//-------------------------------------------------------------------------------
+//---------- DISCUS CARD  ----------------------------------------------------------------
 function frmDiscusCard_adsData()            {renderMessagesScreen()}
 function frmDiscusCard_expand()             {renderMessagesScreen()}
 function frmDiscusCard_roll ()              {renderRollDiscus()}
 function frmDiscusCard_loadImgs ()          {showImgArray()}
-
-//-------------------------------------------------------------------------------
 
 
 //--------- layoutSetting -------------------------------------------------------

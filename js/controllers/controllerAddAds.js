@@ -1,5 +1,5 @@
 $(function () {
-    $('#addAdsForm .str2 select').on('change', function (e) {
+    $('#addAdsForm').find('.str2').on('change', 'select', function (e) {
         adsVars.hourStart = $('.tmHourStart').val();
         adsVars.hourStop  = $('.tmHourStop') .val();
         adsVars.minStart  = $('.tmMinStart') .val();
@@ -25,10 +25,9 @@ $(function () {
             $('.tmMinStop')  .css('background-color', 'azure');
         }
     });
-
-})
+});
 function cancelAddAdsMode() {
-    G_globalMode = C_MODE_MAIN;
+    G_globalMode = MODE_MAIN;
     renderScreenAdsList();
     highlightTabAdsParam();
     $('.sendingImgs ').empty();

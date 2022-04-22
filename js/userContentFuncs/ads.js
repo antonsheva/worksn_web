@@ -1,21 +1,19 @@
 function addAds(data){
-    if(!CNTXT_.user.id){APopUpMessage("Войдите в учетную запись", 1);return;}
-    data.act = 'add_ads';
+    if(!CNTXT_.user.id){APopUpMessage(STRING_SIGN_IN_OR_UP, 1);return;}
+    data.act = ACT_ADS_ADD;
     data.category = parseInt(CLLCT_.category);
-
-
     if (!parseInt(data.cost))data.cost = 0;
     if((CLLCT_.ads_type !== C_TYPE_EMPLOYER)&&(CLLCT_.ads_type !== C_TYPE_WORKER)){
         attractAttention($('#adsType'));
-        APopUpMessage('Выберите тип',1);return;
+        APopUpMessage(STRING_CHOOSE_ADS_TYPE,1);return;
     }
-    if((!data.description)||(data.description === '')){APopUpMessage('Введите текст ',1);return;}
+    if((!data.description)||(data.description === '')){APopUpMessage(STRING_ENTER_ADS_TXT,1);return;}
 
     if((data.category === 0)||(data.category === null)){
         attractAttention($('.adsParamCategory'));
-        APopUpMessage('Укажите категорию',1);return;}
+        APopUpMessage(STRING_CHOOSE_CATEGORY,1);return;}
     if (adsVars.error === ADD_ADS_ERR_TIME_RANGE){
-        APopUpMessage('Не корректно указано время', 1);
+        APopUpMessage(STRING_BAD_TIME, 1);
         return;
     }
     if((adsVars.hourStart !== null)&&(adsVars.hourStop !== null)&&(adsVars.minStart !== null)&&(adsVars.minStop !== null)){
@@ -40,22 +38,21 @@ function addAds(data){
         }
     }
 
-
-    if(mapVars.targetCoords === null){APopUpMessage('Укажите точку на карте',1);return;}
+    if(mapVars.targetCoords === null){APopUpMessage(STRING_SET_POINT_ON_MAP,1);return;}
     data.coord_x = mapVars.targetCoords[0];
     data.coord_y = mapVars.targetCoords[1];
     mapVars.coords = [null, null];
-
-    G_globalMode = C_MODE_MAIN;
-
+    G_globalMode = MODE_MAIN;
     APost(data, cbAddAds);
 }
 
 function checkAdsImgs() {
-    img = '';
-    for(key in G_tmp_imgs){
-        img +=  G_tmp_imgs[key]+',';
-    }
+    var img = '';
+    var key;
+    for(key in G_tmp_imgs)
+        if (G_tmp_imgs.hasOwnProperty(key))
+            img += G_tmp_imgs[key]+',';
+
     G_tmp_imgs = null;
     G_tmp_imgs = [];
     $('.tmpImgGroup').empty();
@@ -66,7 +63,7 @@ function checkAdsImgs() {
 function searchAds(data) {
     CLLCT_.search_phrase = data.content;
     AGetAdsCollection(null);
-    $('#frmSearch .content').val('');
+    $('#frmSearch').find('.content').val('');
 }
 function showAdsCollectionOnMap(data) {
     $.each(data, function (index, item) {
@@ -79,20 +76,18 @@ function adsParameterReset(){
     CLLCT_.remove = 0;
     CLLCT_.user_id  = null;
     CLLCT_.active = 1;
-    // AGetAdsCollection();
 }
 function rmvAds(id){
-    if(confirm('Удалить объявление?')){
+    var data = {};
+    if(confirm(STRING_Q_REMOVE_ADS)){
         G_.target_ads.id = id;
-        data = {};
-        data.act = 'rmv_ads';
+        data.act = ACT_ADS_REMOVE;
         data.id = id;
         APost(data, cbRemoveAds);
     }
 }
-
 function AGetAdsCollection(dntClr){
-    data = {act:"get_ads_collection"}
+    data = {act:ACT_GET_ADS_COLLECTION};
     data.cllct = CLLCT_;
     data.crd = MIN_MAX_CRD_;
     if(!dntClr)AClrPlasemarks();
@@ -105,10 +100,10 @@ function AReloadAdsCollection() {
         if(!G_ev_balloonopen)AGetAdsCollection(1);
         G_ev_balloonopen = null;
 
-        if(G_globalMode === C_MODE_ADD_ADS)renderScreenAddAds();
+        if(G_globalMode === MODE_ADD_ADS)renderScreenAddAds();
         else {
-            if(render.noChangeScreen){
-                render.noChangeScreen = false;
+            if(renderVars.noChangeScreen){
+                renderVars.noChangeScreen = false;
             }else {
                 renderScreenAdsList();
                 mapVars.noBoundsChange = false;
@@ -133,8 +128,8 @@ function editAds() {
     else
         CLLCT_.ads_type = C_TYPE_WORKER;
 
-    mapVars.targetCoords[1] = parseFloat(adsVars.targetAds.coord_x);
-    mapVars.targetCoords[0] = parseFloat(adsVars.targetAds.coord_y);
+    mapVars.targetCoords[0] = parseFloat(adsVars.targetAds.coord_x);
+    mapVars.targetCoords[1] = parseFloat(adsVars.targetAds.coord_y);
 
     myMapSetRedPoint(mapVars.targetCoords);
 
@@ -145,13 +140,12 @@ function editAds() {
     CLLCT_.category = adsVars.targetAds.category;
     
     $('.adsParamCategory .bt1 a').text(catName);
-    $('#addAdsForm .cost').val(adsVars.targetAds.cost);
-    $('#addAdsForm .description').val(adsVars.targetAds.description);
-
+    $('#addAdsForm').find('.cost').val(adsVars.targetAds.cost);
+    $('#addAdsForm').find('.description').val(adsVars.targetAds.description);
     setActivePeriod();
 
-    data = {};
-    data.act      = 'edit_ads';
+    var data = {};
+    data.act      = ACT_ADS_EDIT;
     data.ads_id   = adsVars.targetAds.id;
     data.img      = adsVars.targetAds.img;
     data.img_icon = adsVars.targetAds.img_icon;
@@ -169,8 +163,6 @@ function setActivePeriod() {
     $('.tmHourStop  option[value='+adsVars.hourStop +']').prop('selected', true);
     $('.tmMinStart  option[value='+adsVars.minStart +']').prop('selected', true);
     $('.tmMinStop   option[value='+adsVars.minStop  +']').prop('selected', true);
-
-
 }
 function cbEditAds(data) {
 
@@ -182,12 +174,10 @@ function cbEditAds(data) {
             if(imgVars.tmpImgList.length > 10){
                 imgList = imgVars.tmpImgList.split(',')
                 $.each(imgList, function (index, img) {
-
                     if (img)addImgToGroup(PATH_TMP_IMG+img, PATH_TMP_IMG_ICON+img);
                 })
             }
         }
-
     }else {
         APopUpMessage(data.response, 1);
     }
@@ -196,9 +186,8 @@ function cbRemoveAds(data){
     var error = Number.parseInt(data.error);
     var msg = q.response;
     if(error === 0){
-
         $('#'+G_tmp_obj.target_id).css('background-color', 'antiquewhite');
-        $('#'+G_tmp_obj.target_id+' .description').text('Сообщение удалено и не доступно другим пользователям. Через 1 день Вы не сможете его восстановить.')
+        $('#'+G_tmp_obj.target_id+' .description').text(STRING_MSG_WAS_REMOVE);
         adsVars.adsList[G_tmp_obj.target_id].remove = 1;
     }else {
          APopUpMessage(msg,1);
@@ -206,7 +195,7 @@ function cbRemoveAds(data){
 }
 
 function cbRecoveryAds(data) {
-    if (data.error == 0){
+    if (parseInt(data.error) === 0){
         $('#'+G_tmp_obj.target_id).css('background-color', 'azure');
         $('#'+G_tmp_obj.target_id+' .description').text(adsVars.adsList[G_tmp_obj.target_id].description);
         adsVars.adsList[G_tmp_obj.target_id].remove = 0;
@@ -217,7 +206,7 @@ function cbRecoveryAds(data) {
 }
 function cbHiddenAds(data) {
     $('#'+G_tmp_obj.target_id).css('background-color', 'beige');
-    $('#'+G_tmp_obj.target_id+' .description').text('Сообщение скрыто от других пользователей');
+    $('#'+G_tmp_obj.target_id+' .description').text(STRING_MSG_HIDDEN);
     adsVars.adsList[G_tmp_obj.target_id].active = 0;
 }
 function cbShowAds(data) {
@@ -235,7 +224,6 @@ function cbGetAdsCollection(data){
             data.push(item);
         }
     });
-
     showAdsCollectionOnMap(data);
     printAdsCollection(data);
     printUsersList(data, true, false);
@@ -244,6 +232,7 @@ function cbGetAdsCollection(data){
     $.each(data, function (index, item) {
         if (userVars.targetUsers.indexOf(item.user_id) === -1)
             userVars.targetUsers.push(item.user_id)
+
     });
     wsCheckUsersGroupStatus();
 }
@@ -259,8 +248,8 @@ function cbAddAds(data) {
         selAdsType(CLLCT_.ads_type, true);
         AClrPlasemarks(C_RED);
         AShowPlaceMark(CNTXT_.target_ads);
-        APopUpMessage('Объявление добавлено');
-        G_globalMode = C_MODE_MAIN;
+        APopUpMessage(STRING_ADS_WAS_ADD);
+        G_globalMode = MODE_MAIN;
         renderScreenAdsList();
     }else{
         APopUpMessage(msg,1);
@@ -268,7 +257,6 @@ function cbAddAds(data) {
 }
 
 function selAdsType(val, getAds){
-
     if(CLLCT_.ads_type === val){
         CLLCT_.ads_type = C_TYPE_ANY;
     }else{
@@ -277,10 +265,9 @@ function selAdsType(val, getAds){
     CLLCT_.remove = 0;
     CLLCT_.search_phrase = null;
     if(getAds)AGetAdsCollection();
-    if(G_globalMode === C_MODE_ADD_ADS)renderScreenAddAds();
-    else                               renderScreenAdsList();
-
-    if (G_globalMode !== C_MODE_ADD_ADS)highlightTab(null);
+    if(G_globalMode === MODE_ADD_ADS)renderScreenAddAds();
+    else                             renderScreenAdsList();
+    if (G_globalMode !== MODE_ADD_ADS)highlightTab(null);
 }
 function selCat(catNumber, getAds) {
     var catName   = envVars.catList[catNumber];
@@ -288,19 +275,18 @@ function selCat(catNumber, getAds) {
     CLLCT_.remove = 0;
     CLLCT_.search_phrase = null;
     if(getAds)AGetAdsCollection();
-    if(G_globalMode === C_MODE_ADD_ADS)renderScreenAddAds();
-    else                               renderScreenAdsList();
-    $('.adsParamCategory .bt1 h2').text(catName);//catName
-
+    if(G_globalMode === MODE_ADD_ADS)renderScreenAddAds();
+    else                             renderScreenAdsList();
+    $('.adsParamCategory .bt1 h2').text(catName);
     if(catNumber > 0)
-        $('#addAdsForm .description').text(catName);
+        $('#addAdsForm').find('.description').text(catName);
     else
-        $('#addAdsForm .description').text('');
+        $('#addAdsForm').find('.description').text('');
 
 }
 function setLifetime(val, name) {
     adsVars.lifetime = val;
-    $('#addAdsForm .str1 .lifetime').text(name)
+    $('#addAdsForm').find('.lifetime').text(name)
     renderScreenAddAds();
 }
 function selUserAds(user) {
@@ -310,6 +296,10 @@ function selUserAds(user) {
     CLLCT_.ads_type = null;
     CLLCT_.search_phrase = null;
     AGetAdsCollection();
-    showSelUserIcon(user);
+    if(user !== null)
+        $('.adsParamUser').find('h2').text(user.login);
+    else
+        $('.adsParamUser').find('h2').text(STRING_ALL_USERS);
+
 }
 

@@ -8,22 +8,19 @@ function setScreenHeights(){
         $('.windowDiscus').css('height', '76%');
     }
     $('.replyToMsgForm').css('bottom', '1px');
-
 }
 function resetActiveScreen() {
-    $('.adsParamAddAds .bt1').text('Добавить объявление');
+    $('.adsParamAddAds .bt1').text(STRING_ADD_ADS);
     $('.windowActive > div').css('display', 'none');
 }
 function renderScreenMain() {
     if(mapVars.noBoundsChange){
-        // mapVars.noBoundsChange = false;
         $('.mainScreen .windowMap').css('height', '33%');
         $('.mainScreen .windowMap').css('visibility', 'visible');
         ymaps.ready(function (e) {
             if(myMap)
                myMap.container.fitToViewport();
         });
-
     }
     $('.mainScreen .windowActive').css('display', 'block');
     $('.mainScreen .windowUserMenu').css('display', 'block');
@@ -40,12 +37,8 @@ function renderScreenDiscus() {
     mapVars.noBoundsChange = true;
     $('.mainScreen .windowUserMenu').css('display', 'block');
     $('.mainScreen .windowAdsType').css('display', 'block');
-
-    // $('.mainScreen .windowMap').css('display', 'none');
     $('.mainScreen .windowMap').css('height', '1px');
     $('.mainScreen .windowMap').css('visibility', 'hidden');
-    // myMap.container.fitToViewport();
-
     $('.mainScreen .windowAdsParameter').css('display', 'none');
     $('.mainScreen .activeLabel').css('display', 'none');
     $('.mainScreen .windowActive').css('display', 'none');
@@ -54,20 +47,18 @@ function renderScreenDiscus() {
 
 }
 function renderMessagesScreen(state) {
-    if (state)render.msgScreenState = state;
-    if(render.msgScreenState){
+    if (state)renderVars.msgScreenState = state;
+    if(renderVars.msgScreenState){
         $('.windowDiscus  .fullDescription').css('display', 'none');
         $('#frmDiscusCard .shortDescription').css('display', 'block');
         $('.windowDiscus .frmMsg').css('display', 'block');
-        // $('#frmSendMsgForm').css('display', 'block');
         $('.messagesFrame').scrollTop($('.messagesFrame')[0].scrollHeight);
-        render.msgScreenState = false;
+        renderVars.msgScreenState = false;
     }else{
         $('.windowDiscus  .fullDescription').css('display', 'block');
         $('#frmDiscusCard .shortDescription').css('display', 'none');
         $('.windowDiscus .frmMsg').css('display', 'none');
-        // $('#frmSendMsgForm').css('display', 'none');
-        render.msgScreenState = true;
+        renderVars.msgScreenState = true;
     }
 }
 function renderScreenMsgChainList(){
@@ -78,34 +69,33 @@ function renderScreenMsgChainList(){
 function renderScreenMsgGroupList() {
     renderScreenMain();
     resetActiveScreen();
-    $('.activeLabel').text('Переписки');
+    $('.activeLabel').text(STRING_DISCUSES);
     $('.mainScreen .windowActive .msg').css('display', 'block');
 }
 function renderScreenAdsList() {
     mapVars.noBoundsChange = true;
     renderScreenMain();
     resetActiveScreen();
-    $('.activeLabel').text('Объявления: подработка, свободные руки');
+    $('.activeLabel').text(STRING_ADS_WORKERS_EMPLOYERS);
     $('.mainScreen .windowActive .visibleAds').css('display', 'block');
 }
 function renderScreenSelectLifetime() {
     renderScreenMain();
     resetActiveScreen();
-    // $('.activeLabel').text('Указать время жизни объявления');
     $('.mainScreen .windowActive #frmLifetime').css('display', 'block');
 }
 function renderScreenSelectCategory() {
-    if (G_globalMode !== C_MODE_ADD_ADS)highlightTabAdsParam('.adsParamCategory');
+    if (G_globalMode !== MODE_ADD_ADS)highlightTabAdsParam('.adsParamCategory');
     renderScreenMain();
     resetActiveScreen();
-    $('.activeLabel').text('Выбор категории');
+    $('.activeLabel').text(STRING_TO_CHOOSE_CATEGORY);
     $('.mainScreen .windowActive #frmCategory').css('display', 'block');
 }
 function renderScreenUsersList(title) {
     highlightTabAdsParam('.adsParamUser');
     renderScreenMain();
     resetActiveScreen();
-    if (!title)title = 'Пользователи видимых объявлений'
+    if (!title)title = STRING_OWNERS_OF_VISIBLE_ADS;
     $('.activeLabel').text(title);
     $('.mainScreen .windowActive .users').css('display', 'block');
 }
@@ -113,8 +103,8 @@ function renderScreenAddAds() {
     highlightTabAdsParam('.adsParamAddAds');
     renderScreenMain();
     resetActiveScreen();
-    $('.adsParamAddAds .bt1').text('Опубликовать');
-    $('.activeLabel').text('Добавить объявление');
+    $('.adsParamAddAds .bt1').text(STRING_PUBLISH);
+    $('.activeLabel').text(STRING_ADD_ADS);
     $('.mainScreen .windowActive .addAds').css('display', 'block');
 }
 function renderFirstEntry() {
