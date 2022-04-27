@@ -4,7 +4,6 @@ $rt = $_SERVER['DOCUMENT_ROOT'];
 
 
 
-include 'www/php/classes/ClassError.php';
 include 'www/php/classes/ClassDb.php';
 include 'www/php/classes/ClassChpu.php';
 include 'www/php/classes/ClassController.php';
@@ -23,9 +22,14 @@ include 'www/php/classes/ClassUserReview.php';
 include 'www/php/classes/ClassMsg.php';
 include 'www/php/classes/Mobile_Detect.php';
 
-include 'www/php/defines/defines.php';
-include 'www/php/defines/notifyTypeCode.php';
-include 'www/php/defines/stringConstants.php';
+include 'www/php/defines/url.php';
+include 'www/php/defines/const.php';
+include 'www/php/defines/combinedStrings.php';
+include 'www/php/defines/stringNames.php';
+include 'www/php/defines/stringData.php';
+include 'www/php/defines/actNames.php';
+include 'www/php/defines/tableNames.php';
+include 'www/php/defines/pageNames.php';
 
 include "prvt/k.php";
 

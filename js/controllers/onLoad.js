@@ -43,7 +43,7 @@ $(function () {
     $('#frmVisibleAds .appendData').on("contextmenu", false);
 
     $('.buttonGenerateAds').on('click', function (e) {
-        var date = {act:'create_tmp_ads'};
+        var date = {act: ACT_CREATE_TMP_ADS};
         APost(date,function (data) {
         });
     });

@@ -4,9 +4,6 @@ global $A_start;
 if($A_start != 444){echo 'byby';exit();}
 class userMenu{
     function __construct(){
-        global $G;
-        $img = "../../../service_img/avatars/no-avatar.jpg";
-        if($G->user->img_icon)$img = $G->user->img_icon;
         $sel_arr = array();
         $id = 'userMenu';
         $mDetect = new \Mobile_Detect() ;
@@ -16,31 +13,31 @@ class userMenu{
         <table id="userMenu">
             <tr>
                 <td class="profile q2">
-                    <a href="/../my_profile">
-                        <img src="../../../service_img/design/profile.png"/>
+                    <a href="<?echo LINK_MY_PROFILE?>">
+                        <img src="<?echo URL_SIGN_PROFILE?>"/>
                     </a>
                 </td>
                 <td class="allMsg q2">
-                    <img src="../../../service_img/design/konvert.png"/>
+                    <img src="<?echo URL_SIGN_ENVELOPE?>"/>
                 </td>
                 <td class="newMsg q2">
-                    <img src="../../../service_img/design/no_bell.png"/>
+                    <img src="<?echo URL_SIGN_BELL_NO_ACT?>"/>
                 </td>
                 <td class="like q2">
-                    <img src="../../../service_img/design/no_choose.png"/>
+                    <img src="<?echo URL_SIGN_NO_CHOOSE?>"/>
                 </td>
                 <td class="ban q2">
-                    <img src="../../../service_img/design/no_ban.png"/>
+                    <img src="<?echo URL_SIGN_NO_BAN?>"/>
                 </td>
                 <td class="exit q2">
-                    <img src="../../../service_img/design/exit.png"/>
+                    <img src="<?echo URL_SIGN_EXIT?>"/>
                 </td>
                 <td class="setting q2">
-                    <a href="/../setting">
-                        <img src="../../../service_img/design/setting.png"/>
+                    <a href="<?echo LINK_SETTING?>">
+                        <img src="<?echo URL_SIGN_SETTING?>"/>
                     </a>
                 </td>
-                <?if ($isAndroid)include (__DIR__."/../html/linkPlayMarketSign.html");?>
+                <?if ($isAndroid)include (LINK_G_PLAY);?>
 
             </tr>
         </table>

@@ -3,12 +3,11 @@
 $DIR = new \structsPhp\Dir();
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 $A_file_log = fopen('my_log.txt', 'a');
-$A_err = new \classesPhp\ClassError();
+
 $A_db = new \classesPhp\ClassDb();
 $S = new \classesPhp\ClassSession();
 $G = new \structsPhp\G();
 
-$A_return = new \classesPhp\ClassReturn();
 $P = new \classesPhp\ClassPost();
 new \classesPhp\ClassChpu();
 

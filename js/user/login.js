@@ -18,6 +18,7 @@ function AAnonymLogin(obj) {
 
 
 function ACbLogin(data){
+    console.log(data)
     if(data.result === 1){
         location.reload();
     }

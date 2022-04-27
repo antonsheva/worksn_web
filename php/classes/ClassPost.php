@@ -1,7 +1,7 @@
 <?php
 namespace classesPhp;
 global $A_start;
-if($A_start != 444){echo 'byby';exit();}
+if($A_start != 444){echo BYBY; exit();}
 
 class ClassPost
 {
@@ -16,9 +16,9 @@ class ClassPost
                 foreach ($inputJSON as $key => $item)
                     $this->data[$key] = $item;
 
-                if(isset($inputJSON['data_group']))
-                    if (is_array($inputJSON['data_group']))
-                        foreach ($inputJSON['data_group'] as $k => $i)
+                if(isset($inputJSON[STR_DATA_GROUP]))
+                    if (is_array($inputJSON[STR_DATA_GROUP]))
+                        foreach ($inputJSON[STR_DATA_GROUP] as $k => $i)
                             $this->data[$k] = $i;
             }
         }else{
@@ -34,8 +34,8 @@ class ClassPost
     }
     function checkSessionToken(){
         global $S;
-        if($S->AGet('ws_token')!= $this->AGet('ws_token')){
-            mRESP_WTF('WTF_tk');
+        if($S->AGet(STR_WS_TOKEN)!= $this->AGet(STR_WS_TOKEN)){
+            mRESP_WTF();
         }
     }
     function AGet($variable)

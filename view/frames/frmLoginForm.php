@@ -14,15 +14,15 @@ class frmLoginForm{
             <table style="width: 100%; height: 40%; margin-top: 2%; position: relative; padding-right: <?echo $paddingRight?>%">
                 <tr style="width: 100%; height: 100%; display: block">
                     <td class="txt" style="width: <?echo $width?>; height: 100%;">
-                        <input class="login" type="text" placeholder="Логин" style="width: 100%;  font-size: larger;">
+                        <input class="login" type="text" placeholder="<?echo STRING_LOGIN?>" style="width: 100%;  font-size: larger;">
                     </td>
                     <td class="txt" style="width: <?echo $width?>; height: 100%;">
-                        <input class="password" type="password" placeholder="Пароль" style="width: 100%; font-size: larger;">
+                        <input class="password" type="password" placeholder="<?echo STRING_PASSWORD?>" style="width: 100%; font-size: larger;">
                     </td>
                     <td style="height: 100%; width: 22.5%; text-align: center">
-                        <input class="bt" type="button" value="Войти" style="width: 90%; font-size: larger;">
+                        <input class="bt" type="button" value="<?echo STRING_SIGN_IN?>" style="width: 90%; font-size: larger;">
                     </td>
-                    <?if ($isAndroid)include (__DIR__."/../html/linkPlayMarketSign.html");?>
+                    <?if ($isAndroid)include (LINK_G_PLAY);?>
 
                 </tr>
             </table>
@@ -32,17 +32,17 @@ class frmLoginForm{
                 <tr>
                     <td style="width: 25%">
                         <div style="width: 100%; text-align: center">
-                            <a class="registration" href="/registration" ><h3>Регистрация</h3></a>
+                            <a class="registration" href="/registration" ><h3><?echo STRING_REGISTRATION?></h3></a>
                         </div>
                     </td>
                     <td style="width: 48%">
                         <div style="width: 100%; text-align: center">
-                            <a class="registration" href="/recovery"  ><h3>Восстан. пароль</h3></a>
+                            <a class="registration" href="/recovery"  ><h3><?echo STRING_RECOVER_PASSWORD?></h3></a>
                         </div>
                     </td>
                     <td style="width: 25%">
                         <div style="width: 100%; text-align: center">
-                            <a class="anonym"><h3>Аноним</h3></a>
+                            <a class="anonym"><h3><?echo STRING_ANONYMOUS?></h3></a>
                         </div>
                     </td>
                 </tr>

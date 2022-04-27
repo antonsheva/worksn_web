@@ -1,11 +1,10 @@
 <?php
 namespace classesPhp;
 global $A_start;
-if($A_start != 444){echo 'byby';exit();}
+if($A_start != 444){echo BYBY; exit();}
 
 class ClassSession{
     private $data;
-
     function __construct()
     {
         $this->data = array();
@@ -25,16 +24,13 @@ class ClassSession{
     }
     function clear(){
         $this->data = array();
-
         session_unset();
         session_destroy();
-//        $_SESSION = array();
     }
     function createNewSessionToken()
     {
-        if($this->AGet('ws_token'))return;
-        $time = hrtime(true);
-        $token = password_hash($time . 'dsafvgds', PASSWORD_DEFAULT);
-        $this->ASet('ws_token', $token);
+        if($this->AGet(STR_WS_TOKEN))return;
+        $token = password_hash( WS_TOKEN_FORMULA, PASSWORD_DEFAULT);
+        $this->ASet(STR_WS_TOKEN, $token);
     }
 }

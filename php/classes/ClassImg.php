@@ -8,9 +8,7 @@ use structsPhp\G;
 
 if($A_start != 444){echo 'byby';exit();}
 
-define('INPUT_PATH_IMG',       'wksn_users_img/tmp_img/f1/');
-define('OUTPUT_PATH_IMG',      'wksn_users_img/tmp_img/');
-define('OUTPUT_PATH_IMG_ICON', 'wksn_users_img/tmp_img/icon/');
+
 
 class ClassImg{
 
@@ -20,16 +18,16 @@ class ClassImg{
     function addImg(){
         global $G, $S, $P, $DIR;
 
-        $createId = $P->AGet('create_id');
+        $createId = $P->AGet(STR_CREATE_ID);
 
-        if($S->AGet('load_imgs_qt')){
-            $S->ASet('load_imgs_qt', $S->AGet('load_imgs_qt')+1);
+        if($S->AGet(STR_LOAD_IMGS_QT)){
+            $S->ASet(STR_LOAD_IMGS_QT, $S->AGet(STR_LOAD_IMGS_QT)+1);
         }else{
-            $S->ASet('load_imgs_qt', 1);
+            $S->ASet(STR_LOAD_IMGS_QT, 1);
         }
-        if($S->AGet('load_imgs_qt') > 20){
-            $S->ASet('load_imgs_qt', 20);
-            mRESP_WTF('Вы можете добавить до 20 изображений');
+        if($S->AGet(STR_LOAD_IMGS_QT) > MAX_LOAD_IMG_QT){
+            $S->ASet(STR_LOAD_IMGS_QT, MAX_LOAD_IMG_QT);
+            mRESP_WTF(STRING_MAX_LOAD_IMG_QT);
         }
 
         if(isset($_FILES['userfile']['size'])){
@@ -38,34 +36,34 @@ class ClassImg{
             $fileName = substr($file['filename'], 0,20);
             $file_size = $_FILES['userfile']['size'];
             $ext_file = mb_strtolower($file['extension']);
-            if(!(in_array($ext_file,$ext_file_arr)))mRESP_WTF('Формат '.$ext_file.' не поддерживается. Допустимые форматы: jpg, img, jpeg, png, webp');
-            if($file_size > 1024*1024*5)mRESP_WTF('Слишком большой файл');
+            if(!(in_array($ext_file,$ext_file_arr)))mRESP_WTF(STRING_FORMAT_.$ext_file.STRING_NOT_AVAILABLE);
+            if($file_size > MAX_FILE_SIZE)mRESP_WTF(STRING_FILE_TOO_LARGE);
             $fileName  .= '_'.$G->nSecTime.'_'.$G->time;
             $fileNameFull = $fileName.'.'.$ext_file;
 
             $uploadfile = $DIR->tmp_img.'f1/'.$fileNameFull;
 
-            if (!(move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)))mRESP_WTF('Не удалось загрузить файл :-(');
+            if (!(move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)))mRESP_WTF(STRING_SOME_THROWABLE);
 
 
             if ($ext_file == 'webp'){
                 $tmp = $uploadfile;
                 $info = pathinfo($uploadfile);
                 $img = imagecreatefromwebp($uploadfile);
-                imageJpeg($img, $info['dirname'] . '/' . $info['filename'] . '.jpg', 100);
+                imageJpeg($img, $info['dirname'] . '/' . $info['filename'] . '.jpg', IMG_QUALITY);
                 imagedestroy($img);
                 unlink($tmp);
                 $fileNameFull = $fileName.'.jpg';
             }
 
-            $this->transformImg($fileNameFull, OUTPUT_PATH_IMG, 1000, 1);
-            $outFile = OUTPUT_PATH_IMG.$fileNameFull;
-            $S->ASet('tmp_file', $outFile);
+            $this->transformImg($fileNameFull, PATH_OUTPUT_IMG, MAX_IMG_SIZE, 1);
+            $outFile = PATH_OUTPUT_IMG.$fileNameFull;
+            $S->ASet(STR_TMP_IMG, $outFile);
 
-            $this->transformImg($fileNameFull, OUTPUT_PATH_IMG_ICON, 300, 0);
+            $this->transformImg($fileNameFull, PATH_OUTPUT_IMG_ICON, MAX_ICON_SIZE, 0);
 
-            $outFilePathIcon = OUTPUT_PATH_IMG_ICON.$fileNameFull;
-            $S->ASet('tmp_file_icon', $outFilePathIcon);
+            $outFilePathIcon = PATH_OUTPUT_IMG_ICON.$fileNameFull;
+            $S->ASet(STR_TMP_IMG_ICON, $outFilePathIcon);
 
             $this->removeImg($uploadfile);
 
@@ -73,24 +71,24 @@ class ClassImg{
             if (is_array($imgData)){
                 $data = new \SaveImgData();
                 $data->create_id   = $createId;
-                $data->img         = $imgData['img'];
-                $data->img_icon    = $imgData['imgIcon'];
-                $data->msg_id      = $imgData['msgId'];
-                $data->consumer_id = $imgData['consumerId'];
+                $data->img         = $imgData[STR_IMG];
+                $data->img_icon    = $imgData[STR_IMG_ICON];
+                $data->msg_id      = $imgData[STR_MSG_ID];
+                $data->consumer_id = $imgData[STR_CONSUMER_ID];
                 $G->saveImgData = $data;
                 $this->removeOldImgsFromSession();
-                mRESP_DATA('test -> ok');
+                mRESP_DATA(0);
             }
             if (!$imgData){
                 $G->tmp_img      = $outFile;
                 $G->tmp_img_icon = $outFilePathIcon;
                 $this->addLoadImgToSession($G->tmp_img);
-                mRESP_DATA('test -> null');
+                mRESP_DATA(0);
             }
             else
-                mRESP_WTF("Failed to upload file :-(");
+                mRESP_WTF(STRING_SOME_THROWABLE);
         }
-        mRESP_WTF('Ошибка загрузки файла');
+        mRESP_WTF(STRING_SOME_THROWABLE);
     }
     function copyImgsToTmpFolder($imgList, $imgListIcon){
         $filesString = '';
@@ -104,7 +102,7 @@ class ClassImg{
                     $fileName = $this->getFileNameFromPath($item);
                     try{
                         if (file_exists($item))
-                            copy($item , OUTPUT_PATH_IMG.$fileName);
+                            copy($item , PATH_OUTPUT_IMG.$fileName);
                     }catch (\Exception $e){
 
                     }
@@ -113,7 +111,7 @@ class ClassImg{
                     $fileName = $this->getFileNameFromPath($item);
                     try{
                         if (file_exists($item)){
-                            $res = copy($item , OUTPUT_PATH_IMG_ICON.$fileName);
+                            $res = copy($item , PATH_OUTPUT_IMG_ICON.$fileName);
                             if ($res){
                                 $filesString.=$fileName.',';
                                 $imgCnt++;
@@ -126,8 +124,8 @@ class ClassImg{
                 }
             }
         }
-        $data['img_list'] = $filesString;
-        $data['img_cnt']  = $imgCnt;
+        $data[STR_IMG_LIST] = $filesString;
+        $data[STR_IMG_CNT]  = $imgCnt;
         return $data;
     }
     function getUniqueFileName($fileName, $destFolder){
@@ -142,16 +140,16 @@ class ClassImg{
         $query = "SELECT id, consumer_id FROM msg WHERE create_id='$createId'";
         $res = $A_db->AGetSingleStringFromDb($query);
         if ($res){
-            $id = $res['id'];
-            $consumerId = $res['consumer_id'];
+            $id = $res[STR_ID];
+            $consumerId = $res[STR_CONSUMER_ID];
             $imgData = $this->saveImg($filePath, $DIR->msg_imgs);
-            $img     = $imgData['img'];
-            $imgIcon = $imgData['imgIcon'];
+            $img     = $imgData[STR_IMG];
+            $imgIcon = $imgData[STR_IMG_ICON];
             $query = "UPDATE msg SET img='$img',img_icon='$imgIcon', create_id=NULL WHERE id='$id'";
             $res = $A_db->AQueryToDB($query);
             if ($res){
-                $imgData['msgId'] = $id;
-                $imgData['consumerId'] = $consumerId;
+                $imgData[STR_MSG_ID] = $id;
+                $imgData[STR_CONSUMER_ID] = $consumerId;
                 return $imgData;
             }
             else {
@@ -166,15 +164,15 @@ class ClassImg{
     function addLoadImgToSession($img){
         global $S;
         $imgName = $this->getFileNameFromPath($img);
-        $tmp = $S->AGet('load_imgs');
-        $S->ASet('load_imgs', $tmp . $imgName.',');
+        $tmp = $S->AGet(STR_LOAD_IMGS);
+        $S->ASet(STR_LOAD_IMGS, $tmp . $imgName.',');
     }
     function removeOldImgsFromSession(){
         global $S, $DIR;
-        $S->ASet('tmp_file', null);
-        $S->ASet('load_imgs_qt', 0);
-        if(($S->AGet('load_imgs') != null) && ($S->AGet('load_imgs') != ' ')){
-            $arr = explode(',', $S->AGet('load_imgs'));
+        $S->ASet(STR_TMP_IMG, null);
+        $S->ASet(STR_LOAD_IMGS_QT, 0);
+        if(($S->AGet(STR_LOAD_IMGS) != null) && ($S->AGet(STR_LOAD_IMGS) != ' ')){
+            $arr = explode(',', $S->AGet(STR_LOAD_IMGS));
             foreach ($arr as $item){
                 if($item){
                     $this->removeImg($DIR->tmp_img.$item);
@@ -182,7 +180,7 @@ class ClassImg{
                 }
             }
         }
-        $S->ASet('load_imgs', '');
+        $S->ASet(STR_LOAD_IMGS, '');
     }
     function saveImg($img, $path){
         global $G;
@@ -200,12 +198,12 @@ class ClassImg{
         $tmpArr = explode('/', $img);
 
         $imgName     = $tmpArr[count($tmpArr)-1];
-        $tmpImgIcon  = OUTPUT_PATH_IMG_ICON.$imgName;
+        $tmpImgIcon  = PATH_OUTPUT_IMG_ICON.$imgName;
 
         $newName     = $newPath.$imgName;
         $newIconName = $newIconPath.$imgName;
-        $data['img']     = $newName;
-        $data['imgIcon'] = $newIconName;
+        $data[STR_IMG]     = $newName;
+        $data[STR_IMG_ICON] = $newIconName;
         if(is_writable($img))
             if(is_file($img))
                 rename($img, $newName);
@@ -232,7 +230,7 @@ class ClassImg{
         $cnt = 0;
         $errCnt = 0;
         $errFiles = '';
-        if (is_null($fileList))$fileList = $P->AGet('img_list');
+        if (is_null($fileList))$fileList = $P->AGet(STR_IMG_LIST);
         if ($fileList){
             if (strlen($fileList>10)){
                 $arr = explode(',', $fileList);
@@ -253,7 +251,7 @@ class ClassImg{
     function removeTmpFiles($fileList = null){
         global $P;
         $cnt = 0;
-        if (is_null($fileList))$fileList = $P->AGet('img_list');
+        if (is_null($fileList))$fileList = $P->AGet(STR_IMG_LIST);
         if ($fileList){
             if (strlen($fileList>10)){
                 $arr = explode(',', $fileList);
@@ -269,24 +267,24 @@ class ClassImg{
         global $S, $P, $DIR, $G;
 
         if(is_null($fileName)){
-            if($P->AGet('filename')){
-                $fileName = $this->getFileNameFromPath($P->AGet('filename'));
+            if($P->AGet(STR_FILE_NAME)){
+                $fileName = $this->getFileNameFromPath($P->AGet(STR_FILE_NAME));
             }else{
-                $fileName = $this->getFileNameFromPath($S->AGet('tmp_file'));
+                $fileName = $this->getFileNameFromPath($S->AGet(STR_TMP_IMG));
             }
         }
 
         $this->removeImg($DIR->tmp_img.$fileName);
         $this->removeImg($DIR->tmp_img_icon.$fileName);
-        $S->ASet('tmp_file', null);
+        $S->ASet(STR_TMP_IMG, null);
 
-        if($S->AGet('load_imgs_qt')){
-            $qt = $S->AGet('load_imgs_qt')-1;
-            $S->ASet('load_imgs_qt', $qt);
+        if($S->AGet(STR_LOAD_IMGS_QT)){
+            $qt = $S->AGet(STR_LOAD_IMGS_QT)-1;
+            $S->ASet(STR_LOAD_IMGS_QT, $qt);
         }
         $G->tmp_img      = $DIR->tmp_img.$fileName;
         $G->tmp_img_icon = $DIR->tmp_img_icon.$fileName;
-        if ($exit)mRESP_DATA(0, $S->AGet('load_imgs_qt'));
+        if ($exit)mRESP_DATA(0, $S->AGet(STR_LOAD_IMGS_QT));
         return;
     }
     function getFileNameFromPath($filePath){
@@ -307,8 +305,8 @@ class ClassImg{
     function transformImg($fileName, $outputPath, $imgSize, $proportion = false){
         global $LOG, $G;
         $shift_x = $shift_y = 0;
-        if(file_exists(INPUT_PATH_IMG.$fileName)){
-            $input_file = INPUT_PATH_IMG.$fileName;
+        if(file_exists(PATH_INPUT_IMG.$fileName)){
+            $input_file = PATH_INPUT_IMG.$fileName;
             list($img_w, $img_h, $file_type) = getimagesize($input_file);
             if(!$img_w || !$img_h) {
                 $LOG->write(__FILE__.'func - '.__FUNCTION__.'line - '.__LINE__);

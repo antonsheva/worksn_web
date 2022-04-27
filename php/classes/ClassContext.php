@@ -14,11 +14,7 @@ class ClassContext
     var $token = null;
     var $nullObgQt = 0;
     var $tmpArr = array();
-    function __construct()
-    {
-
-
-    }
+    function __construct(){}
     function  ACreateContext(){
         global $G, $S;
         unset($G->user->password);
@@ -30,38 +26,37 @@ class ClassContext
             case ACT_RMV_TMP_FILE_LIST          : $this->addPack_RemoveTmpFileList();  break;
             case ACT_RMV_TMP_FILE               : $this->addPack_RmvTmpFile();         break;
             case ACT_ADD_IMG                    : $this->addPack_AddImg();             break;
-            case 'edit_ads'                     : $this->addPack_EditAds();            break;
-            case 'set_bw_status'                : $this->addPack_SetBwStatus();        break;
-            case 'get_env_data'                 : $this->addPack_GetEnvData();         break;
-            case 'get_setting_data'             : $this->addPack_GetSettingPageData(); break;
-            case 'get_user_data'                : $this->addPack_GetUserData();        break;
-            case 'login'                        : $this->addPack_Login();              break;
-            case 'anonym_login'                 : $this->addPack_Anonym();             break;
-            case 'exit'                         : $this->addPack_Exit();               break;
-            case 'chng_password'                : $this->addPack_ChngPassword();       break;
-            case 'recovery_password'            : $this->addPack_RecoveryPassword();   break;
-            case  ACT_UPDATE_USER_DATA          : $this->addPack_UpdtUserData();       break;
-            case  ACT_UPDATE_AUTO_AUTH_DATA     : $this->addPack_UpdtAutoAuthData();   break;
-            case 'reg_new_user'                 : $this->addPack_RegNewUser();         break;
-            case 'add_user_review'              : $this->addPack_UserReview();         break;
-            case 'get_user_reviews'             : $this->addPack_GetUserReviews();     break;
-
-            case 'get_ads_collection'           : $this->addPack_GetAdsCollection();   break;
-            case 'add_ads'                      : $this->addPack_AddAds();             break;
-            case 'update_ads'                   : $this->addPack_UpdateAds();          break;
-            case 'hidden_ads'                   : $this->addPack_HiddenAds();          break;
-            case 'show_ads'                     : $this->addPack_ShowAds();            break;
-            case 'rmv_ads'                      : $this->addPack_RmvAds();             break;
-            case 'recovery_ads'                 : $this->addPack_RmvAds();             break;
-            case 'add_msg'                      : $this->addPack_AddMsg();             break;
-            case 'check_new_msg'                : $this->addPack_CheckNewMsg();        break;
-            case 'get_user_msg'                 : $this->addPack_GetUserMsg();          break;
-            case 'get_new_msg'                  : $this->addPack_GetNewMsg();          break;
-            case 'get_all_msg'                  : $this->addPack_GetAllMsg();          break;
-            case 'get_chain_msg'                : $this->addPack_GetChainMsg();        break;
-            case 'get_discus_for_ads'           : $this->addPack_GetDiscusForAds();    break;
-            case 'rmv_msg'                      : $this->addPack_RmvMsg();             break;
-            case 'rmv_discus'                   : $this->addPack_RmvDiscus();          break;
+            case ACT_ADS_EDIT                   : $this->addPack_EditAds();            break;
+            case ACT_SET_BW_STATUS              : $this->addPack_SetBwStatus();        break;
+            case ACT_GET_ENVIRONMENT_DATA       : $this->addPack_GetEnvData();         break;
+            case ACT_GET_SETTING_DATA           : $this->addPack_GetSettingPageData(); break;
+            case ACT_GET_USER_DATA              : $this->addPack_GetUserData();        break;
+            case ACT_LOGIN                      : $this->addPack_Login();              break;
+            case ACT_ANONYMOUS_LOGIN            : $this->addPack_Anonym();             break;
+            case ACT_EXIT                       : $this->addPack_Exit();               break;
+            case ACT_CHNG_PASSWORD              : $this->addPack_ChngPassword();       break;
+            case ACT_RECOVERY_PASSWORD          : $this->addPack_RecoveryPassword();   break;
+            case ACT_UPDATE_USER_DATA           : $this->addPack_UpdtUserData();       break;
+            case ACT_UPDATE_AUTO_AUTH_DATA      : $this->addPack_UpdtAutoAuthData();   break;
+            case ACT_REG_NEW_USER               : $this->addPack_RegNewUser();         break;
+            case ACT_ADD_USER_REVIEW            : $this->addPack_UserReview();         break;
+            case ACT_GET_USER_REVIEWS           : $this->addPack_GetUserReviews();     break;
+            case ACT_GET_ADS_COLLECTION         : $this->addPack_GetAdsCollection();   break;
+            case ACT_ADS_ADD                    : $this->addPack_AddAds();             break;
+            case ACT_ADS_UPDATE                 : $this->addPack_UpdateAds();          break;
+            case ACT_ADS_HIDDEN                 : $this->addPack_HiddenAds();          break;
+            case ACT_ADS_SHOW                   : $this->addPack_ShowAds();            break;
+            case ACT_ADS_REMOVE                 : $this->addPack_RmvAds();             break;
+            case ACT_ADS_RECOVERY               : $this->addPack_RmvAds();             break;
+            case ACT_ADD_MSG                    : $this->addPack_AddMsg();             break;
+            case ACT_CHECK_NEW_MSG              : $this->addPack_CheckNewMsg();        break;
+            case ACT_GET_USER_MSG               : $this->addPack_GetUserMsg();         break;
+            case ACT_GET_NEW_MSG                : $this->addPack_GetNewMsg();          break;
+            case ACT_GET_ALL_MSG                : $this->addPack_GetAllMsg();          break;
+            case ACT_GET_CHAIN_MSG              : $this->addPack_GetChainMsg();        break;
+            case ACT_GET_DISCUS_FOR_ADS         : $this->addPack_GetDiscusForAds();    break;
+            case ACT_REMOVE_MSG                 : $this->addPack_RmvMsg();             break;
+            case ACT_REMOVE_DISCUS              : $this->addPack_RmvDiscus();          break;
             case ACT_CHECK_NEW_NOTIFY           : $this->addPack_CheckNewNotify();     break;
             case ACT_GET_NEW_NOTIFY             : $this->addPack_GetNewNotify();       break;
             case ACT_GET_ALL_NOTIFY             : $this->addPack_GetNewNotify();       break;
@@ -70,7 +65,6 @@ class ClassContext
             default :$this->addPack_Default();
         }
         $this->addServiceData();
-
     }
 
     function clearObject($obj){
@@ -107,7 +101,7 @@ class ClassContext
     }
     function addPack_EditAds(){
         global $G;
-        $this->data['img_list'] = $G->img_list;
+        $this->data[STR_IMG_LIST] = $G->img_list;
     }
     function addPack_RemoveTmpFileList(){
       return;
@@ -115,64 +109,61 @@ class ClassContext
     }
     function addPack_HiddenAds(){
         global $G;
-        $this->data['target_ads'] = $G->targetAds;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
     }
     function addPack_ShowAds(){
         global $G;
-        $this->data['target_ads'] = $G->targetAds;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
     }
     function addPack_UpdateAds(){
         global $G;
-        $this->data['target_ads'] = $G->targetAds;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
     }
     function addPack_CheckNewNotify(){
         return;
     }
     function addPack_GetNewNotify(){
         global $G;
-        $this->data['notifies'] = $G->notifies;
+        $this->data[STR_NOTIFIES] = $G->notifies;
         return;
     }
     function addPack_Login(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_Anonym(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_GetBanUsers(){
         global $G;
-        $this->data['users_list']  = $G->usersList;
+        $this->data[STR_USERS_LIST]  = $G->usersList;
     }
     function addPack_GetLikeUsers(){
         global $G;
-        $this->data['users_list']  = $G->usersList;
+        $this->data[STR_USERS_LIST]  = $G->usersList;
     }
     function addPack_SetBwStatus(){
         global $G;
-        $this->data['ban_list']  = $G->user->ban_list;
-        $this->data['like_list'] = $G->user->like_list;
+        $this->data[STR_BAN_LIST]  = $G->user->ban_list;
+        $this->data[STR_LIKE_LIST] = $G->user->like_list;
     }
     function addPack_GetEnvData(){
         global $G;
         $envData = new EnvData();
-        $this->data['user']              = $G->user;
-//        $this->data['cat_list']          = $G->catList;
-//        $this->data['lifetime_list']     = $G->lifetimeList;
-//        $this->data['lifetime_names']    = $G->lifetimeNames;
-        $this->data['have_sys_notify']   = $G->haveSysNotify;
-        $this->data['setting_page_data'] = $envData->getSettingPageData();
-        $this->data['lifetime']          = $envData->getLifetime();
-        $this->data['categories']        = $envData->getCategories();
+        $this->data[STR_USER]              = $G->user;
+        $this->data[STR_HAVE_SYS_NOTIFY]   = $G->haveSysNotify;
+        $this->data[STR_SETTING_PAGE_DATA] = $envData->getSettingPageData();
+        $this->data[STR_LIFETIME]          = $envData->getLifetime();
+        $this->data[STR_CATEGORIES]        = $envData->getCategories();
     }
     function addPack_GetSettingPageData(){
         $envData = new EnvData();
-        $this->data['setting_page_data'] = $envData->getSettingPageData();
+        $this->data[STR_SETTING_PAGE_DATA] = $envData->getSettingPageData();
     }
     function addPack_GetUserData(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_FullPage(){
 
@@ -185,92 +176,92 @@ class ClassContext
     }
     function addPack_UpdtUserData(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_UpdtAutoAuthData(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_RegNewUser(){
         global $G;
-        $this->data['user']           = $G->user;
+        $this->data[STR_USER]           = $G->user;
     }
     function addPack_RecoveryPassword(){
         return;
     }
     function addPack_UserReview(){
         global $G;
-        $this->data['review'] = $G->userReview;
-        $this->data['float_data'] = $G->owner->rating;
-        $this->data['integer_data'] = $G->owner->vote_qt;
+        $this->data[STR_USER] = $G->userReview;
+        $this->data[STR_FLOAT_DATA] = $G->owner->rating;
+        $this->data[STR_INTEGER_DATA] = $G->owner->vote_qt;
     }
     function addPack_GetUserReviews(){
         global $G;
-        $this->data['review'] = $G->selfReview;
-        $this->data['user_reviews'] = $G->userReviews;
-        $this->data['owner'] = $G->owner;
+        $this->data[STR_REVIEW] = $G->selfReview;
+        $this->data[STR_USER_REVIEWS] = $G->userReviews;
+        $this->data[STR_OWNER] = $G->owner;
     }
     function addPack_RmvTmpFile(){
         global $G;
-        $this->data['tmp_img']      = $G->tmp_img;
-        $this->data['tmp_img_icon'] = $G->tmp_img_icon;
+        $this->data[STR_TMP_IMG]      = $G->tmp_img;
+        $this->data[STR_TMP_IMG_ICON] = $G->tmp_img_icon;
     }
     function addPack_AddImg(){
         global $G, $P;
-        $this->data['create_id']      = $P->AGet('create_id');
-        $this->data['tmp_img']        = $G->tmp_img;
-        $this->data['tmp_img_icon']   = $G->tmp_img_icon;
-        $this->data['save_img_data']  = $G->saveImgData;
+        $this->data[STR_CREATE_ID]      = $P->AGet(STR_CREATE_ID);
+        $this->data[STR_TMP_IMG]        = $G->tmp_img;
+        $this->data[STR_TMP_IMG_ICON]   = $G->tmp_img_icon;
+        $this->data[STR_SAVE_IMG_DATA]  = $G->saveImgData;
     }
     function addPack_GetAdsCollection(){
         global $G;
-        $this->data['ads_collection'] = $G->adsCollection;         //---------------------------------------------------
+        $this->data[STR_ADS_COLLECTION] = $G->adsCollection;         //---------------------------------------------------
     }
     function addPack_AddAds(){
         global $G;
-        $this->data['target_ads'] = $G->targetAds;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
     }
     function addPack_RmvAds(){
         return;
     }
     function addPack_RecoveryAds(){
         global $G;
-        $this->data['target_ads'] = $G->targetAds;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
     }
     function addPack_AddMsg(){
         global $G;
-        $this->data['target_msg'] = $G->targetMsg;
+        $this->data[STR_TARGET_MSG] = $G->targetMsg;
     }
     function addPack_GetUserMsg(){
         global $G;
-        $this->data['messages'] = $G->messages;   //$G->messages;         //---------------------------------------------------
+        $this->data[STR_MESSAGES] = $G->messages;   //$G->messages;         //---------------------------------------------------
     }
     function addPack_GetNewMsg(){
         global $G;
-        $this->data['messages'] = $G->messages;   //$G->messages;         //---------------------------------------------------
+        $this->data[STR_MESSAGES] = $G->messages;   //$G->messages;         //---------------------------------------------------
     }
     function addPack_GetAllMsg(){
         global $G;
-        $this->data['messages'] = $G->messages;   //$G->messages;         //---------------------------------------------------
+        $this->data[STR_MESSAGES] = $G->messages;   //$G->messages;         //---------------------------------------------------
     }
     function addPack_GetChainMsg(){
         global $G;
-        $this->data['owner']      = $G->owner;
-        $this->data['speaker']    = $G->speaker;
-        $this->data['target_ads'] = $G->targetAds;
-        $this->data['messages']   = $G->messages;   //$G->messages;         //---------------------------------------------------
-        $this->data['discus']     = $G->discus;
+        $this->data[STR_OWNER]      = $G->owner;
+        $this->data[STR_SPEAKER]    = $G->speaker;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
+        $this->data[STR_MESSAGES]   = $G->messages;   //$G->messages;         //---------------------------------------------------
+        $this->data[STR_DISCUS]     = $G->discus;
     }
     function addPack_CheckNewMsg(){
-        $this->data['test_data'] = 1;
+        $this->data[STR_TEST_DATA] = 1;
     }
     function addPack_GetDiscusForAds(){
         global $G;
-        $this->data['owner']      = $G->owner;
-        $this->data['speaker']    = $G->speaker;
-        $this->data['target_ads'] = $G->targetAds;
-        $this->data['messages']   = $G->messages;         //---------------------------------------------------
-        $this->data['discus']     = $G->discus;
+        $this->data[STR_OWNER]      = $G->owner;
+        $this->data[STR_SPEAKER]    = $G->speaker;
+        $this->data[STR_TARGET_ADS] = $G->targetAds;
+        $this->data[STR_MESSAGES]   = $G->messages;         //---------------------------------------------------
+        $this->data[STR_DISCUS]     = $G->discus;
     }
     function addPack_RmvMsg(){
         return;
@@ -281,8 +272,8 @@ class ClassContext
     function addPack_Default(){
         global $G;
 
-        if(($G->user->img == null)||($G->user->img == ""))$G->user->img = "../../../service_img/avatars/no-avatar.jpg";;
-        $this->data['user']           = $G->user;
+        if(($G->user->img == null)||($G->user->img == ""))$G->user->img = "../../../service_img/avatars/no-avatar.jpg";
+        $this->data[STR_USER]           = $G->user;
         $this->data['owner']          = $G->owner;
         $this->data['ads_type']       = $G->ads_type;
         $this->data['ads_category']   = $G->ads_category;

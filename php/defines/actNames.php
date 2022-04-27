@@ -1,7 +1,9 @@
+<?php
 const  ACT_CONFIRM_DELIVER_MSG   =     "deliver_msg"           ;
 const  ACT_CHECK_NEW_MSG         =     "check_new_msg"         ;
 const  ACT_GET_ONLINE_STATUS     =     "get_online_status"     ;
 const  ACT_EXIT                  =     "exit"                  ;
+const  ACT_EXIT_ANDROID          =     "exit_android"          ;
 const  ACT_CLOSE_ACTIVITY        =     "enable_notify"         ;
 const  ACT_OPEN_ACTIVITY         =     "disable_notify"        ;
 const  ACT_WAKEUP                =     "wakeup"                ;
@@ -51,6 +53,7 @@ const  ACT_ADS_HIDDEN            =     "hidden_ads"            ;
 const  ACT_ADS_SHOW              =     "show_ads"              ;
 const  ACT_ADS_EDIT              =     "edit_ads"              ;
 const  ACT_ADS_ADD               =     "add_ads"               ;
+const  ACT_ADS_UPDATE            =     "update_ads"            ;
 const  ACT_ADD_IMG               =     "add_img"               ;
 const  ACT_REMOVE_TMP_FILE       =     "rm_tmp_file"           ;
 const  ACT_REMOVE_TMP_FILE_LIST  =     "rm_tmp_file_list"      ;
@@ -61,5 +64,10 @@ const  ACT_REMOVE_DISCUS         =     "rmv_discus"            ;
 const  ACT_SEND_LOG_SERVICE      =     "send_log_service"      ;
 const  ACT_GET_TOKEN             =     "get_token"             ;
 const  ACT_GET_SETTING_DATA      =     "get_setting_data"      ;
-const  ACT_CREATE_TMP_ADS        =     "create_tmp_ads"        ;
 
+const  ACT_RMV_TMP_FILE_LIST     =     "rm_tmp_file_list"      ;
+const  ACT_RMV_FILE_LIST         =     "rm_file_list"          ;
+const  ACT_RMV_TMP_FILE          =     "rm_tmp_file"           ;
+const  ACT_SEND_LOG_ACTIVITY     =     "send_log_activity"     ;
+const  ACT_SEND_EXCEPTION        =     "send_exception"        ;
+const  ACT_CREATE_TMP_ADS        =     "create_tmp_ads"        ;

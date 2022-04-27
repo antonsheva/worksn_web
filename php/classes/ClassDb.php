@@ -9,7 +9,6 @@ class ClassDb{
     function __construct(){
         $this->db = new \mysqli(DB_HOST,DB_USER, DB_PASS,DB_NAME,DB_PORT);
         $this->db->set_charset('utf8mb4'); //utf8
-
         $this->db->query('SET NAMES utf8mb4');
     }
     function AQueryToDB($query){
@@ -28,7 +27,7 @@ class ClassDb{
         return $row;
     }
     function AGetMultiplyDataFromDb($query, $limit=0, $qt=0){
-        global $A_err;
+        global $LOG;
         $err = new \structsPhp\StructError();
         if($qt)$query .= " LIMIT ".$limit.', '.$qt;
         $query = str_replace('SELECT','SELECT SQL_CALC_FOUND_ROWS',$query);
@@ -41,7 +40,7 @@ class ClassDb{
         }else{
             $err->error = ERR_DB_QUERY;
             $err->data = $this->db->error;
-            $A_err->AError($err);
+            $LOG->write($err);
         }
     }
     function ADbResultToArray($result)
@@ -78,11 +77,11 @@ class ClassDb{
         $query .= ' WHERE id='."'$id'";
         $res = $this->AQueryToDB($query);
         $ret = array();
-        $ret['id'] = null;
-        $ret['data'] = array();
+        $ret[STR_ID] = null;
+        $ret[STR_DATA] = array();
         if($res){
-            $ret['id']   = $id;
-            $ret['data'] = $res;
+            $ret[STR_ID]   = $id;
+            $ret[STR_DATA] = $res;
         }
         return $ret;
     }
@@ -130,12 +129,12 @@ class ClassDb{
         $query .= ' WHERE id='."'$id'";
         $res = $this->AQueryToDB($query);
         $ret = array();
-        $ret['id'] = null;
-        $ret['data'] = array();
+        $ret[STR_ID] = null;
+        $ret[STR_DATA] = array();
         if($res){
             settype($id, "string");
-            $ret['id']   = $id;
-            $ret['data'] = $res;
+            $ret[STR_ID]   = $id;
+            $ret[STR_DATA] = $res;
         }
         return $ret;
     }
@@ -161,36 +160,14 @@ class ClassDb{
         return 0;
     }
     function loadOpenUserData($user_id, &$user){
-        $fields[] = 'id';
-        $fields[] = 'login';
-        $fields[] = 'name';
-        $fields[] = 's_name';
-        $fields[] = 'img';
-        $fields[] = 'img_icon';
-        $fields[] = 'create_date';
-        $fields[] = 'last_time';
-        $fields[] = 'rating';
-        $fields[] = 'vote_qt';
-        $fields[] = 'about_user';
-        $res = $this->ALoadStructFromDb('users', $user_id, $user, $fields);
+        $fields = $this->openUserData();
+        $res = $this->ALoadStructFromDb(TBL_USERS, $user_id, $user, $fields);
         return $res;
     }
 
     function getUserList($idList){
-        global $A_db, $G;
-
-        $fields[] = 'id';
-        $fields[] = 'login';
-        $fields[] = 'name';
-        $fields[] = 's_name';
-        $fields[] = 'img';
-        $fields[] = 'img_icon';
-        $fields[] = 'create_date';
-        $fields[] = 'last_time';
-        $fields[] = 'rating';
-        $fields[] = 'vote_qt';
-        $fields[] = 'about_user';
-
+        global $A_db;
+        $fields = $this->openUserData();
         $flds = '';
         foreach($fields as $item){
             $flds.= $item.', ';
@@ -205,6 +182,20 @@ class ClassDb{
         $query = "SELECT $flds FROM users WHERE ".$idL;
         $res = $A_db->AGetMultiplyDataFromDb($query);
         return $res;
+    }
+    function openUserData(){
+        $fields[] = STR_ID;
+        $fields[] = STR_LOGIN;
+        $fields[] = STR_NAME;
+        $fields[] = STR_S_NAME;
+        $fields[] = STR_IMG;
+        $fields[] = STR_IMG_ICON;
+        $fields[] = STR_CREATE_DATE;
+        $fields[] = STR_LAST_TIME;
+        $fields[] = STR_RATING;
+        $fields[] = STR_VOTE_QT;
+        $fields[] = STR_ABOUT_USER;
+        return $fields;
     }
 }
 

@@ -1,11 +1,8 @@
 <?php
 namespace classesPhp;
 global $A_start;
-use function Couchbase\basicEncoderV1;
-use structsPhp\dbStruct\tblBwUserList;
-use structsPhp\G;
 
-if($A_start != 444){echo 'byby';exit();}
+if($A_start != 444){echo BYBY; exit();}
 
 class ClassUserReview{
     var $review;
@@ -19,7 +16,7 @@ class ClassUserReview{
             $this->searchExistUserReview();
             if($this->review->id)$G->selfReview = $this->review;
         }
-        if($G->location_page==='user_profile' && $G->owner->id)$this->getUserReviews();
+        if($G->location_page===PAGE_USER_PROFILE && $G->owner->id)$this->getUserReviews();
     }
     function getUserReviews(){
         global $A_db, $G;
@@ -27,7 +24,7 @@ class ClassUserReview{
         $query = "SELECT sender_id, comment, create_date FROM user_reviews WHERE consumer_id='$G->owner_id' ORDER BY create_date DESC LIMIT 100";
         $G->userReviews = $A_db->AGetMultiplyDataFromDb($query);
         foreach($G->userReviews as &$item){
-            if($item['sender_id'] != $G->user_id)unset($item['sender_id']);
+            if($item[STR_SENDER_ID] != $G->user_id)unset($item[STR_SENDER_ID]);
         }
     }
     function getUserData(){
@@ -37,8 +34,8 @@ class ClassUserReview{
     function addUserReview(){
         global $G, $A_db, $P;
         if($G->user->id && $G->owner->id){
-            $comment = $P->AGet('txt_review');
-            $star_qt = $P->AGet('star_qt');
+            $comment = $P->AGet(STR_TXT_REVIEW);
+            $star_qt = $P->AGet(STR_STAR_QT);
             $this->review->sender_id = $G->user->id;
             $this->review->consumer_id = $G->owner->id;
             $this->searchExistUserReview();
@@ -47,23 +44,21 @@ class ClassUserReview{
             $rating_data = array();
             if($star_qt){
                 $this->review->star_qt = $star_qt;
-                $res = $A_db->ASaveDataToDb($this->review,'user_reviews', $this->review->id);
+                $A_db->ASaveDataToDb($this->review,TBL_USER_REVIEWS, $this->review->id);
                 $this->calculateUserRating($G->owner->id);
-                $rating_data['rating']  = $this->rating;
-                $rating_data['vote_qt'] = $this->vote_qt;
+                $rating_data[STR_RATING]  = $this->rating;
+                $rating_data[STR_VOTE_QT] = $this->vote_qt;
                 $G->owner->rating = $this->rating;
                 $G->owner->vote_qt = $this->vote_qt;
-                $A_db->ASaveDataToDb($rating_data, 'users', $G->owner->id);
+                $A_db->ASaveDataToDb($rating_data, TBL_USERS, $G->owner->id);
                 mRESP_DATA(0);
             }else{
-                $res = $A_db->ASaveDataToDb($this->review,'user_reviews', $this->review->id);
-                if($res['id']){
+                $res = $A_db->ASaveDataToDb($this->review,TBL_USER_REVIEWS, $this->review->id);
+                if($res[STR_ID]){
                     $G->userReview = $this->review;
                     mRESP_DATA(0);
                 }
             }
-
-
         }
         mRESP_WTF();
     }
@@ -71,35 +66,35 @@ class ClassUserReview{
         global $A_db, $G;
         $sender_id   = $G->user->id;
         $consumer_id = $G->owner->id;
-        $query = "SELECT * FROM user_reviews WHERE (sender_id = '$sender_id'  AND consumer_id = '$consumer_id')";
+        $query = "SELECT * FROM user_reviews WHERE (sender_id='$sender_id'  AND consumer_id='$consumer_id')";
         $res = $A_db->AGetSingleStringFromDb($query);
         if($res){
             arrayToArrayNotNull($res, $this->review);
         }
     }
     function setBwStatus(){
-        global $G, $P, $A_db, $S, $U;
+        global $G, $P, $A_db, $S, $U, $LOG;
         $userId = $G->user->id;
-        $subjectId = $P->AGet('subject_id');
-        $status    = $P->AGet('status');
+        $subjectId = $P->AGet(STR_SUBJECT_ID);
+        $status    = $P->AGet(STR_STATUS);
         $resArr = array();
-        if (($subjectId === null) || ($status === null) || ($userId===null))mRESP_WTF('data error: status -> '.$status.'; subjectId -> '.$subjectId.'; userId -> '.$userId);
+        if (($subjectId === null) || ($status === null) || ($userId===null))$LOG->write('data error: status -> '.$status.'; subjectId -> '.$subjectId.'; userId -> '.$userId);
         switch ($status){
             case BW_STATUS_EMPTY : $resArr = $this->clearBwStatus($subjectId); break;
             case BW_STATUS_LIKE  : $resArr = $this->setBwLike($subjectId); break;
             case BW_STATUS_BAN   : $resArr = $this->setBwBan($subjectId); break;
         }
-        $like = $resArr['like'];
-        $ban  = $resArr['ban'];
-        $dt = $resArr['data'];
+        $like = $resArr[STR_LIKE];
+        $ban  = $resArr[STR_BAN];
+        $dt = $resArr[STR_DATA];
         $query = "UPDATE users SET like_list='$like', ban_list='$ban' WHERE id='$userId'";
         $res = $A_db->AQueryToDB($query);
         if ($res){
-            $S->ASet(DATA_COMPLETE, 0);
+            $S->ASet(STR_DATA_COMPLETE, 0);
             $q = $G->user->id;
             $U->user->id = $q;
             $U->AInitUser();
-            mRESP_DATA('user->id  -> '.$q);
+            mRESP_DATA(0);
         }
         else     mRESP_WTF();
     }
@@ -126,16 +121,11 @@ class ClassUserReview{
                 break;
             }
         }
-        // remove from like_list---------------
         if ($indexLike > -1)
             $like1[$indexLike] = null;
-        //------------------------------------
 
-        // add to ban_list if absent
         if ($indexBan < 0)
             $ban1[] = $subjectId;
-
-
 
         foreach ($like1 as $val)
             if (($val !== null)&&($val !== ''))$stringLike.=$val.'_';
@@ -144,11 +134,11 @@ class ClassUserReview{
             if (($val !== null)&&($val !== ''))$stringBan.=$val.'_';
 
 
-        $res['like'] = $stringLike;
-        $res['ban']  = $stringBan;
+        $res[STR_LIKE] = $stringLike;
+        $res[STR_BAN]  = $stringBan;
         $data[] = $ban;
         $data[] = $like;
-        $res['data'] = $data;
+        $res[STR_DATA] = $data;
         return $res;
     }
     private function setBwLike($subjectId){
@@ -174,16 +164,12 @@ class ClassUserReview{
                 break;
             }
         }
-        // remove from ban_list---------------
+
         if ($indexBan > -1)
             $ban[$indexBan] = null;
-        //------------------------------------
 
-        // add to like_list if absent
         if ($indexLike < 0)
             $like[] = $subjectId;
-
-
 
         foreach ($like as $val)
             if (($val !== null)&&($val !== ''))$stringLike.=$val.'_';
@@ -192,13 +178,11 @@ class ClassUserReview{
             if (($val !== null)&&($val !== ''))$stringBan.=$val.'_';
 
 
-
-
-        $res['like'] = $stringLike;
-        $res['ban']  = $stringBan;
+        $res[STR_LIKE] = $stringLike;
+        $res[STR_BAN]  = $stringBan;
         $data[] = $ban;
         $data[] = $like;
-        $res['data'] = $data;
+        $res[STR_DATA] = $data;
 
         return $res;
     }
@@ -226,7 +210,6 @@ class ClassUserReview{
             }
         }
 
-
         if ($indexLike > -1)
             $like[$indexLike] = null;
 
@@ -239,12 +222,11 @@ class ClassUserReview{
         foreach ($ban as $val)
             if (($val !== null)&&($val !== ''))$stringBan.=$val.'_';
 
-        $res['like'] = $stringLike;
-        $res['ban']  = $stringBan;
+        $res[STR_LIKE] = $stringLike;
+        $res[STR_BAN]  = $stringBan;
         $data[] = $ban;
         $data[] = $like;
-        $res['data'] = $data;
-
+        $res[STR_DATA] = $data;
         return $res;
     }
     private function calculateUserRating($id){
@@ -256,7 +238,7 @@ class ClassUserReview{
         if($res){
             foreach ($res as $item){
                 $cnt++;
-                $rating+=(float)$item['star_qt'];
+                $rating+=(float)$item[STR_STAR_QT];
             }
             $this->rating  = (float)($rating/$cnt)*100;
             $this->vote_qt = $cnt;
@@ -269,7 +251,7 @@ class ClassUserReview{
         $banList = $G->user->ban_list;
         $result = 0;
         if ($banList){
-            $banList = explode('_', $banList, 50);
+            $banList = explode('_', $banList, MAX_BAN_USERS_QT);
             if (count($banList) > 0){
                 $result = count($banList);
                 $G->usersList = $A_db->getUserList($banList);
@@ -282,7 +264,7 @@ class ClassUserReview{
         $likeList = $G->user->like_list;
         $result = 0;
         if ($likeList){
-            $likeList = explode('_', $likeList, 50);
+            $likeList = explode('_', $likeList, MAX_LIKE_USERS_QT);
             if (count($likeList) > 0){
                 $result = count($likeList);
                 $G->usersList = $A_db->getUserList($likeList);

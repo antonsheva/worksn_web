@@ -10,10 +10,6 @@ use structsPhp\StructUser;
 
 if($A_start != 444){echo 'byby';exit();}
 
-define('NEW_USER', 0);
-define('UPDATE_USER', 1);
-define('UPDATE_AUTO_AUTH', 2);
-define('CHNG_PASSWORD', 3);
 
 
 class ClassUser
@@ -26,9 +22,8 @@ class ClassUser
         $this->user   = new \structsPhp\StructUser();
         $this->AGetUser();
         getPostData($this->user);
-        $P->AUnSet('password');
+        $P->AUnSet(STR_PASSWORD);
     }
- //---------------------   REG NEW USER    ------------------------------
     function ARegistration(){
         global $G;
         $img = null;
@@ -39,26 +34,26 @@ class ClassUser
         $user_id = $this->AAddUser();
         if ($user_id){
             $user_id = userFillData($user_id, $G->user);
-            $response = 'Вы успешно зарегистрированы. Войдите, используя свой логин и пароль.';
-            if ($this->user->email_hash)$response .= ' Для подтверждения Email проверьте почту';
+            $response = STRING_YOU_ARE_REGISTERED;
+            if ($this->user->email_hash)$response .= STRING_YOUR_EMAIL;
             if($user_id)mRESP_DATA($response);
         }
         mRESP_WTF();
     }
     function AAddUser(){
         global $S, $AC_img, $DIR, $A_db, $G;
-        $user_id = $A_db->ACreateNewLine('users');
+        $user_id = $A_db->ACreateNewLine(TBL_USERS);
         if($user_id){
-            if($S->AGet('tmp_file')){
-                $imgPath              = $AC_img->saveImg($S->AGet('tmp_file'),$DIR->avatars);
-                $this->user->img      = $imgPath['img'];
-                $this->user->img_icon = $imgPath['imgIcon'];
+            if($S->AGet(STR_TMP_IMG)){
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $this->user->img      = $imgPath[STR_IMG];
+                $this->user->img_icon = $imgPath[STR_IMG_ICON];
             }else{
                 $this->user->img      = $DIR->noAvatar;
                 $this->user->img_icon = $DIR->noAvatar; 
             }
-            $this->user->remote_addr = $_SERVER['REMOTE_ADDR'];
-            return $this->ASaveUserData($user_id, NEW_USER);
+            $this->user->remote_addr = $_SERVER[STR_REMOTE_ADDR];
+            return $this->ASaveUserData($user_id, DATA_TYPE_NEW_USER);
         }
         return 0;
     }
@@ -71,33 +66,39 @@ class ClassUser
         $error = false;
         $login = strtolower($login);
 
-        if(strpos($login, 'admin') !== false)$error =  true;
-        if(strpos($login, 'админ') !== false)$error =  true;
-        if(strpos($login, 'логин') !== false)$error =  true;
-        if(strpos($login, 'login') !== false)$error =  true;
+//        if(strpos($login,'admin') !== false)$error =  true;
+//        if(strpos($login,'админ') !== false)$error =  true;
+//        if(strpos($login,'логин') !== false)$error =  true;
+//        if(strpos($login,'login') !== false)$error =  true;
+//
+
+        foreach (BAD_LOGIN as $badLogin){
+            if(strpos($login,$badLogin) !== false)$error =  true;
+        }
         return $error;
     }
     function ACheckUserLoginExist(){
         global $A_db;
         $login = $this->user->login;
 
-        if ($this->checkBanedLogin($login))mRESP_DATA('Логин занят', 0,1);
+        if ($this->checkBanedLogin($login))mRESP_DATA(STRING_LOGIN_EXIST, 0,1);
 
         $query = "SELECT id FROM users WHERE login='$login'";
         $result = $A_db->AGetSingleStringFromDb($query);
-        if($result)mRESP_DATA('Логин занят', 0,0);
+        if($result)mRESP_DATA(STRING_LOGIN_EXIST, 0,0);
     }
     function ACheckUserEmailExist(){
         global $A_db, $G;
         $email = $this->user->email;
+        $emailStatus = EMAIL_STATUS_CONFIRM;
         if ($email){
             if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-                mRESP_DATA('Укажите корректный email');
-            $query = "SELECT id FROM users WHERE email='$email' AND confirm_email='1'";
+                mRESP_DATA(STRING_BAD_EMAIL);
+            $query = "SELECT id FROM users WHERE email='$email' AND confirm_email='$emailStatus'";
             $result = $A_db->AGetSingleStringFromDb($query);
             if($result)
-                if($G->user->id == $result['id'])  return;
-                else mRESP_DATA('Email уже зарегистрирован. Воспользуйтесь формой восстановления доступа к аккаунту');
+                if($G->user->id == $result[STR_ID])  return;
+                else mRESP_DATA(STRING_EMAIL_EXIST);
             $this->user->email_hash = hash("sha256",$G->nSecTime);
         }
     }
@@ -107,30 +108,24 @@ class ClassUser
         $this->user->id = $user_id;
         $G->user_id = $this->user->id;
         switch ($type){
-            case NEW_USER :
+            case DATA_TYPE_NEW_USER :
                 $this->user->password = password_hash($this->user->password.PASS_SALT, PASSWORD_DEFAULT);
                 $this->user->create_date = $G->dateFull;
                 break;
-            case UPDATE_USER:
+            case DATA_TYPE_UPDATE_USER:
                 $this->user->login    = null;
                 $this->user->password = null;
                 $this->user->create_date = null;
                 break;
-            case UPDATE_AUTO_AUTH:
+            case DATA_TYPE_UPDATE_AUTO_AUTH:
                 $this->user->password = password_hash($this->user->password.PASS_SALT, PASSWORD_DEFAULT);
                 $this->user->create_date = null;
                 break;
-            case CHNG_PASSWORD:
-//                $tmpPass = $this->user->cookie_pass;
+            case DATA_TYPE_CHNG_PASSWORD:
                 $password = password_hash($this->user->password.PASS_SALT, PASSWORD_DEFAULT);
                 $this->user = new \structsPhp\StructUser();
 
                 $this->user->password = $password;
-
-
-//                $this->user->cookie_pass = $tmpPass;
-
-
                 break;
         }
         $this->user->ws_token = password_hash($time.$this->user->login, PASSWORD_DEFAULT);
@@ -142,11 +137,11 @@ class ClassUser
             $this->sendMailForConfirmEmail($this->user->email, $this->user->email_hash);
         }
         $ws_token = $this->user->ws_token;
-        $this->cookie->ASet('ws_token', $ws_token);
-        $S->ASet('ws_token', $ws_token);
+        $this->cookie->ASet(STR_WS_TOKEN, $ws_token);
+        $S->ASet(STR_WS_TOKEN, $ws_token);
         $G->user = $this->user;
-        $res = $A_db->ASaveDataToDb($this->user,'users' , $user_id);
-        return $res['id'];
+        $res = $A_db->ASaveDataToDb($this->user,TBL_USERS , $user_id);
+        return $res[STR_ID];
     }
     function addNotify($content, $img = null, $type = 0){
         global $A_db, $G;
@@ -163,7 +158,7 @@ class ClassUser
         $query = "SELECT id, type FROM notify WHERE user_id = '$userId'";
         $res = $A_db->AGetSingleStringFromDb($query);
         if ($res){
-            if ($res['type'] == NOTIFY_TYPE_CHANGE_EMAIL)$id = $res['id'];
+            if ($res[STR_TYPE] == NOTIFY_TYPE_CHANGE_EMAIL)$id = $res[STR_ID];
         }
         $A_db->ASaveStructToDb($notify, TBL_NOTIFY, $id);
     }
@@ -174,27 +169,24 @@ class ClassUser
         if ($result)return $A_db->last_insert_id;
         else        return null;
     }
-//------------------------------------------------------------------------
-
-//-----------  RECOVERY PASSWORD  ----------------------------------------
     function ARecoveryPassword(){
         global $P;
-        $email = $P->AGet('email');
+        $email = $P->AGet(STR_EMAIL);
         if($email){
             $user_data = $this->AFindEmail($email);
             if($user_data){
                 $password = rand();
-                $this->user->id = $user_data['id'];
+                $this->user->id = $user_data[STR_ID];
                 $this->user->password = $password;
                 $this->user->cookie_pass = $password;
-                $res = $this->ASaveUserData($this->user->id, CHNG_PASSWORD);
+                $res = $this->ASaveUserData($this->user->id, DATA_TYPE_CHNG_PASSWORD);
                 if($res){
-                    $msg = 'Данные для восстановления доступа к аккаунту в WORKSN.RU: '.PHP_EOL;
-                    $msg.= 'Логин - '.$user_data['login'].PHP_EOL;
-                    $msg.= 'Пароль - '.$password;
-                    $res = mail($email,'Восстановление доступа WORKSN.RU',$msg);
+                    $msg = STRING_DATA_FOR_RECOVERY.PHP_EOL;
+                    $msg.= STRING_LOGIN_.$user_data[STR_LOGIN].PHP_EOL;
+                    $msg.= STRING_PASSWORD_.$password;
+                    $res = mail($email,STRING_RECOVERY_ACCESS,$msg);
                     if($res){
-                        $txt = "Новый пароль был отправлен по указанному адресу";
+                        $txt = STRING_NEW_PASS_WAS_SEND_;
                         mRESP_DATA($txt);
                     }else{
                         mRESP_WTF();
@@ -203,49 +195,48 @@ class ClassUser
                     mRESP_WTF();
                 }
             }else{
-                $txt = 'Данная почта не зарегистрирована';
+                $txt = STRING_EMAIL_NOT_FOUND;
                 mRESP_DATA($txt, 0);
             }
         }else{
-            $txt = 'Укажите почту';
+            $txt = STRING_ENTER_EMAIL;
             mRESP_DATA($txt, 0);
         }
         mRESP_WTF();
     }
     function AFindEmail($email){
         global $A_db;
-        $query = "SELECT id, login FROM users WHERE email='$email' AND confirm_email='1'";
+        $emailStatus = EMAIL_STATUS_CONFIRM;
+        $query = "SELECT id, login FROM users WHERE email='$email' AND confirm_email='$emailStatus'";
         $user_data = $A_db->AGetSingleStringFromDb($query);
         return $user_data;
     }
-
-//----------   LOGIN    --------------------------------------------------
     function ALogin(){
         global $G, $S;
 
         $this->user->id = $this->ACheckUserData();
         if($this->user->id){
             $this->user->last_time   = $G->dateFull;
-            $this->ASaveUserData($this->user->id, UPDATE_USER);
+            $this->ASaveUserData($this->user->id, DATA_TYPE_UPDATE_USER);
             $this->user->auto_auth = 0;
-            $S->ASet(DATA_COMPLETE, 0);
+            $S->ASet(STR_DATA_COMPLETE, 0);
             $res = $this->AInitUser();
             if($res)mRESP_DATA(0);
         }
-        mRESP_DATA('Неверный логин или пароль', 0);
+        mRESP_DATA(STRING_BAT_LOGIN_PASSWORD, 0);
     }
     function AInitUser(){
         global $S, $G;
         $user_id = $this->user->id;
 
-        if(!$S->AGet(DATA_COMPLETE)){
+        if(!$S->AGet(STR_DATA_COMPLETE)){
            $this->user =  new StructUser();
            $user_id = userFillData($user_id, $this->user);
            $G->user = $this->user;
            if(!$user_id){
                return LOGIN_ERROR;
            }
-            $S->ASet(DATA_COMPLETE,1);
+            $S->ASet(STR_DATA_COMPLETE,1);
         }
 
         $old_img      = $this->user->img;
@@ -254,13 +245,13 @@ class ClassUser
         $auto_auth = $this->user->auto_auth;
 
 
-        $S->ASet('auto_auth', $auto_auth);
-        $S->ASet('user_id', $user_id);
-        $S->ASet('user',session_id());
-        $S->ASet('old_img', $old_img);
-        $S->ASet('old_img_icon', $old_img_icon);
-        $S->ASet('user_data', json_encode($this->user));
-        $S->ASet('ws_token', $ws_token);
+        $S->ASet(STR_AUTO_AUTH, $auto_auth);
+        $S->ASet(STR_USER_ID, $user_id);
+        $S->ASet(STR_USER,session_id());
+        $S->ASet(STR_OLD_IMG, $old_img);
+        $S->ASet(STR_OLD_IMG_ICON, $old_img_icon);
+        $S->ASet(STR_USER_DATA, json_encode($this->user));
+        $S->ASet(STR_WS_TOKEN, $ws_token);
 
 
         return LOGIN_OK;
@@ -273,9 +264,9 @@ class ClassUser
             $query = "SELECT id, password FROM users WHERE login='$login'";
             $result = $A_db->AGetSingleStringFromDb($query);
             if($result){
-                $hash_pass = $result['password'];
+                $hash_pass = $result[STR_PASSWORD];
                 if (password_verify($password.PASS_SALT, $hash_pass)){
-                    return $result['id'];
+                    return $result[STR_ID];
                 }else{
                     return 0;
                 }
@@ -285,17 +276,17 @@ class ClassUser
     }
     function AGetUser(){
         global $S, $G;
-        $user_id = $S->AGet('user_id');
+        $user_id = $S->AGet(STR_USER_ID);
         if($user_id){
             $srch = '`';
             $rplc = '"';
-            $user_data = $S->AGet('user_data');
+            $user_data = $S->AGet(STR_USER_DATA);
             $user_data = str_replace($srch,$rplc, $user_data);
             $user_data = json_decode($user_data);
             foreach($G->user as $key=>&$item){
                 if(isset($user_data->{$key}))$item = $user_data->{$key};
             }
-            $G->user->ws_token = $S->AGet('ws_token');
+            $G->user->ws_token = $S->AGet(STR_WS_TOKEN);
             $G->user_id = $G->user->id;
         }
     }
@@ -305,29 +296,28 @@ class ClassUser
         global $P;
         $this->user->id = $this->ACheckUserData();
         if($this->user->id){
-            $this->user->password = $P->AGet('new_pass');
+            $this->user->password = $P->AGet(STR_NEW_PASS);
             if($this->user->password){
-                $res = $this->ASaveUserData($this->user->id, CHNG_PASSWORD);
+                $res = $this->ASaveUserData($this->user->id, DATA_TYPE_CHNG_PASSWORD);
                 if($res){
-                    mRESP_DATA('Пароль изменен');
+                    mRESP_DATA(STRING_PASS_WAS_CHANGE);
                 }else{
                     mRESP_WTF();
                 }
             }
         }else{
-            mRESP_DATA('Неверный старый пароль', 0);
+            mRESP_DATA(STRING_BAD_OLD_PASS, 0);
         }
     }
 
-//------------- ANONYMUS LOGIN  ------------------------------------------
     function AAnonymLogin(){
         global $G, $S;
         $user_id = $this->ACheckCookie();
         if($user_id){
             $this->user->last_time   = $G->dateFull;
-            $this->ASaveUserData($this->user->id, UPDATE_USER);
+            $this->ASaveUserData($this->user->id, DATA_TYPE_UPDATE_USER);
             $this->AInitUser();
-            mRESP_DATA('ok');
+            mRESP_DATA(0);
         }else{
             $this->AGenerateNewUser();
             $this->user->id  = $this->AAddUser();
@@ -335,15 +325,9 @@ class ClassUser
 
             if($this->user->id){
                 $this->user->last_time   = $G->dateFull;
-                $this->ASaveUserData($this->user->id, UPDATE_USER);
-
-////////////////////------   TEST   -----------------///////////////////////////////////
-
-                $this->user->auto_auth = 1;// = 0;
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-                $S->ASet(DATA_COMPLETE, 0);
+                $this->ASaveUserData($this->user->id, DATA_TYPE_UPDATE_USER);
+                $this->user->auto_auth = 1;
+                $S->ASet(STR_DATA_COMPLETE, 0);
                 $res = $this->AInitUser();
                 $this->AInitCookie();
                 if($res)mRESP_DATA(0);
@@ -354,15 +338,15 @@ class ClassUser
         mRESP_WTF();
     }
     function AInitCookie(){
-        $this->cookie->ASet('user_id'      ,$this->user->id);
-        $this->cookie->ASet('user_login'   ,$this->user->login);
-        $this->cookie->ASet('user_password',$this->user->cookie_pass);
-        $this->cookie->ASet('auto_login'   , 1);
+        $this->cookie->ASet(STR_USER_ID      ,$this->user->id);
+        $this->cookie->ASet(STR_USER_LOGIN   ,$this->user->login);
+        $this->cookie->ASet(STR_USER_PASSWORD,$this->user->cookie_pass);
+        $this->cookie->ASet(STR_AUTO_LOGIN   , 1);
     }
     function ACheckCookie(){
-        $user_id       = $this->cookie->AGet('user_id');
-        $user_login    = $this->cookie->AGet('user_login');
-        $user_password = $this->cookie->AGet('user_password');
+        $user_id       = $this->cookie->AGet(STR_USER_ID);
+        $user_login    = $this->cookie->AGet(STR_USER_LOGIN);
+        $user_password = $this->cookie->AGet(STR_USER_PASSWORD);
         if($user_id && $user_login && $user_password){
             $this->user->login = $user_login;
             $this->user->password = $user_password;
@@ -381,15 +365,15 @@ class ClassUser
         $this->user->password  = substr((hrtime(true)*2),2,8);
         $this->user->cookie_pass = $this->user->password;
         $this->user->auto_auth = 1;
-        $this->user->img = "service_img/avatars/no-avatar.jpg";
-        $this->user->img_icon = "service_img/avatars/no-avatar.jpg";
+        $this->user->img = URL_NO_AVATAR;
+        $this->user->img_icon = URL_NO_AVATAR;
     }
     function checkSessionToken($act){
         global $S;
-        $arr = ['login', 'anonym_login', 'exit'];
+        $arr = [ACT_LOGIN, ACT_ANONYMOUS_LOGIN, ACT_EXIT];
         if(in_array($act, $arr))return;
-        if($S->AGet('ws_token') != $this->cookie->AGet('ws_token')){
-            mRESP_WTF('WTF_tk');
+        if($S->AGet(STR_WS_TOKEN) != $this->cookie->AGet(STR_WS_TOKEN)){
+            mRESP_WTF();
         }
     }
     function getUserData(){
@@ -398,8 +382,6 @@ class ClassUser
         else            $res = 0;
         mRESP_DATA(0, $res);
     }
-
-//------------------------------------------------------------------------
     function checkNewNotify(){
         global $A_db, $G;
         $userId = $G->user_id;
@@ -441,23 +423,22 @@ class ClassUser
                 $this->ACheckUserEmailExist();
 
             $this->user->img = null;
-            if($S->AGet('tmp_file')){
-                $imgPath              = $AC_img->saveImg($S->AGet('tmp_file'),$DIR->avatars);
-                $this->user->img      = $imgPath['img'];
-                $this->user->img_icon = $imgPath['imgIcon'];
-                if($S->AGet('old_img'))$AC_img->removeImg($S->AGet('old_img'));
-                if($S->AGet('old_img_icon'))$AC_img->removeImg($S->AGet('old_img_icon'));
+            if($S->AGet(STR_TMP_IMG)){
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $this->user->img      = $imgPath[STR_IMG];
+                $this->user->img_icon = $imgPath[STR_IMG_ICON];
+                if($S->AGet(STR_OLD_IMG))$AC_img->removeImg($S->AGet(STR_OLD_IMG));
+                if($S->AGet(STR_OLD_IMG_ICON))$AC_img->removeImg($S->AGet(STR_OLD_IMG_ICON));
             }
-            $S->ASet('tmp_file', null);
-            $res = $this->ASaveUserData($user_id,UPDATE_USER);
+            $S->ASet(STR_TMP_IMG, null);
+            $res = $this->ASaveUserData($user_id,DATA_TYPE_UPDATE_USER);
             if($res){
-                $S->ASet(DATA_COMPLETE, 0);
+                $S->ASet(STR_DATA_COMPLETE, 0);
 
-                $str = 'Данные успешно обновлены';
-                if($this->user->email_hash){
-                    $str .= ' Проверьте почту для подтверждения Email';
+                $str = STRING_DATA_WAS_CHANGE;
+                if($this->user->email_hash)
+                    $str .= STRING_CHECK_EMAIL;
 
-                }
                 $this->AInitUser();
                 mRESP_DATA($str);
             }else{
@@ -469,54 +450,44 @@ class ClassUser
     }
     function AUpdateAutoAuthData(){
         global $DIR, $AC_img, $S;
-        if(!$S->AGet('auto_auth') || !$S->AGet('user_id')){
-            mRESP_DATA('Что-то пошло не так :-(',0,1);
+        if(!$S->AGet( STR_AUTO_AUTH) || !$S->AGet(STR_USER_ID)){
+            mRESP_WTF();
         } else{
-            $user_id = $S->AGet('user_id');
+            $user_id = $S->AGet(STR_USER_ID);
             $this->ACheckRegistrationData();
             $this->ACheckUserLoginExist  ();
             $this->ACheckUserEmailExist  ();
-            if($S->AGet('tmp_file')){
-                $imgPath              = $AC_img->saveImg($S->AGet('tmp_file'),$DIR->avatars);
-                $this->user->img      = $imgPath['img'];
-                $this->user->img_icon = $imgPath['imgIcon'];
-//                if($S->AGet('old_img'))$AC_img->ARemoveImg($S->AGet('old_img'));
-//                if($S->AGet('old_img_icon'))$AC_img->ARemoveImg($S->AGet('old_img_icon'));
+            if($S->AGet(STR_TMP_IMG)){
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $this->user->img      = $imgPath[STR_IMG];
+                $this->user->img_icon = $imgPath[STR_IMG_ICON];
             }
             $this->user->auto_auth = 0;
             $this->user->cookie_pass = 0;
-            $res = $this->ASaveUserData($user_id,UPDATE_AUTO_AUTH);
+            $res = $this->ASaveUserData($user_id,DATA_TYPE_UPDATE_AUTO_AUTH);
             if($res){
-                $S->ASet('data_complete', 0);
+                $S->ASet(STR_DATA_COMPLETE, 0);
                 $this->AInitUser();
-                mRESP_DATA('Данные успешно обновлены');
+                mRESP_DATA(STRING_DATA_WAS_CHANGE);
             }else{
-                mRESP_DATA('Что-то пошло не так :-(', 0,1);
+                mRESP_WTF();
             }
         }
     }
-
-//------------- email _---------------------------------------------------
     function sendMailForConfirmEmail($email, $hash){
-        global $LOG;
-        $href = '<a href="https://worksn.ru/confirm_email/'.$hash.'" target="_blank"> этой ссылке</a>';
-        $msg = 'Для подтверждения почтового ящика '.$email.' для WORKSN.RU: '.PHP_EOL;
-        $msg.= 'пройдите по: '.$href;
+        $href = stringForConfirmEmail($hash);
+        $msg  = stringMsgForConfirmEmail($email, $href);
         $header = "Content-type:text/html";
-        $res = mail($email,'Подтверждение почтового ящика для WORKSN.RU',$msg, $header);
-        $LOG->write('mail() to '.$email.'; result -> '.$res);
+        mail($email,STRING_MSG_CONFIRM_EMAIL,$msg, $header);
     }
     function confirmEmail(){
         global $G, $A_db;
-        $userId = $G->user_id;
         $confirmUserId = $G->email_user_id;
         $confirmEmailHash = $G->email_user_id.'/'.$G->email_hash;
         $query = "SELECT email FROM users WHERE (id='$confirmUserId' AND email_hash='$confirmEmailHash')";
         $res = $A_db->AGetSingleStringFromDb($query);
         if ($res){
             $email = $res[0];
-            $data[] = array();
-            $data['confirm_email'] = 1;
             $query = "UPDATE users SET confirm_email='1', email_hash=NULL, system_notify=NULL, notify_id=0 WHERE id='$confirmUserId'";
             $res = $A_db->AQueryToDB($query);
             if ($res){
@@ -528,18 +499,13 @@ class ClassUser
             }
         } return 0;
     }
-
-//------------------ EXIT ------------------------------------------------
     function AExit(){
         global $S, $G;
-//        $ws_token = $S->AGet('ws_token');
         $S->clear();
-//        $S->ASet('ws_token', $ws_token);
         $G->user = new StructUser();
         $G->user_id = null;
-        $this->cookie->ASet('auto_login', 0);
-        $this->cookie->AUnSet('ws_token');
-//        $this->cookie->AClear();
+        $this->cookie->ASet(STR_AUTO_LOGIN, 0);
+        $this->cookie->AUnSet(STR_WS_TOKEN);
         mRESP_DATA(0);
     }
     function exitAndroid(){
@@ -549,16 +515,14 @@ class ClassUser
         mRESP_DATA(0);
     }
 
-//------------------ TOKEN ------------------------------------------------
     function checkToken($act){
         global $S;
-        $arr = [ACT_LOGIN, ACT_ANONYM_LOGIN, ACT_EXIT];
+        $arr = [ACT_LOGIN, ACT_ANONYMOUS_LOGIN, ACT_EXIT];
         if(in_array($act, $arr))return;
-        if($S->AGet('ws_token') != $this->cookie->AGet('ws_token')){
-            mRESP_WTF('WTF_tk');
+        if($S->AGet(STR_WS_TOKEN) != $this->cookie->AGet(STR_WS_TOKEN)){
+            mRESP_WTF();
         }
     }
-
 }
 
 

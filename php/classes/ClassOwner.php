@@ -4,7 +4,7 @@ global $A_start;
 
 use structsPhp\dbStruct\tblDiscus;
 
-if($A_start != 444){echo 'byby';exit();}
+if($A_start != 444){echo BYBY; exit();}
 
 class ClassOwner{
     var $owner = null;
@@ -18,7 +18,7 @@ class ClassOwner{
     }
     function AGetOwner(){
         global $P, $G, $A_db;
-        $ownerId = $P->AGet('owner_id');
+        $ownerId = $P->AGet(STR_OWNER_ID);
         if(!$ownerId)$ownerId = $G->owner_id;
         if($ownerId){
             $res = $A_db->loadOpenUserData($ownerId, $this->owner);
@@ -26,16 +26,8 @@ class ClassOwner{
 
                 $G->owner = $this->owner;
                 $G->owner_id = $this->owner->id;
-                $G->owner->bw_status = $this->getBwStatus($ownerId);
+                $G->owner->bw_status = BW_STATUS_EMPTY;
             }            
         }
-    }
-
-    function getBwStatus($ownerId){
-        $status = BW_STATUS_EMPTY;
-
-
-
-        return $status;
     }
 }

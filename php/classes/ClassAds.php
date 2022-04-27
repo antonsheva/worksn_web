@@ -22,15 +22,13 @@ class ClassAds{
         $this->adDb   = new \structsPhp\dbStruct\tblAds();
         $this->adFull = new \structsPhp\StructAds();
         $this->crd    = new \structsPhp\StructCoordinates();
-        $this->AInitType();
         getPostData($this->adDb);
         getPostData($this->adFull);
-        $this->checkPostData('get_ads');
+        $this->checkPostData(STR_GET_ADS);
         $this->getTargetAds();
 
     }
     function getSearchQuery(){
-        global $P, $G;
         $tmp = $this->cllct->search_phrase;
         $tmp = substr($tmp,0,100);
         $this->searchQuery = '';
@@ -48,42 +46,33 @@ class ClassAds{
                 if($key < (count($tmpArr)-1)) $this->searchQuery .=" AND ";
             endforeach;
         }
-
     }
     function getTargetAds(){
         global $P, $A_db, $G;
-        $ads_id = $P->AGet('ads_id');
+        $ads_id = $P->AGet(STR_ADS_ID);
         if(!$ads_id)$ads_id = $G->ads_id;
         if($ads_id)$A_db->ALoadStructFromDb('ads', $ads_id, $G->targetAds);
         if($G->targetAds->user_id)$G->owner_id = $G->targetAds->user_id;
         $G->targetAds->user_login = $G->owner->login;
         $G->targetAds->user_rating = $G->owner->rating;
     }
-    function AInitType(){
-        global $S, $G;
-//        if($S->AGet('ads_type')){
-//            $G->ads_type = $S->AGet('ads_type');
-//        }else{
-//            $G->ads_type = ADS_TYPE_WORKER;
-//            $S->ASet('ads_type', ADS_TYPE_WORKER);
-//        }
-    }
+
     function ASetAdsType($type){
         global $S, $G;
         if($type){
             $G->ads_type = $type;
-            $S->ASet('ads_type', $type);
+            $S->ASet(STR_ADS_TYPE, $type);
         }
     }
     function AAddAds(){
-        global $P,$G, $A_db, $S, $AC_img;
+        global $P,$G, $A_db, $AC_img;
 
         $lifetime = $this->getLifeTime();
-        $user_id = $P->AGet('user_id');
+        $user_id = $P->AGet(STR_USER_ID);
         if($user_id == $G->user->id){
 
-            if($P->AGet('edit')){
-               $G->ads_id = $P->AGet('id');
+            if($P->AGet(STR_EDIT)){
+               $G->ads_id = $P->AGet(STR_ID);
                $this->getTargetAds();
                if (!$G->targetAds->user_id            )mRESP_WTF();
                if ( $G->targetAds->user_id != $user_id)mRESP_WTF();
@@ -95,17 +84,17 @@ class ClassAds{
             $this->adDb->create_time = $G->time;
             $this->adDb->lifetime = $lifetime;
             $this->adDb->remove = 0;
-            $this->adDb->remote_addr = $_SERVER['REMOTE_ADDR'];
-            $this->adDb->id = $A_db->ASaveDataToDb($this->adDb,'ads', $this->adDb->id)['id'];
+            $this->adDb->remote_addr = $_SERVER[STR_REMOTE_ADDR];
+            $this->adDb->id = $A_db->ASaveDataToDb($this->adDb,TBL_ADS, $this->adDb->id)[STR_ID];
             if($this->adDb->id){
                 $this->adFull->user_login = $G->user->login;
                 $this->adFull->user_img   = $G->user->img;
                 arrayToArrayNotNull($this->adDb, $this->adFull);
                 $G->targetAds = $this->adFull;
                 $AC_img->removeOldImgsFromSession();
-                mRESP_DATA("Объявление успешно добавлено");
+                mRESP_DATA(STRING_ADS_WAS_ADD);
 
-                $_SERVER['REMOTE_ADDR'];
+                $_SERVER[STR_REMOTE_ADDR];
             }
             else    mRESP_WTF();
         }else{
@@ -134,11 +123,11 @@ class ClassAds{
     }
     function saveImgs(){
         global $AC_img, $DIR, $P;
-        if ($P->AGet('edit'))$this->removeOldImgs();
+        if ($P->AGet(STR_EDIT))$this->removeOldImgs();
         try{
             $arr = explode(',', $this->adDb->img);
         }catch (\Exception $e){
-            mRESP_WTF('error save images');
+            mRESP_WTF();
             $arr = null;
         }
         if(is_array($arr)){
@@ -146,8 +135,8 @@ class ClassAds{
             foreach ($arr as $item){
                 if($item && ($item !='')){
                     $imgPath = $AC_img->saveImg($DIR->tmp_img.$item,$DIR->ads_imgs);
-                    $this->adDb->img     .= $imgPath['img'].',';
-                    $this->adDb->img_icon.= $imgPath['imgIcon'].',';
+                    $this->adDb->img     .= $imgPath[STR_IMG].',';
+                    $this->adDb->img_icon.= $imgPath[STR_IMG_ICON].',';
                 }
             }
             $tmpStr = $this->adDb->img;
@@ -163,14 +152,15 @@ class ClassAds{
         global $P, $AC_img;
         $errCnt = 0;
         $errFiles = '';
-        if ($P->AGet('old_imgs')){
-            $fileList = $P->AGet('old_imgs');
+        $res = array();
+        if ($P->AGet(STR_OLD_IMGS)){
+            $fileList = $P->AGet(STR_OLD_IMGS);
             $res = $AC_img->removeFileList($fileList, 0);
             $errCnt += $res['errCnt'];
             $errFiles.= $res['errFiles'];
         }
-        if ($P->AGet('old_imgs')){
-            $fileList = $P->AGet('old_imgs_icon');
+        if ($P->AGet(STR_OLD_IMGS)){
+            $fileList = $P->AGet(STR_OLD_IMGS_ICON);
             $AC_img->removeFileList($fileList, 0);
             $errCnt += $res['errCnt'];
             $errFiles.= $res['errFiles'];
@@ -181,22 +171,22 @@ class ClassAds{
     }
     function editAds(){
         global $AC_img, $P, $G;
-        $adsId   = $P->AGet('ads_id');
-        $img     = $P->AGet('img');
-        $imgIcon = $P->AGet('img_icon');
-        if (!$G->targetAds->user_id)mRESP_WTF('ads data error');
-        if ($G->targetAds->user_id != $G->user_id)mRESP_WTF('adsId -> '.$G->targetAds->id.' user data error');
+        $adsId   = $P->AGet(STR_ADS_ID);
+        $img     = $P->AGet(STR_IMG);
+        $imgIcon = $P->AGet(STR_IMG_ICON);
+        if (!$G->targetAds->user_id)mRESP_WTF();
+        if ($G->targetAds->user_id != $G->user_id)mRESP_WTF();
         if ($img){
             $res = $AC_img->copyImgsToTmpFolder($img, $imgIcon);
-            $G->img_list = $res['img_list'];
-            mRESP_DATA(0, $res['img_cnt']);
+            $G->img_list = $res[STR_IMG_LIST];
+            mRESP_DATA(0, $res[STR_IMG_CNT]);
         }
         mRESP_DATA(0);
     }
     function updateAds(){
         global $P,$G, $A_db;
-        $user_id = $P->AGet('user_id');
-        $ads_id  = $P->AGet('ads_id');
+        $user_id = $P->AGet(STR_USER_ID);
+        $ads_id  = $P->AGet(STR_ADS_ID);
         $lifetime = $this->getLifeTime();
         if(($user_id === $G->user->id) && $ads_id && ($user_id === $this->adDb->user_id)){
             $this->adDb->img = $G->user->img;
@@ -204,7 +194,7 @@ class ClassAds{
             $this->adDb->create_time = $G->time;
             $this->adDb->lifetime = $lifetime;
             $this->adDb->remove = 0;
-            $this->adDb->id = $A_db->ASaveDataToDb($this->adDb,'ads', $ads_id)['id'];
+            $this->adDb->id = $A_db->ASaveDataToDb($this->adDb,TBL_ADS, $ads_id)[STR_ID];
             if($this->adDb->id){
                 $this->adFull->user_login = $G->user->login;
                 $this->adFull->img        = $G->user->img;
@@ -217,8 +207,8 @@ class ClassAds{
     }
     function checkCollectionParameters(){
         global $P, $G;
-        if(is_array($P->AGet('cllct'))){
-            arrayToArray($P->AGet('cllct'), $this->cllct);
+        if(is_array($P->AGet(STR_CLLCT))){
+            arrayToArray($P->AGet(STR_CLLCT), $this->cllct);
             if($this->cllct->ads_type)
                 switch ($this->cllct->ads_type){
                     case TYPE_WORKER   : $this->cllct->ads_type = TYPE_WORKER;    break;
@@ -245,10 +235,10 @@ class ClassAds{
         $this->crd->max_y = round($this->crd->max_y,4);
 
 
-        $fields[] = 'login';
-        $fields[] = 'img';
-        $fields[] = 'img_icon';
-        $fields[] = 'rating';
+        $fields[] = STR_LOGIN;
+        $fields[] = STR_IMG;
+        $fields[] = STR_IMG_ICON;
+        $fields[] = STR_RATING;
         $f1 = '';
         $fltr = "";
         if ($G->user_id){
@@ -262,7 +252,7 @@ class ClassAds{
                 if(($item !== '') && ($item !== 'null') && ($item !== 'NULL') && ($item !== null))$f1 .= " AND ".$key." = '".$item."' ";
         }
         $fltr.= ")";
-        if($f1 != '')$fltr.= ' '.$f1.') ORDER BY create_time LIMIT 200';
+        if($f1 != '')$fltr.= ' '.$f1.') ORDER BY create_time LIMIT '.MAX_ADS_QT;
 
         $query = "SELECT * FROM ads WHERE (";
 
@@ -277,9 +267,9 @@ class ClassAds{
             foreach($res as $item1){
                 $visibleMode = $this->filterTimeRange($item1);
                 if (!$visibleMode)continue;
-                $str .= '_'.$item1['user_id'];
+                $str .= '_'.$item1[STR_USER_ID];
                 $user1 = new \structsPhp\StructUser();
-                $user_id = $item1['user_id'];
+                $user_id = $item1[STR_USER_ID];
                 userFillData($user_id, $user1, $fields);
 
                 $adFull = new \structsPhp\StructAds();
@@ -297,7 +287,7 @@ class ClassAds{
                 $adFull = null;
             }
         }else{
-            mRESP_DATA("no ads", 0);
+            mRESP_DATA(0,0);
         }
         $G->adsCollection = $data;
         mRESP_DATA($str, count($data));
@@ -326,7 +316,7 @@ class ClassAds{
     }
     function getLifeTime( ){
         global $P;
-        $tmp = $P->AGet('lifetime');
+        $tmp = $P->AGet(STR_LIFETIME);
         if($tmp){
             if(($tmp > 0)&&($tmp < 2592000)){
                 return $tmp;
@@ -336,13 +326,13 @@ class ClassAds{
     }
     function removeAds(){
         global $P,$G, $A_db;
-        $user_id = $P->AGet('user_id');
-        $ads_id = $P->AGet('id');
+        $user_id = $P->AGet(STR_USER_ID);
+        $ads_id = $P->AGet(STR_ID);
         if(($user_id == $G->user->id)&& $ads_id){
             $query = "SELECT user_id FROM ads WHERE id='$ads_id'";
             $res = $A_db->AGetSingleStringFromDb($query);
             if($res){
-                if($res['user_id']==$user_id){
+                if($res[STR_USER_ID]==$user_id){
                     $query="UPDATE ads SET remove='1' WHERE id='$ads_id'";
                     $res = $A_db->AQueryToDB($query);
                     if($res)mRESP_DATA(1);
@@ -353,11 +343,11 @@ class ClassAds{
     }
     function checkPostData($type){
         switch ($type){
-            case 'get_ads'   :{
+            case STR_GET_ADS   :{
                 $this->checkCollectionParameters();
                 $this->checkMinMaxCoords();
                 break;}
-            case 'add_ads'   :{
+            case STR_ADD_ADS   :{
                 $this->checkAddAdsData();
             }
         }
@@ -391,50 +381,50 @@ class ClassAds{
     function filterTimeRange($data){
         global $G;
 
-        if (($data['hour_start'] == 0)&&($data['hour_stop'] == 0)&&($data['min_start'] == 0)&&($data['min_stop'] == 0))return ADS_VISIBLE_NORMAL;
+        if (($data[STR_HOUR_START] == 0)&&($data[STR_HOUR_STOP] == 0)&&($data[STR_MIN_START] == 0)&&($data[STR_MIN_STOP] == 0))return ADS_VISIBLE_NORMAL;
         $date = getdate();
-        $hour = $date['hours'];
-        $min  = $date['minutes'];
-        if($data['hour_start'] == $data['hour_stop']){
-            if($hour == $data['hour_start']){
-                if($data['min_start'] ==  $data['min_stop'])return ADS_VISIBLE_NORMAL;
+        $hour = $date[STR_HOURS];
+        $min  = $date[STR_MINUTES];
+        if($data[STR_HOUR_START] == $data[STR_HOUR_STOP]){
+            if($hour == $data[STR_HOUR_START]){
+                if($data[STR_MIN_START] ==  $data[STR_MIN_STOP])return ADS_VISIBLE_NORMAL;
 
-                if($data['min_start'] <  $data['min_stop']){
-                    if (($min >= $data['min_start'])&&($min <= $data['min_stop']))return ADS_VISIBLE_NORMAL;
+                if($data[STR_MIN_START] <  $data[STR_MIN_STOP]){
+                    if (($min >= $data[STR_MIN_START])&&($min <= $data[STR_MIN_STOP]))return ADS_VISIBLE_NORMAL;
                 }else{
-                    if (($min >= $data['min_start']) || ($min <= $data['min_stop']))return ADS_VISIBLE_NORMAL;
+                    if (($min >= $data[STR_MIN_START]) || ($min <= $data[STR_MIN_STOP]))return ADS_VISIBLE_NORMAL;
                 }
             }
         }else{
-            if ($hour == $data['hour_start']){
-                if ($min >= $data['min_start'])return ADS_VISIBLE_NORMAL;
+            if ($hour == $data[STR_HOUR_START]){
+                if ($min >= $data[STR_MIN_START])return ADS_VISIBLE_NORMAL;
             }
-            if ($hour == $data['hour_stop']){
-                if ($min < $data['min_stop']) return ADS_VISIBLE_NORMAL;
-            }
-
-            if($data['hour_start'] < $data['hour_stop']){
-                if(($hour > $data['hour_start'])&&($hour < $data['hour_stop']))return ADS_VISIBLE_NORMAL;
+            if ($hour == $data[STR_HOUR_STOP]){
+                if ($min < $data[STR_MIN_STOP]) return ADS_VISIBLE_NORMAL;
             }
 
-            if($data['hour_start'] > $data['hour_stop']){
-                if (($hour > $data['hour_start'])||($hour < $data['hour_stop']))return ADS_VISIBLE_NORMAL;
+            if($data[STR_HOUR_START] < $data[STR_HOUR_STOP]){
+                if(($hour > $data[STR_HOUR_START])&&($hour < $data[STR_HOUR_STOP]))return ADS_VISIBLE_NORMAL;
+            }
+
+            if($data[STR_HOUR_START] > $data[STR_HOUR_STOP]){
+                if (($hour > $data[STR_HOUR_START])||($hour < $data[STR_HOUR_STOP]))return ADS_VISIBLE_NORMAL;
             }
         }
 
-        if ($data['user_id'] == $G->user_id)return ADS_VISIBLE_HIDDEN_FOR_TIME;
+        if ($data[STR_USER_ID] == $G->user_id)return ADS_VISIBLE_HIDDEN_FOR_TIME;
         return ADS_VISIBLE_HIDDEN;
     }
 
     function hiddenAds(){
         global $P,$G, $A_db;
-        $user_id = $P->AGet('user_id');
-        $ads_id = $P->AGet('id');
+        $user_id = $P->AGet(STR_USER_ID);
+        $ads_id = $P->AGet(STR_ID);
         if(($user_id == $G->user->id)&& $ads_id){
             $query = "SELECT user_id FROM ads WHERE id='$ads_id'";
             $res = $A_db->AGetSingleStringFromDb($query);
             if($res){
-                if($res['user_id']==$user_id){
+                if($res[STR_USER_ID]==$user_id){
                     $query="UPDATE ads SET active='0' WHERE id='$ads_id'";
                     $res = $A_db->AQueryToDB($query);
                     if($res)mRESP_DATA(1);
@@ -445,16 +435,16 @@ class ClassAds{
     }
     function showAds(){
         global $P,$G, $A_db;
-        $user_id = $P->AGet('user_id');
-        $ads_id = $P->AGet('id');
+        $user_id = $P->AGet(STR_USER_ID);
+        $ads_id = $P->AGet(STR_ID);
         if(($user_id == $G->user->id)&& $ads_id){
             $query = "SELECT user_id, lifetime FROM ads WHERE id='$ads_id'";
             $res = $A_db->AGetSingleStringFromDb($query);
             if($res){
-                if($res['user_id']==$user_id){
+                if($res[STR_USER_ID]==$user_id){
                     $create_date = $G->date;
                     $create_time = $G->time;
-                    $lifetime = $res['lifetime'];
+                    $lifetime = $res[STR_LIFETIME];
 
                     $query="UPDATE ads SET active='1', create_date='$create_date', create_time='$create_time', lifetime='$lifetime'  WHERE id='$ads_id'";
                     $res = $A_db->AQueryToDB($query);
@@ -471,8 +461,8 @@ class ClassAds{
 
 
 
-        $user_id = $P->AGet('user_id');
-        $ads_id = $P->AGet('id');
+        $user_id = $P->AGet(STR_USER_ID);
+        $ads_id = $P->AGet(STR_ID);
         if (($user_id == $G->user_id) && $ads_id) {
             $G->ads_id = $ads_id;
             $this->getTargetAds();
@@ -482,7 +472,7 @@ class ClassAds{
             $createTime = $G->time;
             $lifetime = $this->getLifeTime();
             $createDate = $G->date;
-            $remoteAddr = $_SERVER['REMOTE_ADDR'];
+            $remoteAddr = $_SERVER[STR_REMOTE_ADDR];
             $query = "UPDATE ads SET  remove      ='0',
                                       active      ='1',
                                       create_date ='$createDate',
@@ -493,86 +483,13 @@ class ClassAds{
 
             $res = $A_db->AQueryToDB($query);
             if ($res) mRESP_DATA(1);
-            else    mRESP_WTF('error query to DB');
+            else    mRESP_WTF();
         }
-        mRESP_WTF('error post data');
+        mRESP_WTF();
     }
 
-
-
-
     function generateTmpAds(){
-        global $A_db, $G;
-
-        if ($G->user_id != 1)mRESP_DATA('uWTF');
-
-        define("MIN_X", 41);
-        define("MAX_X", 69);
-        define("MIN_Y", 23);
-        define("MAX_Y", 141);
-
-        $cnt = 0;
-        $imgs     = array('wksn_users_img/ads_imgs/f1_71/f2_58/701a52e7c2cc6dfb1c54_1218871972827623_1646669400.jpg',
-            ' ',
-            ' ',
-            'wksn_users_img/ads_imgs/f1_03/f2_27/PC_1219360736676350_1646669889.jpg',
-            'wksn_users_img/ads_imgs/f1_72/f2_30/c213c60ac9687ff342d6_1219874453265264_1646670403.jpeg',
-            'wksn_users_img/ads_imgs/f1_61/f2_45/scale_1200_1220162049604247_1646670690.jpg',
-            ' ',
-            'wksn_users_img/ads_imgs/f1_09/f2_39/kompqjytery-dell-302_1220542885581440_1646671071.jpg');
-        $imgsIcon = array('wksn_users_img/ads_imgs_icon/f1_71/f2_58/701a52e7c2cc6dfb1c54_1218871972827623_1646669400.jpg',
-            ' ',
-            ' ',
-            'wksn_users_img/ads_imgs_icon/f1_03/f2_27/PC_1219360736676350_1646669889.jpg',
-            'wksn_users_img/ads_imgs_icon/f1_72/f2_30/c213c60ac9687ff342d6_1219874453265264_1646670403.jpeg',
-            'wksn_users_img/ads_imgs_icon/f1_61/f2_45/scale_1200_1220162049604247_1646670690.jpg',
-            ' ',
-            'wksn_users_img/ads_imgs_icon/f1_09/f2_39/kompqjytery-dell-302_1220542885581440_1646671071.jpg');
-
-
-        $t = new TxtData();
-        $extAdsEmployer = $t->extAdsEmployer;
-        $extAdsWorker   = $t->extAdsWorker;
-        $description = array('Некому сходить в магазин? '.$extAdsEmployer,
-            'Некому послать посылку? '.$extAdsEmployer,
-            'Нужен помощник? '.$extAdsEmployer,
-            'Не работает компьютер? Найдите специалиста или оставьте объявление. '.$extAdsEmployer,
-            'Сломалась стиральная машина? Найдите специалиста или оставьте объявление. '.$extAdsEmployer,
-            'Есть свободные 15 минут? Проживите их с пользой - помогите другим. '.$extAdsWorker,
-            'Есть свободные 15 минут? Проживите их с пользой - помогите другим. '.$extAdsWorker,
-            'Можете: разобраться с компьютером, установить Windows, настроить WiFi...? Помогите другим. '.$extAdsWorker);
-
-        $category = array(1,2,3,4,5,1,3,4);
-        $type     = array(2,2,2,2,2,1,1,1);
-        $cost     = array(100,200,500,1000,1000,100,500,500);
-        $userId   = array(279,279,279,279,279,278,278,278);
-        $adsCnt = 0;
-        for ($x = MIN_X; $x < MAX_X; $x+=0.5){
-            for ($y = MIN_Y; $y < MAX_Y; $y+=1){
-                $ads = new \structsPhp\dbStruct\tblAds();
-                $ads->user_id     = $userId[$cnt];
-                $ads->img         = $imgs[$cnt];
-                $ads->img_icon    = $imgsIcon[$cnt];
-                $ads->description = $description[$cnt];
-                $ads->cost        = $cost[$cnt];
-                $ads->category    = $category[$cnt];
-                $ads->ads_type    = $type[$cnt];
-                $ads->coord_x     = $x;
-                $ads->coord_y     = $y;
-
-                $ads->create_date = $G->date;
-                $ads->create_time = $G->time;
-                $ads->lifetime    = 2592000;
-                $ads->remove      = 0;
-                $ads->remote_addr = $_SERVER['REMOTE_ADDR'];
-
-                $A_db->ASaveDataToDb($ads,'ads');
-                $cnt++;
-                if ($cnt>7)$cnt = 0;
-                $adsCnt++;
-            }
-        }
-        mRESP_DATA('adsCnt -> '.$adsCnt);
+        mRESP_DATA('OK');
     }
 }
 
