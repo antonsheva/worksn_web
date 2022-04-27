@@ -8,17 +8,17 @@ class frmAdsParameter{
             <tr id="myButton" class="myButton">
                 <td class="adsParamCategory" style="width: 33%;">
                     <div class="bt1">
-                        <h2 style="font-size: medium">Все категории</h2>
+                        <h2 style="font-size: medium"><?echo STRING_ALL_CATEGORIES?></h2>
                     </div>
                 </td>
                 <td class="adsParamUser" style="width: 33%;">
                     <div class="bt1">
-                        <h2 style="font-size: medium">Все пользователи</h2>
+                        <h2 style="font-size: medium"><?echo STRING_ALL_USERS?></h2>
                     </div>
                 </td>
                 <td class="adsParamAddAds" style="width: 33%;">
                     <div class="bt1">
-                        <h2 style="font-size: medium">Добавить объявление</h2>
+                        <h2 style="font-size: medium"><?echo STRING_ADD_NEW_ADS?></h2>
                     </div>
                 </td>
             </tr>
@@ -27,7 +27,6 @@ class frmAdsParameter{
         $sel[] = 'adsParamCategory';
         $sel[] = 'adsParamUser';
         $sel[] = 'adsParamAddAds';
-//        $sel[] = 'adsParamSearch';
         new \jsFuncClick($id, $sel, 'myButton');
     }
 }

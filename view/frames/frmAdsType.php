@@ -8,15 +8,15 @@ class frmAdsType{
         <table id="adsType">
             <tr class="myButton">
                 <td class="btWorker" style="width: 43%">
-                    <div class="bt1" title="Свободные руки">Заказчик</div>
+                    <div class="bt1" title="<?echo STRING_FREE_HANDS?>"><?echo STRING_EMPLOYER?></div>
                 </td>
                 <td class="myLocation">
                     <div style="height: 100%; width: 100%">
-                        <img  src="../../service_img/design/my_location.png">
+                        <img  src="<?echo URL_IMG_MY_LOCATION?>">
                     </div>
                 </td>
                 <td class="btEmployer" style="width: 43%">
-                    <div class="bt1" title="Подработка в свободное время">Работник</div>
+                    <div class="bt1" title="<?echo STRING_PART_TIME_JOB?>"><?echo STRING_WORKER?></div>
                 </td>
             </tr>
         </table>

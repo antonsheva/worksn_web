@@ -46,9 +46,9 @@ $img = "../../../service_img/avatars/no-avatar.jpg";?>
         </tr>
         <tr>
             <td colspan="3" class="q1">
-                <img class="ban"      src="<?echo URL_SIGN_NO_BAN?>">
-                <img class="like"     src="<?echo URL_SIGN_NO_CHOOSE?>">
-                <img class="messages" src="<?echo URL_SIGN_ENVELOPE?>">
+                <img class="ban"      src="<?echo URL_IMG_NO_BAN?>">
+                <img class="like"     src="<?echo URL_IMG_NO_CHOOSE?>">
+                <img class="messages" src="<?echo URL_IMG_ENVELOPE?>">
             </td>
         </tr>
 

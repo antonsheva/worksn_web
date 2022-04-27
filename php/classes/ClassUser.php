@@ -21,7 +21,7 @@ class ClassUser
         $this->cookie = new ClassCookie();
         $this->user   = new \structsPhp\StructUser();
         $this->AGetUser();
-        getPostData($this->user);
+        $P->getAllData($this->user);
         $P->AUnSet(STR_PASSWORD);
     }
     function ARegistration(){
@@ -33,7 +33,7 @@ class ClassUser
 
         $user_id = $this->AAddUser();
         if ($user_id){
-            $user_id = userFillData($user_id, $G->user);
+            $user_id = $this->userFillData($user_id, $G->user);
             $response = STRING_YOU_ARE_REGISTERED;
             if ($this->user->email_hash)$response .= STRING_YOUR_EMAIL;
             if($user_id)mRESP_DATA($response);
@@ -45,12 +45,12 @@ class ClassUser
         $user_id = $A_db->ACreateNewLine(TBL_USERS);
         if($user_id){
             if($S->AGet(STR_TMP_IMG)){
-                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),PATH_AVATARS);
                 $this->user->img      = $imgPath[STR_IMG];
                 $this->user->img_icon = $imgPath[STR_IMG_ICON];
             }else{
-                $this->user->img      = $DIR->noAvatar;
-                $this->user->img_icon = $DIR->noAvatar; 
+                $this->user->img      = URL_IMG_NO_AVATAR;
+                $this->user->img_icon = URL_IMG_NO_AVATAR;
             }
             $this->user->remote_addr = $_SERVER[STR_REMOTE_ADDR];
             return $this->ASaveUserData($user_id, DATA_TYPE_NEW_USER);
@@ -133,7 +133,7 @@ class ClassUser
         if ($this->user->email_hash){
             $this->user->confirm_email = 0;
             $this->user->email_hash = $user_id.'/'.$this->user->email_hash;
-            $this->addNotify(TXT_CONFIRM_EMAIL_START.$this->user->email.TXT_CONFIRM_EMAIL_END);
+            $this->addNotify(stringNotifyConfirmEmail($this->user->email));
             $this->sendMailForConfirmEmail($this->user->email, $this->user->email_hash);
         }
         $ws_token = $this->user->ws_token;
@@ -231,7 +231,7 @@ class ClassUser
 
         if(!$S->AGet(STR_DATA_COMPLETE)){
            $this->user =  new StructUser();
-           $user_id = userFillData($user_id, $this->user);
+           $user_id = $this->userFillData($user_id, $this->user);
            $G->user = $this->user;
            if(!$user_id){
                return LOGIN_ERROR;
@@ -290,8 +290,6 @@ class ClassUser
             $G->user_id = $G->user->id;
         }
     }
-
-//---------   CHNG PASSWORD   --------------------------------------------
     function AChangePassword(){
         global $P;
         $this->user->id = $this->ACheckUserData();
@@ -309,7 +307,6 @@ class ClassUser
             mRESP_DATA(STRING_BAD_OLD_PASS, 0);
         }
     }
-
     function AAnonymLogin(){
         global $G, $S;
         $user_id = $this->ACheckCookie();
@@ -352,7 +349,7 @@ class ClassUser
             $this->user->password = $user_password;
             $res = $this->ACheckUserData();
             if($res==$user_id){
-                $user_id = userFillData($user_id, $this->user);
+                $user_id = $this->userFillData($user_id, $this->user);
                 return $user_id;
             }else{
                 $this->cookie->AClear();
@@ -365,8 +362,8 @@ class ClassUser
         $this->user->password  = substr((hrtime(true)*2),2,8);
         $this->user->cookie_pass = $this->user->password;
         $this->user->auto_auth = 1;
-        $this->user->img = URL_NO_AVATAR;
-        $this->user->img_icon = URL_NO_AVATAR;
+        $this->user->img = URL_IMG_NO_AVATAR;
+        $this->user->img_icon = URL_IMG_NO_AVATAR;
     }
     function checkSessionToken($act){
         global $S;
@@ -414,7 +411,6 @@ class ClassUser
         }
         mRESP_DATA(0);
     }
-
     function AUpdtUserData(){
         global $DIR, $AC_img, $S, $G;
         $user_id = $G->user_id;
@@ -424,7 +420,7 @@ class ClassUser
 
             $this->user->img = null;
             if($S->AGet(STR_TMP_IMG)){
-                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),PATH_AVATARS);
                 $this->user->img      = $imgPath[STR_IMG];
                 $this->user->img_icon = $imgPath[STR_IMG_ICON];
                 if($S->AGet(STR_OLD_IMG))$AC_img->removeImg($S->AGet(STR_OLD_IMG));
@@ -458,7 +454,7 @@ class ClassUser
             $this->ACheckUserLoginExist  ();
             $this->ACheckUserEmailExist  ();
             if($S->AGet(STR_TMP_IMG)){
-                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->avatars);
+                $imgPath              = $AC_img->saveImg($S->AGet(STR_TMP_IMG),PATH_AVATARS);
                 $this->user->img      = $imgPath[STR_IMG];
                 $this->user->img_icon = $imgPath[STR_IMG_ICON];
             }
@@ -514,7 +510,6 @@ class ClassUser
         $this->cookie->AClear();
         mRESP_DATA(0);
     }
-
     function checkToken($act){
         global $S;
         $arr = [ACT_LOGIN, ACT_ANONYMOUS_LOGIN, ACT_EXIT];
@@ -522,6 +517,27 @@ class ClassUser
         if($S->AGet(STR_WS_TOKEN) != $this->cookie->AGet(STR_WS_TOKEN)){
             mRESP_WTF();
         }
+    }
+    function userFillData($user_id, \structsPhp\StructUser &$user, $fields = null){
+        global $A_db, $G;
+        $flds = '*';
+        if($fields){
+            $flds = '';
+            foreach($fields as $item){
+                $flds.= $item.', ';
+            }
+            $flds = substr($flds, 0, strlen($flds)-2);
+        }
+
+        $query = "SELECT $flds FROM users WHERE id='$user_id'";
+        $res = $A_db->AGetSingleStringFromDb($query);
+        if($res){
+            foreach($user as $key=>&$item){
+                if(isset($res[$key]))$item = $res[$key];
+            }
+            return $user_id;
+        }
+        return 0;
     }
 }
 

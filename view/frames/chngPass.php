@@ -11,9 +11,9 @@ class chngPass{
             <div class="bt_visible stlBtSmall" style="display: block">Смена пароля</div>
             <div class="visible" id="new_pass_hidden" style="display: none">
                 <a style="font-size: larger">Смена пароля</a><br>
-                <div class="padd_5"><input class="password" type="password" placeholder="Старый пароль"><div class="underLine"></div></div>
-                <div class="padd_5"><input class="new_pass" type="password" placeholder="Новый пароль"><div class="underLine"></div></div>
-                <div class="padd_5"><input class="rpt_pass" type="password" placeholder="Новый пароль еще раз"><div class="underLine"></div></div>
+                <div class="padd_5"><input class="password" type="password" placeholder="<?echo STRING_OLD_PASS?>"><div class="underLine"></div></div>
+                <div class="padd_5"><input class="new_pass" type="password" placeholder="<?echo STRING_NEW_PASS?>"><div class="underLine"></div></div>
+                <div class="padd_5"><input class="rpt_pass" type="password" placeholder="<?echo STRING_NEW_PASS_REPEAT?>"><div class="underLine"></div></div>
                 <div class="bt_send stlBtSmall">Изменить пароль</div>
             </div>
         </div>

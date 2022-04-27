@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Anton
- * Date: 13.07.2021
- * Time: 21:05
- */
 
 namespace structsPhp;
 global $A_start;

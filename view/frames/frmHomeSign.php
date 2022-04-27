@@ -5,10 +5,9 @@ if($A_start != 444){echo 'byby';exit();}
 
 
 class frmHomeSign{
-    function __construct()
-    {?>
+    function __construct(){?>
         <a class="homeSign" href="/">
-            <img src="../../../service_img/design/home.png">
+            <img src="<?echo URL_SIGN_HOME?>">
         </a>
     <?}
 }

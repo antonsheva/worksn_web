@@ -5,6 +5,7 @@ const STRING_WAS_ONLINE                  = 'был в сети ';
 const STRING_ONLINE                      = 'в сети ';
 const STRING_NONAME_USER                 = 'Кто-то';
 const STRING_MSG_TXT                     = 'Текст сообщения';
+const STRING_ADS_TXT                     = 'Текст объявления';
 const STRING_MSG_FROM_                   = 'Сообщение от ';
 const STRING_ERROR_SEND_MSG              = 'Не удалось отправить сообщение :-(';
 const STRING_ERROR_SEND_FILE             = 'Не удалось отправить файл :-(';
@@ -116,6 +117,8 @@ const STRING_YOU_ARE_REGISTERED          = 'Вы успешно зарегист
 const STRING_YOUR_EMAIL                  = ' Для подтверждения Email проверьте почту';
 const STRING_LOGIN_EXIST                 = 'Логин занят';
 const STRING_EMAIL_EXIST                 = 'Email уже зарегистрирован. Воспользуйтесь формой восстановления доступа к аккаунту';
+const STRING_ACTUALITY                   = 'Актуально';
+const STRING_COST_R                      = 'Цена р.';
 
 
 const STRING_PRINTS_1                    = 'Печатает';
@@ -136,10 +139,22 @@ const STRING_PASSWORD_                   = 'Пароль - ';
 const STRING_BAT_LOGIN_PASSWORD          = 'Неверный логин или пароль';
 const STRING_BAD_OLD_PASS                = 'Неверный старый пароль';
 const STRING_PASS_WAS_CHANGE             = 'Пароль изменен';
+const STRING_OLD_PASS                    = 'Старый пароль';
+const STRING_NEW_PASS                    = 'Новый пароль';
+const STRING_NEW_PASS_REPEAT             = 'Новый пароль еще раз';
+const STRING_ADD_ADS_FOR_OTHERS          = 'Оставьте объявление, чтоб его увидели те, кто рядом.';
+
+const STRING_ALL_CATEGORIES              = 'Все категории';
+const STRING_ADD_NEW_ADS                 = 'Добавить объявление';
+
+const STRING_EMPLOYER                    = 'Заказчик';
+const STRING_WORKER                      = 'Работник';
+const STRING_FREE_HANDS                  = 'Свободные руки';
+const STRING_PART_TIME_JOB                  = 'Подработка в свободное время';
 const STRING_DATA_WAS_CHANGE             = 'Данные успешно обновлены';
 const STRING_CHECK_EMAIL                 = ' Проверьте почту для подтверждения Email';
 
-const STRING_MSG_CONFIRM_EMAIL       = 'Подтверждение почтового ящика для WORKSN.RU ';
+const STRING_MSG_CONFIRM_EMAIL           = 'Подтверждение почтового ящика для WORKSN.RU ';
 //const STRING_                    = '';
 //const STRING_                    = '';
 //const STRING_                    = '';

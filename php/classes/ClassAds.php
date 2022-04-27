@@ -1,13 +1,6 @@
 <?php
 namespace classesPhp;
 global $A_start;
-use structsPhp\dbStruct\tblAds;
-use structsPhp\G;
-use structsPhp\StructAds;
-use structsPhp\StructCllct;
-use structsPhp\StructUser;
-use structsPhp\TxtData;
-
 if($A_start != 444){echo 'byby';exit();}
 
 class ClassAds{
@@ -18,12 +11,13 @@ class ClassAds{
     var $searchQuery = null;
     public function __construct()
     {
+        global $P;
         $this->cllct  = new \structsPhp\StructCllct();
         $this->adDb   = new \structsPhp\dbStruct\tblAds();
         $this->adFull = new \structsPhp\StructAds();
         $this->crd    = new \structsPhp\StructCoordinates();
-        getPostData($this->adDb);
-        getPostData($this->adFull);
+        $P->getAllData($this->adDb);
+        $P->getAllData($this->adFull);
         $this->checkPostData(STR_GET_ADS);
         $this->getTargetAds();
 
@@ -89,7 +83,7 @@ class ClassAds{
             if($this->adDb->id){
                 $this->adFull->user_login = $G->user->login;
                 $this->adFull->user_img   = $G->user->img;
-                arrayToArrayNotNull($this->adDb, $this->adFull);
+                $A_db->arrayToArrayNotNull($this->adDb, $this->adFull);
                 $G->targetAds = $this->adFull;
                 $AC_img->removeOldImgsFromSession();
                 mRESP_DATA(STRING_ADS_WAS_ADD);
@@ -134,7 +128,7 @@ class ClassAds{
             $this->adDb->img = '';
             foreach ($arr as $item){
                 if($item && ($item !='')){
-                    $imgPath = $AC_img->saveImg($DIR->tmp_img.$item,$DIR->ads_imgs);
+                    $imgPath = $AC_img->saveImg(PATH_TMP_IMG.$item,PATH_ADS_IMGS);
                     $this->adDb->img     .= $imgPath[STR_IMG].',';
                     $this->adDb->img_icon.= $imgPath[STR_IMG_ICON].',';
                 }
@@ -198,7 +192,7 @@ class ClassAds{
             if($this->adDb->id){
                 $this->adFull->user_login = $G->user->login;
                 $this->adFull->img        = $G->user->img;
-                arrayToArrayNotNull($this->adDb, $this->adFull);
+                $A_db->arrayToArrayNotNull($this->adDb, $this->adFull);
                 $G->targetAds = $this->adFull;
                 mRESP_DATA(0);
             }
@@ -206,9 +200,9 @@ class ClassAds{
         mRESP_WTF();
     }
     function checkCollectionParameters(){
-        global $P, $G;
+        global $P, $A_db;
         if(is_array($P->AGet(STR_CLLCT))){
-            arrayToArray($P->AGet(STR_CLLCT), $this->cllct);
+            $A_db->arrayToArray($P->AGet(STR_CLLCT), $this->cllct);
             if($this->cllct->ads_type)
                 switch ($this->cllct->ads_type){
                     case TYPE_WORKER   : $this->cllct->ads_type = TYPE_WORKER;    break;
@@ -227,7 +221,7 @@ class ClassAds{
         if ($this->cllct->search_phrase)$this->getSearchQuery();
     }
     function AGetAdsCollection(){
-        global $A_db, $G;
+        global $A_db, $G, $U;
 
         $this->crd->min_x = round($this->crd->min_x,4);
         $this->crd->max_x = round($this->crd->max_x,4);
@@ -250,6 +244,7 @@ class ClassAds{
         foreach($this->cllct as $key=>$item){
             if($key != 'search_phrase')
                 if(($item !== '') && ($item !== 'null') && ($item !== 'NULL') && ($item !== null))$f1 .= " AND ".$key." = '".$item."' ";
+
         }
         $fltr.= ")";
         if($f1 != '')$fltr.= ' '.$f1.') ORDER BY create_time LIMIT '.MAX_ADS_QT;
@@ -270,10 +265,10 @@ class ClassAds{
                 $str .= '_'.$item1[STR_USER_ID];
                 $user1 = new \structsPhp\StructUser();
                 $user_id = $item1[STR_USER_ID];
-                userFillData($user_id, $user1, $fields);
+                $U->userFillData($user_id, $user1, $fields);
 
                 $adFull = new \structsPhp\StructAds();
-                arrayToArrayNotNull($item1,$adFull);
+                $A_db->arrayToArrayNotNull($item1,$adFull);
                 if ($adFull->active == 0)$visibleMode = ADS_VISIBLE_HIDDEN_MANUAL;
                 if ($adFull->remove == 1)$visibleMode = ADS_VISIBLE_HIDDEN_REMOVE;
                 $adFull->user_id = $user_id                     ;
@@ -301,7 +296,7 @@ class ClassAds{
         if ($res){
             foreach ($res as $ads){
                 $adFull = new \structsPhp\StructAds();
-                arrayToArray($ads,$adFull);
+                $A_db->arrayToArray($ads,$adFull);
                 $adFull->user_id = $user_id                       ;
                 $adFull->user_login = $G->user->login             ;
                 $adFull->user_rating = $G->user->rating           ;
@@ -353,10 +348,10 @@ class ClassAds{
         }
     }
     function checkMinMaxCoords(){
-        global $P;
+        global $P, $A_db;
         $crdErr = 0;
         if(is_array($P->AGet('crd'))){
-            arrayToArray($P->AGet('crd'), $this->crd);
+            $A_db->arrayToArray($P->AGet('crd'), $this->crd);
             if($this->crd->min_x && $this->crd->max_x && $this->crd->min_y && $this->crd){
                 if(!is_numeric($this->crd->min_x ))$crdErr = -1;
                 if(!is_numeric($this->crd->max_x ))$crdErr = -1;
@@ -415,7 +410,6 @@ class ClassAds{
         if ($data[STR_USER_ID] == $G->user_id)return ADS_VISIBLE_HIDDEN_FOR_TIME;
         return ADS_VISIBLE_HIDDEN;
     }
-
     function hiddenAds(){
         global $P,$G, $A_db;
         $user_id = $P->AGet(STR_USER_ID);
@@ -487,7 +481,6 @@ class ClassAds{
         }
         mRESP_WTF();
     }
-
     function generateTmpAds(){
         mRESP_DATA('OK');
     }

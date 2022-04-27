@@ -1,14 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Anton
- * Date: 31.01.2021
- * Time: 21:27
- */
-
 namespace framesView;
-
-
 class frmActive
 {
     public function __construct(){?>
@@ -21,9 +12,9 @@ class frmActive
         <div id="frmUsers"      class="users      activFrmContent">msgFrmUsers</div>
         <div id="frmAddAds"     class="addAds     activFrmContent"><?new addAdsForm()?></div>
         <div id="firstEntry"    class="firstEntry activFrmContent">
-            <h2 style="color: rgb(76, 169, 84); margin-left: 5%; width: 88%">Оставьте объявление, чтоб его увидели те, кто рядом.</h2><br>
+            <h2 style="color: rgb(76, 169, 84); margin-left: 5%; width: 88%"><?echo STRING_ADD_ADS_FOR_OTHERS?></h2><br>
             <div style="position: relative; display: block; margin-left: 3%">
-                <?include (__DIR__."/../html/linkPlayMarket.html");?>
+                <?new \framesView\frmLinkPlayMarket();?>
             </div>
 
         </div>

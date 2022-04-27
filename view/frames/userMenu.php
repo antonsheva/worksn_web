@@ -14,20 +14,20 @@ class userMenu{
             <tr>
                 <td class="profile q2">
                     <a href="<?echo LINK_MY_PROFILE?>">
-                        <img src="<?echo URL_SIGN_PROFILE?>"/>
+                        <img src="<?echo URL_IMG_PROFILE?>"/>
                     </a>
                 </td>
                 <td class="allMsg q2">
-                    <img src="<?echo URL_SIGN_ENVELOPE?>"/>
+                    <img src="<?echo URL_IMG_ENVELOPE?>"/>
                 </td>
                 <td class="newMsg q2">
-                    <img src="<?echo URL_SIGN_BELL_NO_ACT?>"/>
+                    <img src="<?echo URL_IMG_BELL_NO_ACT?>"/>
                 </td>
                 <td class="like q2">
-                    <img src="<?echo URL_SIGN_NO_CHOOSE?>"/>
+                    <img src="<?echo URL_IMG_NO_CHOOSE?>"/>
                 </td>
                 <td class="ban q2">
-                    <img src="<?echo URL_SIGN_NO_BAN?>"/>
+                    <img src="<?echo URL_IMG_NO_BAN?>"/>
                 </td>
                 <td class="exit q2">
                     <img src="<?echo URL_SIGN_EXIT?>"/>
@@ -37,7 +37,7 @@ class userMenu{
                         <img src="<?echo URL_SIGN_SETTING?>"/>
                     </a>
                 </td>
-                <?if ($isAndroid)include (LINK_G_PLAY);?>
+                <?if ($isAndroid)new frmSignGooglePlay();?>
 
             </tr>
         </table>

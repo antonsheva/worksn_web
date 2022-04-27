@@ -1,8 +1,8 @@
 <?php
-    if($A_start != 444){echo 'byby';exit();}
-    include (__DIR__."/../html/linkPlayMarket.html");
-?>
+global $A_start;
+if($A_start != 444){echo 'byby';exit();}
 
+new \framesView\frmLinkPlayMarket();?>
 <div class="settingBody">
     <div id="layoutSetting">
         <b class="notifyType">Уведомления</b>

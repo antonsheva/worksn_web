@@ -1,12 +1,12 @@
 <?php
 if($A_start != 444){echo 'byby';exit();}
 
-global $ROOT, $G, $DIR;
-$img = $DIR->noAvatar;
+global $G, $DIR;
+$img = URL_IMG_NO_AVATAR;
 if($G->user->img)
     if (file_exists($G->user->img))$img = $G->user->img_icon;
 
-include $ROOT.'/www/view/forms/sendAvatar.php';
+new \framesView\frmSendAvatar();
 new \framesView\frmMyProfileSign($G->user_id);
 ?>
 

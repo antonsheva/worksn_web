@@ -6,27 +6,27 @@ if($A_start != 444){echo 'byby';exit();}
 class addAdsForm{
     public function __construct($id = 'addAdsForm'){
         global $G;
-        if($G->user->id)$placeholder = "Текст объявления";
-        else            $placeholder = "Авторизуйтесь";
+        if($G->user->id)$placeholder = STRING_ADS_TXT;
+        else            $placeholder = STRING_SIGN_IN_OR_UP;
         $attr = $G->user->id ? '' : 'disabled="disable"';
         ?>
         <div id="addAdsForm">
             <table class="str1">
                 <tr style="width: 100%; height: 100%">
-                    <td class="lifetime" style="width: 30%; height: 100%">Актуальность</td>
+                    <td class="lifetime" style="width: 30%; height: 100%"><?echo STRING_ACTUALITY?></td>
                     <td style="width: 15%; text-align: left; position: relative">
-                        <div style="text-align: center; width: 100%; height: 80%; position: relative"><img class="gallerySign" src="../../../service_img/design/gallery.gif"></div>
+                        <div style="text-align: center; width: 100%; height: 80%; position: relative"><img class="gallerySign" src="<?echo URL_IMG_GALLERY?>"></div>
                     </td>
                     <td style="width: 30%">
                         <div class="sendingImgs"></div>
                     </td>
-                    <td class="cancel" style="width: 20%"><b style="font-size: larger; color: #777777">Отмена</b></td>
+                    <td class="cancel" style="width: 20%"><b style="font-size: larger; color: #777777"><?echo STRING_CANCEL?></b></td>
                 </tr>
             </table>
             <table class="str2">
                 <tr>
                     <td style="height: 20%; width: 20%">
-                        <input class="cost" style="width: 100%" maxlength="8"  type="tel" pattern="[0-9]"  placeholder='Цена р.'<?echo $attr?>>
+                        <input class="cost" style="width: 100%" maxlength="8"  type="tel" pattern="[0-9]"  placeholder= <?echo STRING_COST_R.$attr?>>
                     </td>
 
                     <td style="width: 60%; text-align: right; padding-right: 2%">

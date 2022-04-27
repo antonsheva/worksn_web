@@ -69,7 +69,7 @@ class ClassUserReview{
         $query = "SELECT * FROM user_reviews WHERE (sender_id='$sender_id'  AND consumer_id='$consumer_id')";
         $res = $A_db->AGetSingleStringFromDb($query);
         if($res){
-            arrayToArrayNotNull($res, $this->review);
+            $A_db->arrayToArrayNotNull($res, $this->review);
         }
     }
     function setBwStatus(){

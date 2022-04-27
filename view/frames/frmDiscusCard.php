@@ -19,17 +19,17 @@ class frmDiscusCard{
         $user = $G->owner->id ? $G->owner : null;
         ?>
         <div id="frmDiscusCard">
-            <img class="roll" src="../../../service_img/design/sn_down_azure.gif">
-            <img class="expand" src="../../../service_img/design/bt_open_expand.png">
+            <img class="roll" src="<?echo URL_IMG_DOWN_AZURE?>">
+            <img class="expand" src="<?echo URL_IMG_BT_OPEN_EXPAND?>">
             <div class="profile">
                 <a class="href" href="/">
-                    <img class="avatar" src="../../../service_img/avatars/no-avatar.jpg"/>
-                    <img class="online" src="../../../service_img/design/online.gif"/>
+                    <img class="avatar" src="<?echo URL_IMG_NO_AVATAR?>"/>
+                    <img class="online" src="<?echo URL_IMG_ONLINE?>"/>
                 </a>
                 <div class="stars">
-                    <img class="smallStars" style="height: 20px" src="../../../service_img/design/stars_bad_bgrd.gif">
-                    <img class="slider" style="height: 20px; width:20%" src="../../../service_img/design/stars_ok_bgrd.gif" >
-                    <img class="smallStars" style="height: 20px" src="../../../service_img/design/stars.gif">
+                    <img class="smallStars" style="height: 20px" src="<?echo URL_IMG_STARS_BAD_BGRD?>">
+                    <img class="slider" style="height: 20px; width:20%" src="<?echo URL_IMG_STARS_OK_BGRD?>" >
+                    <img class="smallStars" style="height: 20px" src="<?echo URL_IMG_STARS?>">
                 </div>
             </div>
             <div class="adsData">
@@ -40,10 +40,10 @@ class frmDiscusCard{
 
                 <div class="str2">
                     <div class="loadImgs">
-                        <img src="../../../service_img/design/bell_act.png">
+                        <img src="<?echo URL_IMG_BELL_ACT?>">
                     </div>
                     <div style="width: 50%; display: inline-block; vertical-align: top">
-                        <div class="category">category</div>
+                        <div class="category"><?echo STRING_CATEGORY?></div>
                         <div class="cost">100p.</div>
                     </div>
                 </div>

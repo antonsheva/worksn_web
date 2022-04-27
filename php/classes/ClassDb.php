@@ -197,5 +197,26 @@ class ClassDb{
         $fields[] = STR_ABOUT_USER;
         return $fields;
     }
+    function arrayToArrayNotNull($src, $dest){
+        $arr_src = array();
+        foreach($src as $key=>$item)
+            $arr_src[$key] = $item;
+
+        foreach($dest as $key=> &$item)
+            if (array_key_exists($key, $arr_src))
+                if (!is_null($arr_src[$key])) $item = $arr_src[$key];
+
+    }
+    function arrayToArray($src, $dest){
+        $arr_src = array();
+        foreach($src as $key=>$item)
+            $arr_src[$key] = $item;
+
+        foreach($dest as $key=> &$item)
+            if (array_key_exists($key, $arr_src))
+                if ($arr_src[$key]) $item = $arr_src[$key];
+
+    }
+
 }
 

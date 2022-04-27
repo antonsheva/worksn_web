@@ -17,22 +17,23 @@ class ClassMsg{
     var $discusDb;
 
     function __construct(){
+        global $P;
         $this->adsDb      = new \structsPhp\dbStruct\tblAds();
         $this->msgDb    = new \structsPhp\dbStruct\tblMsg();
         $this->msgFull  = new \structsPhp\StructMsg();
         $this->discusDb = new \structsPhp\dbStruct\tblDiscus();
-        getPostData($this->msgDb);
-        getPostData($this->msgFull);
-        getPostData($this->discusDb);
+        $P->getAllData($this->msgDb);
+        $P->getAllData($this->msgFull);
+        $P->getAllData($this->discusDb);
     }
     function AAddMsg(){
-        global $G, $A_db, $S, $DIR, $AC_img;
+        global $G, $A_db, $S, $DIR, $AC_img, $P;
         $msgDb    = new \structsPhp\dbStruct\tblMsg();
         $msgFull  = new \structsPhp\StructMsg();
         $discusDb = new \structsPhp\dbStruct\tblDiscus();
-        getPostData($msgDb);
-        getPostData($msgFull);
-        getPostData($discusDb);
+        $P->getAllData($msgDb);
+        $P->getAllData($msgFull);
+        $P->getAllData($discusDb);
 
         if($msgDb->sender_id && $msgDb->consumer_id && $msgDb->ads_id){
             if($msgDb->sender_id == $G->user->id){
@@ -42,7 +43,7 @@ class ClassMsg{
                     if($discusDb->speaker_2 != $msgDb->sender_id)$msgDb->consumer_id = $discusDb->speaker_2;
                 }
                 if($S->AGet(STR_TMP_IMG)){
-                    $imgPath = $AC_img->saveImg($S->AGet(STR_TMP_IMG),$DIR->msg_imgs);
+                    $imgPath = $AC_img->saveImg($S->AGet(STR_TMP_IMG),PATH_MSG_IMGS);
                     $msgDb->img      = $imgPath[STR_IMG];
                     $msgDb->img_icon = $imgPath[STR_IMG_ICON];
                 }
@@ -92,7 +93,7 @@ class ClassMsg{
                                                     AND (ads_id='$ads_id'))";
                 $res = $A_db->AGetSingleStringFromDb($query);
                 if($res){
-                    arrayToArrayNotNull($res,$discusDb);
+                    $A_db->arrayToArrayNotNull($res,$discusDb);
                     $msgDb->discus_id = $discusDb->id;
                 }else {
                     $discusDb->id = $A_db->ASaveStructToDb($discusDb, TBL_DISCUS)[STR_ID];
@@ -153,7 +154,7 @@ class ClassMsg{
                     $A_db->loadOpenUserData($item[STR_SENDER_ID], $sender);
                     $A_db->loadOpenUserData($item[STR_CONSUMER_ID], $consumer);
                     $A_db->ALoadStructFromDb(TBL_ADS, $item[STR_ADS_ID], $ads, $flds_ads);
-                    arrayToArrayNotNull($item, $msg);
+                    $A_db->arrayToArrayNotNull($item, $msg);
                     $msg->sender_id     = $sender->id;
                     $msg->sender_login  = $sender->login;
                     $msg->sender_rating = $sender->rating;
@@ -225,7 +226,7 @@ class ClassMsg{
             $this->setViewedDiscus($discusId);
             foreach ($res as $key=>$item){
                 $msg = new StructMsgShort();
-                arrayToArrayNotNull($item, $msg);
+                $A_db->arrayToArrayNotNull($item, $msg);
                 $msg->sender_id = $item[STR_SENDER_ID];
                 $msg->discus_id = $discusId;
                 $data[] = $msg;

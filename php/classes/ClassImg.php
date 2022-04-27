@@ -41,7 +41,7 @@ class ClassImg{
             $fileName  .= '_'.$G->nSecTime.'_'.$G->time;
             $fileNameFull = $fileName.'.'.$ext_file;
 
-            $uploadfile = $DIR->tmp_img.'f1/'.$fileNameFull;
+            $uploadfile = PATH_TMP_IMG.'f1/'.$fileNameFull;
 
             if (!(move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)))mRESP_WTF(STRING_SOME_THROWABLE);
 
@@ -56,13 +56,13 @@ class ClassImg{
                 $fileNameFull = $fileName.'.jpg';
             }
 
-            $this->transformImg($fileNameFull, PATH_OUTPUT_IMG, MAX_IMG_SIZE, 1);
-            $outFile = PATH_OUTPUT_IMG.$fileNameFull;
+            $this->transformImg($fileNameFull, PATH_TMP_IMG, MAX_IMG_SIZE, 1);
+            $outFile = PATH_TMP_IMG.$fileNameFull;
             $S->ASet(STR_TMP_IMG, $outFile);
 
-            $this->transformImg($fileNameFull, PATH_OUTPUT_IMG_ICON, MAX_ICON_SIZE, 0);
+            $this->transformImg($fileNameFull, PATH_TMP_IMG_ICON, MAX_ICON_SIZE, 0);
 
-            $outFilePathIcon = PATH_OUTPUT_IMG_ICON.$fileNameFull;
+            $outFilePathIcon = PATH_TMP_IMG_ICON.$fileNameFull;
             $S->ASet(STR_TMP_IMG_ICON, $outFilePathIcon);
 
             $this->removeImg($uploadfile);
@@ -102,7 +102,7 @@ class ClassImg{
                     $fileName = $this->getFileNameFromPath($item);
                     try{
                         if (file_exists($item))
-                            copy($item , PATH_OUTPUT_IMG.$fileName);
+                            copy($item , PATH_TMP_IMG.$fileName);
                     }catch (\Exception $e){
 
                     }
@@ -111,7 +111,7 @@ class ClassImg{
                     $fileName = $this->getFileNameFromPath($item);
                     try{
                         if (file_exists($item)){
-                            $res = copy($item , PATH_OUTPUT_IMG_ICON.$fileName);
+                            $res = copy($item , PATH_TMP_IMG_ICON.$fileName);
                             if ($res){
                                 $filesString.=$fileName.',';
                                 $imgCnt++;
@@ -142,7 +142,7 @@ class ClassImg{
         if ($res){
             $id = $res[STR_ID];
             $consumerId = $res[STR_CONSUMER_ID];
-            $imgData = $this->saveImg($filePath, $DIR->msg_imgs);
+            $imgData = $this->saveImg($filePath, PATH_MSG_IMGS);
             $img     = $imgData[STR_IMG];
             $imgIcon = $imgData[STR_IMG_ICON];
             $query = "UPDATE msg SET img='$img',img_icon='$imgIcon', create_id=NULL WHERE id='$id'";
@@ -175,8 +175,8 @@ class ClassImg{
             $arr = explode(',', $S->AGet(STR_LOAD_IMGS));
             foreach ($arr as $item){
                 if($item){
-                    $this->removeImg($DIR->tmp_img.$item);
-                    $this->removeImg($DIR->tmp_img_icon.$item);
+                    $this->removeImg(PATH_TMP_IMG.$item);
+                    $this->removeImg(PATH_TMP_IMG_ICON.$item);
                 }
             }
         }
@@ -198,7 +198,7 @@ class ClassImg{
         $tmpArr = explode('/', $img);
 
         $imgName     = $tmpArr[count($tmpArr)-1];
-        $tmpImgIcon  = PATH_OUTPUT_IMG_ICON.$imgName;
+        $tmpImgIcon  = PATH_TMP_IMG_ICON.$imgName;
 
         $newName     = $newPath.$imgName;
         $newIconName = $newIconPath.$imgName;
@@ -214,7 +214,7 @@ class ClassImg{
     }
     function removeImg($img_file){
         global $DIR;
-        if ($img_file == $DIR->noAvatar)return OK;
+        if ($img_file == URL_IMG_NO_AVATAR)return OK;
         try{
             if(file_exists($img_file))
                 if(is_file($img_file))
@@ -274,16 +274,16 @@ class ClassImg{
             }
         }
 
-        $this->removeImg($DIR->tmp_img.$fileName);
-        $this->removeImg($DIR->tmp_img_icon.$fileName);
+        $this->removeImg(PATH_TMP_IMG.$fileName);
+        $this->removeImg(PATH_TMP_IMG_ICON.$fileName);
         $S->ASet(STR_TMP_IMG, null);
 
         if($S->AGet(STR_LOAD_IMGS_QT)){
             $qt = $S->AGet(STR_LOAD_IMGS_QT)-1;
             $S->ASet(STR_LOAD_IMGS_QT, $qt);
         }
-        $G->tmp_img      = $DIR->tmp_img.$fileName;
-        $G->tmp_img_icon = $DIR->tmp_img_icon.$fileName;
+        $G->tmp_img      = PATH_TMP_IMG.$fileName;
+        $G->tmp_img_icon = PATH_TMP_IMG_ICON.$fileName;
         if ($exit)mRESP_DATA(0, $S->AGet(STR_LOAD_IMGS_QT));
         return;
     }

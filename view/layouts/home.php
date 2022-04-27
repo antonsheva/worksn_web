@@ -1,21 +1,18 @@
-<?global $G, $ROOT, $DIR;
-$chck1 = '';
-$chck2 = '';
-if($G->ads_type==ADS_TYPE_EMPLOYER)
-    $chck1 = 'checked';
-else
-    $chck2 = 'checked';
-include 'www/view/forms/sendAvatar.php';?>
+<?
+global $G, $DIR;
+
+new \framesView\frmSendAvatar();
+?>
  
 <div class="tmpImgBox">
-    <?  $img = "../../../service_img/design/gallery.gif";
+    <?  $img = URL_IMG_GALLERY;
     new \framesView\imgBox($img );
     new \framesView\frmSendImageMsg();
     ?>
 </div>
 
 <div class="imgGrp">
-    <img class="closeImgGroup" src="<?echo $DIR->design?>sn_down_azure.gif">
+    <img class="closeImgGroup" src="<?echo URL_IMG_DOWN_AZURE?>">
     <div class="tmpImgGroup"></div>
 </div>
 <div id="onClick"></div>

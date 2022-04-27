@@ -1,10 +1,11 @@
 <?php
-if($A_start != 444){echo 'byby';exit();}
 
-global $ROOT, $G;
+global $A_start;
+if($A_start != 444){echo BYBY; exit();}
+
 $img = "service_img/avatars/no-avatar.jpg";
-include $ROOT.'/www/view/forms/sendAvatar.php';
-include (__DIR__."/../html/linkPlayMarket.html");
+new \framesView\frmLinkPlayMarket();
+new \framesView\frmSendAvatar();
 ?>
 <div class="layoutRegistration">
     <table style="width: 100%;">

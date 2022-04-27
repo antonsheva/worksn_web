@@ -26,15 +26,15 @@ class ClassPost
                 if(is_array($item)){
                     $this->data[$key] = array();
                     foreach ($item as $k=>$i){
-                        $this->data[$key][$k] = AClearField($i);
+                        $this->data[$key][$k] = $this->AClearField($i);
                     }
-                }else $this->data[$key] = AClearField($item);
+                }else $this->data[$key] = $this->AClearField($item);
             }
         }
     }
     function checkSessionToken(){
-        global $S;
-        if($S->AGet(STR_WS_TOKEN)!= $this->AGet(STR_WS_TOKEN)){
+        $s = new ClassSession();
+        if($s->AGet(STR_WS_TOKEN)!= $this->AGet(STR_WS_TOKEN)){
             mRESP_WTF();
         }
     }
@@ -44,12 +44,10 @@ class ClassPost
             return $this->data[$variable];
         } else return null;
     }
-
     function ASet($variable, $val)
     {
         $this->data[$variable] = $val;
     }
-
     function AUnSet($variable)
     {
         if (array_key_exists($variable, $this->data)) {
@@ -57,11 +55,30 @@ class ClassPost
             unset($_POST[$variable]);
         }
     }
-
     function clear()
     {
         $this->data = array();
     }
+    function AClearField($str){
+        global $A_db, $LOG;
+        $str = str_replace("'","`",$str);
+        $str = str_replace("\"","`",$str);
+        try{
+            $str = $A_db->db->real_escape_string($str);
+        }catch (\Exception $e){
+            $LOG->write($e);
+            mRESP_WTF();
+        }
+        $str = stripslashes($str);
+        $str = htmlspecialchars($str);
+        $str = trim($str);
+        return $str;
+    }
+    function getAllData(&$data){
+        global $P;
+        foreach ($data as $key=> &$item)
+            $item = $P->AGet($key);
 
+    }
 }
 

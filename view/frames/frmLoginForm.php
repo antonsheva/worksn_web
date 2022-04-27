@@ -22,7 +22,7 @@ class frmLoginForm{
                     <td style="height: 100%; width: 22.5%; text-align: center">
                         <input class="bt" type="button" value="<?echo STRING_SIGN_IN?>" style="width: 90%; font-size: larger;">
                     </td>
-                    <?if ($isAndroid)include (LINK_G_PLAY);?>
+                    <?if ($isAndroid)new frmSignGooglePlay();?>
 
                 </tr>
             </table>
